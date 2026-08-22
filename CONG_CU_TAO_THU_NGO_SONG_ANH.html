@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Hình Song Anh - Công Cụ Tạo Thư Ngỏ & Kế Hoạch Tiếp Cận Dự Án Tự Động</title>
+    <style>
+        :root {
+            --primary: #c5a059;
+            --primary-dark: #a37d36;
+            --bg-dark: #0b1120;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 520px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .brand-title h1 {
+            color: var(--primary);
+            font-size: 19px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .brand-title p {
+            color: var(--text-muted);
+            font-size: 12.5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .card-header {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 7px 10px;
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 12.5px;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2);
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 14px;
+            font-size: 13.5px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #0f172a;
+            grid-column: 1 / -1;
+            font-size: 15px;
+            padding: 12px;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        /* PREVIEW WRAPPER (Trang Văn Bản Chuẩn A4) */
+        .preview-wrapper {
+            background: #475569;
+            border-radius: 10px;
+            padding: 20px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .page-sheet {
+            background: #ffffff;
+            color: #000000;
+            width: 800px;
+            min-height: 1130px;
+            padding: 45px 50px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            font-size: 13.5px;
+            line-height: 1.6;
+            position: relative;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .doc-quoc-hieu {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .doc-quoc-hieu h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .doc-quoc-hieu h4 {
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            padding-bottom: 2px;
+        }
+
+        .doc-header-brand {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1.5px solid #c5a059;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .doc-header-brand .logo-text {
+            font-weight: bold;
+            font-size: 15px;
+            color: #b78a38;
+        }
+
+        .doc-header-brand .contact-mini {
+            font-size: 11px;
+            color: #555;
+            text-align: right;
+        }
+
+        .doc-main-title {
+            text-align: center;
+            margin: 18px 0 14px 0;
+        }
+
+        .doc-main-title h1 {
+            font-size: 17px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+            line-height: 1.4;
+        }
+
+        .doc-main-title h2 {
+            font-size: 13.5px;
+            color: #b78a38;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .page-sheet p, .page-sheet li {
+            text-align: justify;
+            margin-bottom: 6px;
+            font-size: 13.5px;
+        }
+
+        .page-sheet ul {
+            margin-left: 20px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 13.5px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            color: #000;
+        }
+
+        .signature-block {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .signature-inner {
+            width: 240px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="notification" id="notif">✅ Đã sao chép toàn bộ Thư Ngỏ! Đang mở Google Docs...</div>
+
+<div class="container">
+    <!-- FORM NHẬP THÔNG TIN DỰ ÁN MỤC TIÊU -->
+    <div class="card">
+        <div class="card-header">
+            📝 1. Thông Tin Khách Hàng & Dự Án Mục Tiêu
+        </div>
+
+        <div class="form-group">
+            <label>Tên Dự Án</label>
+            <input type="text" id="projectName" value="Nhà máy Nhiệt điện An Khánh – Bắc Giang" oninput="updatePreview()">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Quy Mô / Công Suất / Tổng Vốn</label>
+                <input type="text" id="projectScale" value="66,4 ha - 650 MW - Tổng vốn gần 30.000 tỷ VNĐ (~1,1 tỷ USD)" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>Ngày Khởi Công / Mở Bán</label>
+                <input type="text" id="eventDate" value="12/08/2026" oninput="updatePreview()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Chủ Đầu Tư (Đơn vị chủ quản)</label>
+            <input type="text" id="clientCompany" value="CÔNG TY CỔ PHẦN NHIỆT ĐIỆN AN KHÁNH BẮC GIANG" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+            <label>Tổng Thầu EPC / Đơn Vị Thi Công (Nếu có)</label>
+            <input type="text" id="epcCompany" value="TỔNG CÔNG TY XÂY DỰNG BẠCH ĐẰNG (BDCC)" oninput="updatePreview()">
+        </div>
+
+        <div class="card-header" style="margin-top: 10px;">
+            📐 2. Đề Xuất Quy Cách & Hạng Mục Sa Bàn
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Tỷ Lệ Khuyến Nghị</label>
+                <input type="text" id="scaleProposal" value="Tỷ lệ 1/500 hoặc 1/1000" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>Vị Trí Đặt Sa Bàn</label>
+                <input type="text" id="displayLocation" value="Nhà Điều Hành Dự Án & Phòng Truyền Thống" oninput="updatePreview()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Các Hạng Mục Chi Tiết Cần Tái Hiện Trên Sa Bàn</label>
+            <textarea id="modelItems" rows="3" oninput="updatePreview()">Khối nhà lò hơi CFB, ống khói cao 210m, gian tua-bin máy phát điện 650MW, tháp làm mát giải nhiệt, bãi chứa than kín mái vòm, hệ thống băng tải than kín, trạm biến áp 500kV/220kV và cảng chuyên dùng bốc than sông Lục Nam.</textarea>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="createAndOpenGoogleDoc()">
+                🚀 CREATE: TẠO THƯ NGỎ & MỞ GOOGLE DOCS
+            </button>
+            <button class="btn btn-secondary" onclick="downloadWordDoc()">
+                📄 Tải File Word (.doc)
+            </button>
+            <button class="btn btn-secondary" onclick="printDoc()">
+                🖨️ In / Xuất PDF
+            </button>
+            <button class="btn btn-secondary" onclick="copyZaloMessage()" style="grid-column: 1 / -1; background: #0284c7;">
+                💬 Sao Chép Tin Nhắn Zalo 1-1 Soạn Sẵn
+            </button>
+        </div>
+    </div>
+
+    <!-- PREVIEW THƯ NGỎ CHUẨN MÔ HÌNH SONG ANH -->
+    <div class="preview-wrapper">
+        <div class="page-sheet" id="previewPane">
+            <!-- Dynamic Document Content -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function updatePreview() {
+        const pName = document.getElementById('projectName').value;
+        const pScale = document.getElementById('projectScale').value;
+        const eDate = document.getElementById('eventDate').value;
+        const cComp = document.getElementById('clientCompany').value;
+        const epcComp = document.getElementById('epcCompany').value;
+        const sProp = document.getElementById('scaleProposal').value;
+        const dLoc = document.getElementById('displayLocation').value;
+        const mItems = document.getElementById('modelItems').value;
+
+        const today = new Date();
+        const dateStr = `TP. Hồ Chí Minh, ngày ${today.getDate()} tháng ${today.getMonth() + 1} năm ${today.getFullYear()}`;
+
+        const html = `
+            <div class="doc-header-brand">
+                <div>
+                    <div class="logo-text">CÔNG TY TNHH TM DV TV SONG ANH</div>
+                    <div style="font-size: 12px; font-weight: bold; color: #333;">MÔ HÌNH SONG ANH (SONG ANH ARCHITECTURAL MODEL)</div>
+                </div>
+                <div class="contact-mini">
+                    Website: https://mohinhkientruc.org<br>
+                    Hotline / Zalo: 0929 22 4444 – 0981 169 200<br>
+                    Email: mohinhsonganh@gmail.com
+                </div>
+            </div>
+
+            <div class="doc-quoc-hieu">
+                <h3>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h3>
+                <h4>Độc lập - Tự do - Hạnh phúc</h4>
+            </div>
+
+            <div class="doc-main-title">
+                <h1>THƯ NGỎ CHÀO HỢP TÁC THI CÔNG SA BÀN MÔ HÌNH KIẾN TRÚC</h1>
+                <h2>DỰ ÁN: ${pName.toUpperCase()}</h2>
+            </div>
+
+            <p style="margin-bottom: 12px;"><strong>Kính gửi:</strong></p>
+            <ul style="list-style: none; margin-left: 10px; margin-bottom: 14px;">
+                <li>- <strong>BAN GIÁM ĐỐC & BAN QUẢN LÝ DỰ ÁN</strong> – ${cComp.toUpperCase()}</li>
+                ${epcComp ? `<li>- <strong>BAN CHỈ HUY CÔNG TRƯỜNG & PHÒNG ĐẤU THẦU</strong> – ${epcComp.toUpperCase()}</li>` : ''}
+            </ul>
+
+            <p>
+                Lời đầu tiên, <strong>Công ty TNHH Thương Mại Dịch Vụ Tư Vấn Song Anh (Mô hình Song Anh)</strong> xin trân trọng gửi lời chào và lời chúc mừng nồng nhiệt nhất đến Quý Chủ đầu tư ${epcComp ? 'và Quý Tổng thầu' : ''} nhân dịp Dự án <strong>${pName} (${pScale})</strong> đã chính thức khởi công xây dựng vào ngày ${eDate}!
+            </p>
+
+            <p>
+                Nhằm phục vụ cho công tác trưng bày tại <strong>${dLoc}</strong>, cũng như đón tiếp các đoàn công tác của Lãnh đạo Chính phủ, các Bộ ban ngành, Tỉnh ủy và các đối tác tài chính, Mô hình Song Anh trân trọng gửi Thư ngỏ đề xuất giải pháp:
+            </p>
+
+            <p style="text-align: center; margin: 12px 0;">
+                <strong style="color: #b78a38; font-size: 14.5px;">👉 THI CÔNG SA BÀN MÔ HÌNH QUY HOẠCH TỔNG THỂ & CÔNG NGHỆ DỰ ÁN (${sProp.toUpperCase()})</strong>
+            </p>
+
+            <div class="section-title">1. VỀ NĂNG LỰC CỦA MÔ HÌNH SONG ANH:</div>
+            <ul>
+                <li><strong>Hơn 15 năm kinh nghiệm chuyên sâu:</strong> Chuyên gia công sa bàn quy hoạch công nghiệp, nhà máy năng lượng, khu đô thị quy mô lớn trên toàn quốc.</li>
+                <li><strong>Công nghệ chế tác hiện đại:</strong> Làm chủ 100% công nghệ gia công Laser/CNC độ chính xác 0.05mm và công nghệ in 3D. Sử dụng vật liệu Mica Đài Loan chịu nhiệt, sơn ICI/Joton chống phai màu, hệ thống đèn LED 12V an toàn chống cháy nổ.</li>
+                <li><strong>Tối ưu chi phí & Tiến độ cam kết:</strong> Sản xuất trực tiếp tại xưởng, không qua trung gian, cam kết bảo hành kỹ thuật 12 tháng tận nơi.</li>
+            </ul>
+
+            <div class="section-title">2. CÁC HẠNG MỤC MÔ PHỎNG CHI TIẾT TRÊN SA BÀN:</div>
+            <ul>
+                <li>Tái hiện sắc nét toàn bộ không gian quy hoạch: ${mItems}.</li>
+                <li>Hệ thống đèn LED phân khu thông minh: Chiếu sáng đường giao thông, đèn hắt khối công trình và đèn cảnh báo kỹ thuật an toàn.</li>
+            </ul>
+
+            <div class="section-title">3. ĐỀ XUẤT HỖ TRỢ ĐẶC BIỆT CHO DỰ ÁN:</div>
+            <p>
+                Mô hình Song Anh sẵn sàng tiếp nhận file bản vẽ mặt bằng tổng thể (CAD/PDF) để <strong>KHẢO SÁT, THIẾT KẾ PHỐI CẢNH 3D KÍCH THƯỚC BỤC CHÂN BÀN VÀ LẬP DỰ TOÁN BÁO GIÁ CHI TIẾT HOÀN TOÀN MIỄN PHÍ</strong> trong vòng 24 giờ.
+            </p>
+
+            <p>
+                Chúng tôi rất mong có cơ hội được đón tiếp Quý Lãnh đạo ghé thăm xưởng sản xuất hoặc được trực tiếp trình bày phương án tại Văn phòng Quý Công ty.
+            </p>
+
+            <p>
+                Kính chúc Dự án <strong>${pName}</strong> thi công an toàn, đúng tiến độ và thành công rực rỡ!
+            </p>
+
+            <div class="signature-block">
+                <div></div>
+                <div class="signature-inner">
+                    <p style="font-style: italic; font-size: 13px; margin-bottom: 4px;">${dateStr}</p>
+                    <p style="font-weight: bold; font-size: 13px;">ĐẠI DIỆN CÔNG TY SONG ANH</p>
+                    <p style="color: #555; font-size: 12px; margin-bottom: 50px;">GIÁM ĐỐC</p>
+                    <p style="font-weight: bold; font-size: 14.5px; text-transform: uppercase;">MAI XUÂN THIỆN</p>
+                </div>
+            </div>
+        `;
+        document.getElementById('previewPane').innerHTML = html;
+    }
+
+    function createAndOpenGoogleDoc() {
+        const previewContent = document.getElementById('previewPane').innerHTML;
+        
+        // Copy formatted HTML to clipboard
+        const blob = new Blob([previewContent], { type: 'text/html' });
+        const textBlob = new Blob([document.getElementById('previewPane').innerText], { type: 'text/plain' });
+        const item = new ClipboardItem({
+            'text/html': blob,
+            'text/plain': textBlob
+        });
+
+        navigator.clipboard.write([item]).then(() => {
+            const notif = document.getElementById('notif');
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 5000);
+            
+            // Open docs.new in new tab
+            window.open('https://docs.new', '_blank');
+        }).catch(err => {
+            alert("Đã mở Google Docs. Bạn hãy nhấn phím (Ctrl + V) để dán Thư Ngỏ vào!");
+            window.open('https://docs.new', '_blank');
+        });
+    }
+
+    function downloadWordDoc() {
+        const pName = document.getElementById('projectName').value;
+        const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+            "xmlns='http://www.w3.org/TR/REC-html40'>"+
+            "<head><meta charset='utf-8'><title>Thư Ngỏ Song Anh</title></head><body>";
+        const footer = "</body></html>";
+        const sourceHTML = header + document.getElementById("previewPane").innerHTML + footer;
+        
+        const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+        const fileDownload = document.createElement("a");
+        document.body.appendChild(fileDownload);
+        fileDownload.href = source;
+        fileDownload.download = `Thu_Ngo_Chao_Thau_${pName.replace(/\\s+/g, '_')}_Song_Anh.doc`;
+        fileDownload.click();
+        document.body.removeChild(fileDownload);
+    }
+
+    function printDoc() {
+        const printContents = document.getElementById('previewPane').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    }
+
+    function copyZaloMessage() {
+        const pName = document.getElementById('projectName').value;
+        const msg = `Dạ em chào Anh/Chị - Ban Quản lý Dự án ${pName} ạ!\n\nEm là Mai Xuân Thiện đại diện Công ty Mô Hình Song Anh (Website: mohinhkientruc.org - Hotline: 0929.22.4444).\n\nLời đầu tiên xin chúc mừng bên mình dự án ${pName} đã chính thức khởi công xây dựng! 💐\n\nXưởng Mô hình Song Anh bên em chuyên gia công sa bàn quy hoạch nhà máy năng lượng & công nghiệp lớn (15+ năm kinh nghiệm) phục vụ trưng bày tại Nhà Điều Hành Dự Án và đón tiếp các đoàn Lãnh đạo cấp cao kiểm tra tiến độ.\n\nBên em sản xuất trực tiếp tại xưởng bằng máy CNC/Laser độ nét cao, hệ thống LED 12V an toàn và khung bục gỗ MDF chống ẩm bảo hành 12 tháng tận nơi.\n\nNếu bên mình đang chuẩn bị mặt bằng trưng bày sa bàn tại nhà điều hành công trường, em xin phép gửi qua Anh/Chị Hồ sơ năng lực và hỗ trợ lên phương án kích thước - tỷ lệ cùng bảng dự toán sơ bộ để bên mình tham khảo hoàn toàn miễn phí nhé ạ! 🙏`;
+        navigator.clipboard.writeText(msg).then(() => {
+            alert("✅ Đã sao chép tin nhắn Zalo 1-1 vào bộ nhớ đệm! Bạn có thể dán vào Zalo gửi ngay.");
+        });
+    }
+
+    // Init on load
+    window.onload = function() {
+        updatePreview();
+    };
+</script>
+</body>
+</html>

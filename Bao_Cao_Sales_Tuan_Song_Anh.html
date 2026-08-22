@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Sale Hàng Tuần - Mô Hình Song Anh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B5952F;
+            --rich-black: #111827;
+            --slate-gray: #4B5563;
+            --light-bg: #F3F4F6;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background-color: #374151; padding: 2rem 0; }
+        
+        .a4-page {
+            background: var(--white); width: 297mm; min-height: 210mm; margin: 0 auto 20px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--rich-black) 0%, #1F2937 100%);
+            padding: 12mm 20mm 8mm 20mm; display: flex; justify-content: space-between; align-items: center;
+            color: var(--white); border-bottom: 5px solid var(--primary-gold); position: relative;
+        }
+        .header::after {
+            content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.1));
+        }
+        
+        .logo-box { background: var(--white); padding: 8px 14px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .logo-text { font-size: 18px; font-weight: 700; color: var(--rich-black); letter-spacing: 1px; }
+        
+        .report-title { text-align: right; z-index: 1; }
+        .report-title h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--primary-gold); margin-bottom: 2px; }
+        .report-title p { font-size: 12.5px; color: #E5E7EB; font-weight: 400; }
+        
+        .content { padding: 8mm 20mm 12mm 20mm; flex-grow: 1; }
+        .section-header { font-size: 16px; font-weight: 600; color: var(--rich-black); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .section-header::before { content: ''; display: block; width: 5px; height: 18px; background: var(--primary-gold); border-radius: 3px; }
+        
+        /* KPI GRID */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+        .kpi-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; position: relative; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--primary-gold); }
+        .kpi-title { font-size: 10.5px; color: var(--slate-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+        .kpi-value { font-size: 26px; font-weight: 700; color: var(--rich-black); line-height: 1; }
+        .kpi-sub { font-size: 11px; color: var(--slate-gray); margin-top: 4px; }
+        
+        /* NGUỒN KHÁCH HÀNG MINI BADGES */
+        .source-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; background: var(--light-bg); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; }
+        .source-pill { background: var(--white); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); font-weight: 500; }
+        .source-pill strong { color: var(--dark-gold); }
+
+        /* TABLES */
+        .table-container { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        thead { background: var(--light-bg); }
+        th { padding: 8px 10px; text-align: left; font-weight: 600; color: var(--slate-gray); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 8px 10px; color: var(--rich-black); border-bottom: 1px solid var(--border); }
+        tbody tr:nth-child(even) { background: #F9FAFB; }
+        
+        .badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 12px; font-weight: 600; font-size: 10px; }
+        .bg-gold { background: rgba(212, 175, 55, 0.15); color: var(--dark-gold); }
+        .bg-blue { background: rgba(59, 130, 246, 0.15); color: #2563EB; }
+        .bg-green { background: rgba(16, 185, 129, 0.15); color: #059669; }
+        .bg-gray { background: #E5E7EB; color: #4B5563; }
+        .bg-purple { background: rgba(168, 85, 247, 0.15); color: #7e22ce; }
+        
+        .footer { margin-top: auto; text-align: center; font-size: 10px; color: #9CA3AF; border-top: 1px solid var(--border); padding-top: 8px; }
+
+        /* TOP ACTION BAR */
+        .action-bar { max-width: 297mm; margin: 0 auto 12px auto; display: flex; justify-content: flex-end; gap: 10px; }
+        .btn { background: #1F2937; color: #fff; border: 1px solid var(--primary-gold); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .btn:hover { background: #374151; }
+        
+        @media print {
+            body { background: transparent; padding: 0; }
+            .a4-page { box-shadow: none; margin: 0; page-break-after: always; }
+            .action-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="action-bar">
+        <button class="btn" onclick="window.print()">🖨️ In / Lưu PDF A4</button>
+        <button class="btn" onclick="copyQuickZalo()">📋 Sao Chép Báo Cáo Zalo</button>
+    </div>
+
+    <!-- ==================== TRANG 1: TỔNG QUAN KHÁCH HÀNG MỚI & NGUỒN LIÊN HỆ ==================== -->
+    <div class="a4-page">
+        <div class="header">
+            <div class="logo-box">
+                <div class="logo-text">MÔ HÌNH SONG ANH</div>
+            </div>
+            <div class="report-title">
+                <h1>BÁO CÁO SALE HÀNG TUẦN</h1>
+                <p>Báo cáo Sale - Người thực hiện: <strong>Phạm Hoàng Tiến</strong> và <strong>Võ Minh Sang</strong></p>
+                <p style="color: var(--primary-gold); margin-top: 2px;" id="dateText">Thứ Bảy, Tuần này</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2 class="section-header">Chỉ Số Tổng Quan Tình Trạng Đơn Hàng (Tuần Này)</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Khách hàng liên hệ tuần này</div>
+                    <div class="kpi-value" style="color: var(--dark-gold);">08</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Đơn hàng ký trong tuần</div>
+                    <div class="kpi-value" style="color: #059669;">02</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Đơn hàng đang báo giá</div>
+                    <div class="kpi-value" style="color: #2563EB;">04</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Đơn hàng đang thi công</div>
+                    <div class="kpi-value" style="color: #4B5563;">03</div>
+                </div>
+            </div>
+
+            <h2 class="section-header">Phân Bổ Nguồn Khách Hàng Mới Tiếp Nhận Trong Tuần</h2>
+            <div class="source-bar">
+                <div class="source-pill">📞 Hotline Sếp: <strong>02 Khách</strong></div>
+                <div class="source-pill">📱 Số Tiến (Zalo/ĐT): <strong>03 Khách</strong></div>
+                <div class="source-pill">📱 Số Sang (Zalo/ĐT): <strong>02 Khách</strong></div>
+                <div class="source-pill">📘 Facebook Fanpage: <strong>01 Khách</strong></div>
+                <div class="source-pill">🌐 Website / Khác: <strong>00 Khách</strong></div>
+            </div>
+
+            <h2 class="section-header">Danh Sách Khách Hàng Mới Trong Tuần</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 4%;">#</th>
+                            <th style="width: 32%;">TÊN DỰ ÁN &amp; KHÁCH HÀNG</th>
+                            <th style="width: 14%;">NGUỒN KHÁCH</th>
+                            <th style="width: 14%;">NGƯỜI TƯ VẤN</th>
+                            <th style="width: 12%;">NGÀY LH</th>
+                            <th style="width: 24%;">TRẠNG THÁI ĐƠN HÀNG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td style="font-weight: 500;">Sa bàn Dự án Hướng Dương - Mr. Việt Bách (CONA LAND)</td>
+                            <td><span class="badge bg-purple">Hotline Sếp</span></td>
+                            <td>Tiến &amp; Sang</td>
+                            <td>20/08/2026</td>
+                            <td><span class="badge bg-green">🤝 Hợp đồng</span></td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td style="font-weight: 500;">Mô hình Nhà máy chế biến - Cty XD Nam Phát</td>
+                            <td><span class="badge bg-blue">Số Sang</span></td>
+                            <td>Sang</td>
+                            <td>19/08/2026</td>
+                            <td><span class="badge bg-green">🤝 Hợp đồng</span></td>
+                        </tr>
+                        <tr>
+                            <td>03</td>
+                            <td style="font-weight: 500;">Khu Dân Cư Sinh Thái (1/200) - CĐT Hưng Phát</td>
+                            <td><span class="badge bg-blue">Số Tiến</span></td>
+                            <td>Tiến</td>
+                            <td>18/08/2026</td>
+                            <td><span class="badge bg-gold">🧾 Báo giá</span></td>
+                        </tr>
+                        <tr>
+                            <td>04</td>
+                            <td style="font-weight: 500;">Quy Hoạch KCN Bến Lức (1/1000) - Cty Kiến Trúc X</td>
+                            <td><span class="badge bg-purple">Facebook</span></td>
+                            <td>Tiến &amp; Sang</td>
+                            <td>17/08/2026</td>
+                            <td><span class="badge bg-gold">🧾 Báo giá</span></td>
+                        </tr>
+                        <tr>
+                            <td>05</td>
+                            <td style="font-weight: 500;">Sa bàn Tòa nhà học tập (1/100) - Trường Quốc Tế V</td>
+                            <td><span class="badge bg-blue">Số Sang</span></td>
+                            <td>Sang</td>
+                            <td>16/08/2026</td>
+                            <td><span class="badge bg-gray">💬 Tư vấn</span></td>
+                        </tr>
+                        <tr>
+                            <td>06</td>
+                            <td style="font-weight: 500;">Mô hình thiết bị công nghiệp - Ms. Thúy Nhi</td>
+                            <td><span class="badge bg-blue">Số Tiến</span></td>
+                            <td>Tiến</td>
+                            <td>16/08/2026</td>
+                            <td><span class="badge bg-gold">💬 Tư vấn</span></td>
+                        </tr>
+                        <tr>
+                            <td>07</td>
+                            <td style="font-weight: 500;">Sửa chữa sa bàn - Cty Quảng Cáo Ý Tưởng Mới</td>
+                            <td><span class="badge bg-purple">Hotline Sếp</span></td>
+                            <td>Sang</td>
+                            <td>15/08/2026</td>
+                            <td><span class="badge bg-blue">💬 Tư vấn</span></td>
+                        </tr>
+                        <tr>
+                            <td>08</td>
+                            <td style="font-weight: 500;">Sa bàn Cảng Logistics - Vina Logistics</td>
+                            <td><span class="badge bg-blue">Số Tiến</span></td>
+                            <td>Tiến</td>
+                            <td>15/08/2026</td>
+                            <td><span class="badge bg-gold">💬 Tư vấn</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>          <td><span class="badge bg-blue">Số Tiến</span></td>
+                            <td>Tiến</td>
+                            <td>15/08/2026</td>
+                            <td><span class="badge bg-gold">💬 Đang tư vấn</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer">
+                Tài liệu Báo cáo Sale nội bộ • Mô hình Kiến trúc Song Anh • Người thực hiện: Phạm Hoàng Tiến & Võ Minh Sang
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TRANG 2: CHI TIẾT DỰ ÁN THEO TRẠNG THÁI ĐƠN HÀNG ==================== -->
+    <div class="a4-page">
+        <div class="header" style="padding: 10mm 20mm; border-bottom: 3px solid var(--primary-gold);">
+            <div class="report-title" style="text-align: left;">
+                <h1 style="font-size: 19px;">CHI TIẾT DỰ ÁN THEO TRẠNG THÁI ĐƠN HÀNG</h1>
+                <p>Theo dõi tình trạng: Tư Vấn, Báo Giá, Hợp Đồng Chốt, Dự Án Đang Làm &amp; Bàn Giao</p>
+            </div>
+            <div class="logo-box">
+                <div class="logo-text" style="font-size: 15px;">MÔ HÌNH SONG ANH</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 1. Hợp đồng -->
+            <div class="table-container" style="margin-bottom: 14px;">
+                <table>
+                    <thead>
+                        <tr style="background-color: #059669; color: white;">
+                            <th colspan="5" style="font-weight: 700; font-size: 11.5px; padding: 6px 10px; text-transform: uppercase;">
+                                🤝 Hợp Đồng Đã Chốt Mới &amp; Tạm Ứng (2 Dự án)
+                            </th>
+                        </tr>
+                        <tr style="background-color: #F3F4F6; color: var(--slate-gray);">
+                            <th style="width: 4%;">#</th>
+                            <th style="width: 32%;">TÊN DỰ ÁN</th>
+                            <th style="width: 12%;">NGÀY LH</th>
+                            <th style="width: 18%;">NGƯỜI PHỤ TRÁCH (SALE)</th>
+                            <th style="width: 34%;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td style="font-weight: 500;">Sa bàn Dự án Hướng Dương - Mr. Việt Bách (CONA LAND)</td>
+                            <td>20/08</td>
+                            <td>Tiến &amp; Sang</td>
+                            <td>Đã nhận cọc 40% (66.4tr) ⇒ Đang cắt laser mica và lên bục gỗ</td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td style="font-weight: 500;">Mô hình Nhà máy chế biến - Cty XD Nam Phát</td>
+                            <td>19/08</td>
+                            <td>Sang</td>
+                            <td>Đã ký HĐ và nhận cọc 40% (34tr) ⇒ Tiến độ giao 20 ngày</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 2. Báo giá -->
+            <div class="table-container" style="margin-bottom: 14px;">
+                <table>
+                    <thead>
+                        <tr style="background-color: var(--primary-gold); color: white;">
+                            <th colspan="5" style="font-weight: 700; font-size: 11.5px; padding: 6px 10px; text-transform: uppercase;">
+                                🧾 Đang Báo Giá &amp; Đàm Phán (3 Dự án)
+                            </th>
+                        </tr>
+                        <tr style="background-color: #F3F4F6; color: var(--slate-gray);">
+                            <th style="width: 4%;">#</th>
+                            <th style="width: 32%;">TÊN DỰ ÁN</th>
+                            <th style="width: 12%;">NGÀY LH</th>
+                            <th style="width: 18%;">NGƯỜI PHỤ TRÁCH (SALE)</th>
+                            <th style="width: 34%;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td style="font-weight: 500;">Khu Dân Cư Sinh Thái (1/200) - CĐT Hưng Phát</td>
+                            <td>18/08</td>
+                            <td>Tiến</td>
+                            <td>Khách xin giảm 5% ⇒ Đề xuất giữ giá tặng nâng cấp bục alu xước</td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td style="font-weight: 500;">Quy Hoạch KCN Bến Lức (1/1000) - Cty Kiến Trúc X</td>
+                            <td>17/08</td>
+                            <td>Tiến &amp; Sang</td>
+                            <td>Đã gửi báo giá, khách đang trình ban giám đốc duyệt kinh phí</td>
+                        </tr>
+                        <tr>
+                            <td>03</td>
+                            <td style="font-weight: 500;">Mô hình nội thất - LG - Ms Ngọc Tuyền</td>
+                            <td>31/07</td>
+                            <td>Sang</td>
+                            <td>Đã gửi báo giá cho khách ⇒ Khách chưa phản hồi</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 3. Dự án đang làm (KÈM KỸ THUẬT) -->
+            <div class="table-container" style="margin-bottom: 14px;">
+                <table>
+                    <thead>
+                        <tr style="background-color: #4B5563; color: white;">
+                            <th colspan="5" style="font-weight: 700; font-size: 11.5px; padding: 6px 10px; text-transform: uppercase;">
+                                🏗️ Dự Án Đang Làm (2 Dự án)
+                            </th>
+                        </tr>
+                        <tr style="background-color: #F3F4F6; color: var(--slate-gray);">
+                            <th style="width: 4%;">#</th>
+                            <th style="width: 30%;">TÊN DỰ ÁN</th>
+                            <th style="width: 16%;">NGƯỜI PHỤ TRÁCH (SALE)</th>
+                            <th style="width: 20%;">NGƯỜI THỰC HIỆN (KỸ THUẬT)</th>
+                            <th style="width: 30%;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td style="font-weight: 500;">Sa bàn Đô Thị Phú Mỹ (Tỷ lệ 1/500)</td>
+                            <td>Sang</td>
+                            <td style="color: #0284C7; font-weight: 600;">A. Nam (Xưởng Laser/CNC)</td>
+                            <td>Tiến độ 75%: Khối nhà đã sơn xong, đang lên thảm cỏ và test LED</td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td style="font-weight: 500;">Dự án EZ Land - Bản đồ treo tường</td>
+                            <td>Sang</td>
+                            <td style="color: #0284C7; font-weight: 600;">A. Hùng (Bục gỗ/Khung)</td>
+                            <td>Tiến độ 50%: Đang gia công khung gỗ MDF 18mm và đi LED 12V</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4. Thanh toán & Bàn giao -->
+            <div class="table-container" style="margin-bottom: 14px;">
+                <table>
+                    <thead>
+                        <tr style="background-color: #7C3AED; color: white;">
+                            <th colspan="5" style="font-weight: 700; font-size: 11.5px; padding: 6px 10px; text-transform: uppercase;">
+                                💸 Thanh Toán &amp; Bàn Giao (2 Dự án)
+                            </th>
+                        </tr>
+                        <tr style="background-color: #F3F4F6; color: var(--slate-gray);">
+                            <th style="width: 4%;">#</th>
+                            <th style="width: 30%;">TÊN DỰ ÁN</th>
+                            <th style="width: 16%;">NGƯỜI PHỤ TRÁCH (SALE)</th>
+                            <th style="width: 20%;">NGƯỜI THỰC HIỆN (KỸ THUẬT)</th>
+                            <th style="width: 30%;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td style="font-weight: 500;">Sa bàn Nhà máy Trần Đức - Cty TDH</td>
+                            <td>Tiến</td>
+                            <td style="color: #0284C7; font-weight: 600;">A. Tuấn (Lắp ráp &amp; Đóng thùng)</td>
+                            <td>Đã hoàn thiện 100% tại xưởng ⇒ Chờ lịch xuất xưởng bàn giao</td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td style="font-weight: 500;">Sa bàn trụ sở Cục CN An Ninh Đông Anh</td>
+                            <td>Tiến</td>
+                            <td style="color: #0284C7; font-weight: 600;">A. Dũng (Kỹ thuật hiện trường)</td>
+                            <td>Khách đã thanh toán đợt 1/2, nghiệm thu hoàn tất xuất sắc</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer">
+                Tài liệu Báo cáo Sale nội bộ • Mô hình Kiến trúc Song Anh • Trang 2/2
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const today = new Date();
+        document.getElementById('dateText').innerText = `Thứ Bảy, ngày ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+
+        function copyQuickZalo() {
+            const text = `📊 BÁO CÁO SALE HÀNG TUẦN\n` +
+                `Người thực hiện: Phạm Hoàng Tiến và Võ Minh Sang\n` +
+                `Thời gian: Thứ Bảy (${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()})\n\n` +
+                `🎯 1. NGUỒN KHÁCH HÀNG MỚI (8 Khách):\n` +
+                `- Hotline Sếp: 2 khách\n` +
+                `- Số Tiến (Zalo/ĐT): 3 khách\n` +
+                `- Số Sang (Zalo/ĐT): 2 khách\n` +
+                `- Facebook Fanpage: 1 khách\n\n` +
+                `📋 2. TÌNH TRẠNG ĐƠN HÀNG:\n` +
+                `✅ Đơn chốt mới: 2 đơn (Dự án Hướng Dương - Cona Land & Nhà máy Nam Phát)\n` +
+                `🧾 Đơn đang báo giá: 3 đơn (KDC Hưng Phát, KCN Bến Lức, Trường Quốc tế V)\n` +
+                `🏭 Đơn đang thi công xưởng: 3 đơn (Sa bàn Trần Đức đã xong 100% chờ giao)\n\n` +
+                `⚠️ Việc trọng tâm tuần tới: Xuất xưởng giao sa bàn Trần Đức & chốt cọc đơn Hưng Phát.`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert("✅ Đã sao chép nội dung Báo cáo Sale! Bạn có thể dán vào Zalo gửi ngay.");
+            });
+        }
+    </script>
+</body>
+</html>
