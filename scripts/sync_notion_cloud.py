@@ -272,4 +272,40 @@ for filename in ["index.html", "App_Sale_Song_Anh.html"]:
         f.write(html)
     print(f"✅ Updated {filename} successfully!", flush=True)
 
+# 5. Send Telegram Notification to Sếp Tiến
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or "8852452435:AAE9UYCPdCECPDfiV8M3cq2oycFqXV_wMpg"
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or 1730306144
+
+try:
+    time_str = now_vn.strftime("%H:%M - %d/%m/%Y")
+    top_leads_txt = ""
+    for idx, p in enumerate(week_leads[:4]):
+        top_leads_txt += f"  {idx+1}. {p['name']} ({p['source']})\n"
+
+    msg = (
+        f"📊 *BÁO CÁO ĐỒNG BỘ NOTION SALES (SONG ANH)*\n"
+        f"⏰ *Cập nhật:* {time_str}\n\n"
+        f"• 🟡 *Khách liên hệ tuần:* `{lead_str}` khách\n"
+        f"• 🟢 *Đang làm hợp đồng:* `{hd_str}` đơn\n"
+        f"• 🔵 *Đang báo giá:* `{bg_str}` đơn\n"
+        f"• ⚪ *Đang làm tại xưởng:* `{dl_str}` đơn\n"
+        f"• 💸 *Bàn giao & thanh toán:* `0{cnt_tt}` đơn\n"
+        f"• 💬 *Đang tư vấn:* `{cnt_tv}` đơn\n"
+        f"✨ *Tổng Active Pipeline:* `{cnt_total}` dự án\n\n"
+        f"🎯 *Dự án mới tiếp nhận gần nhất:*\n{top_leads_txt}\n"
+        f"🔗 [Bấm vào đây để mở Web App](https://songanh-sale.phamhoangtien1300.workers.dev/)"
+    )
+    t_res = requests.post(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", json={
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": msg,
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": True
+    }, timeout=10)
+    if t_res.status_code == 200:
+        print("✅ Telegram notification sent successfully to Sếp Tiến!", flush=True)
+    else:
+        print(f"⚠️ Telegram send status: {t_res.status_code} - {t_res.text}", flush=True)
+except Exception as e:
+    print(f"⚠️ Telegram notification error: {e}", flush=True)
+
 print("🎉 Complete! Web app updated ready for deployment.", flush=True)
