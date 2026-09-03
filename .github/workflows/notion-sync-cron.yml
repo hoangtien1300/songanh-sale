@@ -1,0 +1,38 @@
+name: Auto Sync Notion Sales to Web App
+
+on:
+  schedule:
+    # Chạy tự động lúc 07:30, 11:30, 17:30, 21:00 hàng ngày theo giờ VN (UTC+7 -> UTC: 00:30, 04:30, 10:30, 14:30)
+    - cron: '30 0,4,10,14 * * 1-6'
+  workflow_dispatch: # Cho phép bấm nút Sync thủ công bất kỳ lúc nào trên GitHub
+
+jobs:
+  sync-notion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Fetch Notion Data & Update Web App
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          python scripts/sync_notion_cloud.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "Song Anh AI Agent"
+          git config --global user.email "agent@songanhmodel.vn"
+          git add index.html App_Sale_Song_Anh.html Bao_Cao_Sales_Tuan_Song_Anh.html
+          git diff --quiet && git diff --staged --quiet || (git commit -m "auto(sync): Cloud scheduled sync from Notion BẢNG DS DỰ ÁN [skip ci]" && git push origin main)
