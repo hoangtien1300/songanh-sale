@@ -6,8 +6,12 @@ Cloud Notion Synchronizer for GitHub Actions (Ubuntu runner compatible)
 import json
 import re
 import os
+import sys
 import datetime
 import requests
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 if not NOTION_TOKEN:
