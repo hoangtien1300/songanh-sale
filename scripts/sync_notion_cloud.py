@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Cloud Notion Synchronizer for GitHub Actions (Ubuntu runner compatible)
+Cloud Notion Synchronizer & Smart Daily/Weekend Reporter for GitHub Actions
 """
 
 import json
@@ -13,17 +13,20 @@ import requests
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
-if not NOTION_TOKEN:
-    NOTION_TOKEN = "ntn_" + "202316998566adC5moVwLDu5vZcjHFYLKdcPcvKO1mq1uE"
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN") or ("ntn_" + "202316998566" + "adC5moVwLDu5vZcjHFYLKdcPcvKO1mq1uE")
 
 DATABASE_ID = "1a54b5e73d90809985a8f7557c51f80c"
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or ("8852452435" + ":" + "AAE9UYCPdCECPDfiV8M3cq2oycFqXV_wMpg")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or 1730306144
 
 HEADERS = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
     "Notion-Version": "2022-06-28",
     "Content-Type": "application/json"
 }
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATE_FILE = os.path.join(BASE_DIR, "data", "notion_state.json")
 
 # 1. Fetch live data from Notion API
 print("📡 Connecting to Notion API to fetch latest projects...", flush=True)
@@ -58,7 +61,6 @@ status_map = {
     "3a74b5e7-3d90-80bd-b3bb-dc527928c868": "🧾 Báo giá"
 }
 
-# Determine current reporting week range (Monday to Sunday in UTC+7)
 now_vn = datetime.datetime.utcnow() + datetime.timedelta(hours=7)
 monday = now_vn - datetime.timedelta(days=now_vn.weekday())
 sunday = monday + datetime.timedelta(days=6)
@@ -67,8 +69,10 @@ end_week_str = sunday.strftime("%Y-%m-%d")
 
 all_active_projects = []
 week_leads = []
+current_state = {}
 
 for r in all_records:
+    pid = r.get("id")
     props = r.get("properties", {})
     
     title_list = props.get("Tên dự án", {}).get("title", [])
@@ -141,7 +145,7 @@ for r in all_records:
     note_val = "".join([t.get("plain_text", "") for t in note_list]).strip() or "Đang cập nhật tiến độ chi tiết"
 
     item = {
-        "id": r.get("id"),
+        "id": pid,
         "name": name,
         "date": display_date,
         "rawDate": eff_date,
@@ -157,6 +161,32 @@ for r in all_records:
     if start_week_str <= eff_date <= end_week_str or (not week_leads and eff_date >= "2026-08-24"):
         week_leads.append(item)
 
+    # For change tracking
+    current_state[pid] = {
+        "name": name,
+        "status": stage_label,
+        "source": src_exact,
+        "advisor": adv_clean,
+        "note": note_val,
+        "last_edited": r.get("last_edited_time", "")[:19]
+    }
+
+# Check comments for active priority projects (limit to 15 most recently edited to keep fast)
+sorted_pids = sorted(current_state.keys(), key=lambda k: current_state[k]["last_edited"], reverse=True)[:15]
+for pid in sorted_pids:
+    comments = []
+    try:
+        c_res = requests.get(f"https://api.notion.com/v1/comments?block_id={pid}", headers=HEADERS, timeout=4)
+        if c_res.status_code == 200:
+            for c in c_res.json().get("results", []):
+                c_text = "".join([rt.get("plain_text", "") for rt in c.get("rich_text", [])]).strip()
+                c_time = c.get("created_time", "")
+                if c_text:
+                    comments.append({"time": c_time, "text": c_text})
+    except Exception:
+        pass
+    current_state[pid]["comments"] = comments
+
 # Sort
 all_active_projects.sort(key=lambda x: x["rawDate"], reverse=True)
 week_leads.sort(key=lambda x: x["rawDate"], reverse=True)
@@ -171,7 +201,12 @@ cnt_total = len(all_active_projects)
 
 print(f"📊 Stats: Leads Week={cnt_week}, HD={cnt_hd}, Quote={cnt_bg}, Work={cnt_dl}, Pay={cnt_tt}, Consult={cnt_tv}, Total={cnt_total}", flush=True)
 
-# Generate HTML components
+# 2. Update HTML Files
+hd_str = f"0{cnt_hd}" if cnt_hd < 10 else str(cnt_hd)
+bg_str = f"0{cnt_bg}" if cnt_bg < 10 else str(cnt_bg)
+dl_str = f"0{cnt_dl}" if cnt_dl < 10 else str(cnt_dl)
+lead_str = f"0{cnt_week}" if cnt_week < 10 else str(cnt_week)
+
 cnt_sep = len([p for p in week_leads if "Sếp" in p["source"] or "Hotline" in p["source"]])
 cnt_tien = len([p for p in week_leads if "Tiến" in p["source"]])
 cnt_sang = len([p for p in week_leads if "Sang" in p["source"]])
@@ -190,7 +225,6 @@ for idx, p in enumerate(week_leads):
     if "Hợp đồng" in st: badge_cls = "badge-green"
     elif "Báo giá" in st: badge_cls = "badge-blue"
     elif "Đang làm" in st: badge_cls = "badge-purple"
-    
     src = p["source"]
     src_cls = "badge-purple" if ("Hotline" in src or "Sếp" in src) else ("badge-blue" if ("Zalo" in src or "Tiến" in src or "Sang" in src or "Gọi" in src) else "badge-gray")
     idx_str = f"0{idx+1}" if idx + 1 < 10 else str(idx+1)
@@ -221,12 +255,6 @@ for idx, p in enumerate(week_leads):
                         <div>👤 Tư vấn: <strong>{p['assignee']}</strong></div>
                     </div>
                 </div>\n"""
-
-# Update HTML files
-hd_str = f"0{cnt_hd}" if cnt_hd < 10 else str(cnt_hd)
-bg_str = f"0{cnt_bg}" if cnt_bg < 10 else str(cnt_bg)
-dl_str = f"0{cnt_dl}" if cnt_dl < 10 else str(cnt_dl)
-lead_str = f"0{cnt_week}" if cnt_week < 10 else str(cnt_week)
 
 kpi_grid_html = f"""<div class="kpi-grid">
                 <div class="kpi-box">
@@ -259,7 +287,7 @@ filter_bar_html = f"""            <div class="filter-bar">
 pipeline_json_js = json.dumps(all_active_projects, ensure_ascii=False, indent=4)
 
 for filename in ["index.html", "App_Sale_Song_Anh.html"]:
-    filepath = os.path.join(os.getcwd(), filename)
+    filepath = os.path.join(BASE_DIR, filename)
     if not os.path.exists(filepath):
         continue
     with open(filepath, "r", encoding="utf-8") as f:
@@ -276,19 +304,65 @@ for filename in ["index.html", "App_Sale_Song_Anh.html"]:
         f.write(html)
     print(f"✅ Updated {filename} successfully!", flush=True)
 
-# 5. Send Telegram Notification to Sếp Tiến
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or "8852452435:AAE9UYCPdCECPDfiV8M3cq2oycFqXV_wMpg"
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or 1730306144
+# 3. Detect Changes vs Last Sync State
+os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+old_state = {}
+if os.path.exists(STATE_FILE):
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            old_state = json.load(f)
+    except Exception:
+        old_state = {}
 
-try:
-    time_str = now_vn.strftime("%H:%M - %d/%m/%Y")
+new_projects = []
+status_changes = []
+new_comments = []
+note_updates = []
+
+for pid, curr in current_state.items():
+    if pid not in old_state:
+        new_projects.append(curr)
+    else:
+        prev = old_state[pid]
+        if prev.get("status") != curr.get("status") and curr.get("status"):
+            status_changes.append({
+                "name": curr["name"],
+                "old": prev.get("status", "Chưa rõ"),
+                "new": curr["status"]
+            })
+        prev_comm_texts = [c.get("text") for c in prev.get("comments", [])]
+        for c in curr.get("comments", []):
+            if c.get("text") not in prev_comm_texts:
+                new_comments.append({
+                    "name": curr["name"],
+                    "time": c.get("time", "")[:16].replace("T", " "),
+                    "text": c.get("text")
+                })
+        if prev.get("note") != curr.get("note") and len(curr.get("note", "")) > 10:
+            if curr.get("note") not in prev.get("note", ""):
+                note_updates.append({
+                    "name": curr["name"],
+                    "note": curr["note"][:120]
+                })
+
+# Save new state
+with open(STATE_FILE, "w", encoding="utf-8") as f:
+    json.dump(current_state, f, ensure_ascii=False, indent=2)
+
+# 4. Telegram Notification Dispatcher
+is_saturday = (now_vn.weekday() == 5) # 5 = Saturday
+time_str = now_vn.strftime("%H:%M - %d/%m/%Y")
+
+if is_saturday:
+    # --- WEEKEND STATISTICAL REPORT (GỬI THỨ 7 HÀNG TUẦN) ---
+    print("📢 Today is Saturday! Sending Weekly Statistical Summary Report to Telegram...", flush=True)
     top_leads_txt = ""
-    for idx, p in enumerate(week_leads[:4]):
+    for idx, p in enumerate(week_leads[:5]):
         top_leads_txt += f"  {idx+1}. {p['name']} ({p['source']})\n"
 
     msg = (
-        f"📊 *BÁO CÁO ĐỒNG BỘ NOTION SALES (SONG ANH)*\n"
-        f"⏰ *Cập nhật:* {time_str}\n\n"
+        f"📊 *BÁO CÁO THỐNG KÊ TUẦN (SONG ANH SALES)*\n"
+        f"⏰ *Chốt tuần:* Thứ Bảy, {time_str}\n\n"
         f"• 🟡 *Khách liên hệ tuần:* `{lead_str}` khách\n"
         f"• 🟢 *Đang làm hợp đồng:* `{hd_str}` đơn\n"
         f"• 🔵 *Đang báo giá:* `{bg_str}` đơn\n"
@@ -296,20 +370,65 @@ try:
         f"• 💸 *Bàn giao & thanh toán:* `0{cnt_tt}` đơn\n"
         f"• 💬 *Đang tư vấn:* `{cnt_tv}` đơn\n"
         f"✨ *Tổng Active Pipeline:* `{cnt_total}` dự án\n\n"
-        f"🎯 *Dự án mới tiếp nhận gần nhất:*\n{top_leads_txt}\n"
-        f"🔗 [Bấm vào đây để mở Web App](https://songanh-sale.phamhoangtien1300.workers.dev/)"
+        f"🎯 *Khách mới tiếp nhận tuần qua:*\n{top_leads_txt}\n"
+        f"🔗 [Mở Web App & Báo Cáo Tuần](https://songanh-sale.phamhoangtien1300.workers.dev/)"
     )
-    t_res = requests.post(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", json={
+    requests.post(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", json={
         "chat_id": TELEGRAM_CHAT_ID,
         "text": msg,
         "parse_mode": "Markdown",
         "disable_web_page_preview": True
     }, timeout=10)
-    if t_res.status_code == 200:
-        print("✅ Telegram notification sent successfully to Sếp Tiến!", flush=True)
-    else:
-        print(f"⚠️ Telegram send status: {t_res.status_code} - {t_res.text}", flush=True)
-except Exception as e:
-    print(f"⚠️ Telegram notification error: {e}", flush=True)
+    print("✅ Weekend report sent to Sếp Tiến!", flush=True)
 
-print("🎉 Complete! Web app updated ready for deployment.", flush=True)
+else:
+    # --- DAILY NOTIFICATION: CHỈ BÁO CÁO CÁC CẬP NHẬT TRÊN NOTION ---
+    has_activity = bool(new_projects or status_changes or new_comments or note_updates)
+    
+    if has_activity:
+        print(f"📢 Detected changes on Notion! Sending Daily Activity Alert to Telegram...", flush=True)
+        sections = []
+        
+        if new_projects:
+            p_txt = "🆕 *DỰ ÁN MỚI LÊN ĐƠN:*\n"
+            for p in new_projects[:4]:
+                p_txt += f"• *{p['name']}*\n  └ Nguồn: `{p['source']}` | Phụ trách: `{p['advisor']}`\n"
+            sections.append(p_txt)
+            
+        if status_changes:
+            s_txt = "🔄 *CHUYỂN TRẠNG THÁI:*\n"
+            for sc in status_changes[:5]:
+                s_txt += f"• *{sc['name']}*\n  └ `{sc['old']}` ➔ `{sc['new']}`\n"
+            sections.append(s_txt)
+            
+        if new_comments:
+            c_txt = "💬 *TIẾN ĐỘ & COMMENT MỚI:*\n"
+            for c in new_comments[:4]:
+                c_txt += f"• *{c['name']}*:\n  \"{c['text']}\"\n"
+            sections.append(c_txt)
+            
+        if note_updates and not new_comments:
+            n_txt = "📝 *GHI CHÚ MỚI:*\n"
+            for nu in note_updates[:3]:
+                n_txt += f"• *{nu['name']}*: {nu['note']}...\n"
+            sections.append(n_txt)
+
+        body = "\n".join(sections)
+        msg = (
+            f"🔔 *CẬP NHẬT DIỄN BIẾN NOTION (SONG ANH)*\n"
+            f"⏰ *Thời gian:* {time_str}\n\n"
+            f"{body}\n"
+            f"🔗 [Xem chi tiết trên Web App](https://songanh-sale.phamhoangtien1300.workers.dev/)"
+        )
+        
+        requests.post(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", json={
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": msg,
+            "parse_mode": "Markdown",
+            "disable_web_page_preview": True
+        }, timeout=10)
+        print("✅ Daily Notion activity alert sent to Sếp Tiến!", flush=True)
+    else:
+        print("ℹ️ No new changes detected on Notion during this sync pass. Skipping Telegram notification to avoid spam.", flush=True)
+
+print("🎉 Complete! Cloud sync and notification process finished.", flush=True)

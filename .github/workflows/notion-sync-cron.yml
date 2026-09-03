@@ -34,5 +34,5 @@ jobs:
         run: |
           git config --global user.name "Song Anh AI Agent"
           git config --global user.email "agent@songanhmodel.vn"
-          git add index.html App_Sale_Song_Anh.html Bao_Cao_Sales_Tuan_Song_Anh.html
+          git add index.html App_Sale_Song_Anh.html Bao_Cao_Sales_Tuan_Song_Anh.html data/notion_state.json
           git diff --quiet && git diff --staged --quiet || (git commit -m "auto(sync): Cloud scheduled sync from Notion BẢNG DS DỰ ÁN [skip ci]" && git push origin main)
