@@ -533,12 +533,82 @@
             gap: 8px;
         }
 
-        /* 3 CLEAN KPI CARDS FOR HOME */
+        /* 3 CLEAN KPI CARDS FOR HOME & DASHBOARD 2-COL OVERVIEW GRID */
         .kpi-grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 14px;
             margin-bottom: 20px;
+        }
+
+        .dashboard-overview-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: stretch;
+        }
+
+        .kpi-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+        }
+
+        .kpi-column .kpi-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 16px 20px;
+            margin-bottom: 0;
+        }
+
+        .source-card {
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .source-distribution-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+            align-content: stretch;
+        }
+
+        .source-kpi-item {
+            padding: 16px 18px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: default;
+            transition: all 0.2s;
+        }
+
+        .source-kpi-item:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+
+        .source-kpi-title {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .source-kpi-value {
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-top: 4px;
+            line-height: 1.2;
         }
 
         .kpi-box {
@@ -940,6 +1010,8 @@
             .desktop-table-wrap { display: none; }
             .mobile-card-list { display: flex; }
             .kpi-grid-3 { grid-template-columns: 1fr; }
+            .dashboard-overview-grid { grid-template-columns: 1fr; gap: 14px; }
+            .source-distribution-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .main-container { padding: 14px 10px; }
             .module-header-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
             .module-header-icon { font-size: 1.8rem; padding: 8px; }
@@ -990,6 +1062,11 @@
             }
             .app-main {
                 padding-bottom: 95px !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .source-distribution-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1087,6 +1164,7 @@
                 <div class="filter-preset-pills">
                     <span class="filter-icon-label">📅 Lọc:</span>
                     <button class="filter-pill-btn active" id="btn-period-week" onclick="setGlobalPeriod('week', this)">Tuần này</button>
+                    <button class="filter-pill-btn" id="btn-period-7days" onclick="setGlobalPeriod('7days', this)">7 ngày qua</button>
                     <button class="filter-pill-btn" id="btn-period-month" onclick="setGlobalPeriod('month', this)">Tháng này</button>
                     <button class="filter-pill-btn" id="btn-period-all" onclick="setGlobalPeriod('all', this)">Tất cả</button>
                     <button class="filter-pill-btn" id="btn-period-custom" onclick="toggleCustomDatePicker(this)">Tùy chọn ▾</button>
@@ -1119,87 +1197,56 @@
                         <div>
                             <h2>Tổng quan</h2>
                             <div class="filter-active-indicator" id="filterActiveIndicator">
-                                📅 Đang xem: <strong id="filterActiveText">Tuần này (24/08 - 07/09/2026)</strong>
+                                📅 Đang xem: <strong id="filterActiveText">Tuần này (07/09 - 13/09/2026)</strong>
                             </div>
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> <span id="pipelineFilterBadge">08 Khách mới</span>
+                        <span class="live-dot"></span> <span id="pipelineFilterBadge">00 Khách mới</span>
                     </div>
                 </div>
 
-                <!-- 3 THẺ KPI CHUẨN YÊU CẦU: KHÁCH HÀNG MỚI, DỰ ÁN ĐANG LÀM, DỰ ÁN TIỀM NĂNG -->
-                <div class="kpi-grid-3">
-                    <div class="kpi-box gold" onclick="switchAppTab('tab-bao-cao')" title="Bấm để xem danh sách khách hàng mới">
-                        <div class="kpi-label">Khách hàng mới</div>
-                        <div class="kpi-num" id="homeNewLeadsCount" style="color: var(--primary-gold);">08</div>
-                    </div>
-                    <div class="kpi-box green" onclick="switchAppTab('tab-theo-doi'); filterPipeline('danglam', document.getElementById('btn-filter-danglam'));" title="Bấm để xem các dự án xưởng đang làm">
-                        <div class="kpi-label">Dự án đang làm</div>
-                        <div class="kpi-num" id="homeInProductionCount" style="color: #059669;">11</div>
-                    </div>
-                    <div class="kpi-box blue" onclick="switchAppTab('tab-theo-doi'); filterPipeline('tiemnang', document.getElementById('btn-filter-tiemnang'));" title="Bấm để xem các dự án có tick Tiềm năng">
-                        <div class="kpi-label">Dự án tiềm năng</div>
-                        <div class="kpi-num" id="homePotentialCount" style="color: #0284C7;">08</div>
-                    </div>
-                </div>
-
-                <!-- PHÂN BỔ NGUỒN KHÁCH HÀNG & PHÍM TẮT HÀNH ĐỘNG -->
-                <div class="card">
-                    <div class="card-header">
-                        <span>🎯 PHÂN BỔ NGUỒN KHÁCH HÀNG THỰC TẾ</span>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);" id="sourceScopeLabel">Theo bộ lọc hiện tại</span>
-                    </div>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
-                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Zalo / Hotline Tiến</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: var(--primary-gold); margin-top: 2px;" id="srcCountTien">58 Khách</div>
+                <!-- KHỐI DASHBOARD TỔNG QUAN 2 CỘT GỌN GÀNG -->
+                <div class="dashboard-overview-grid">
+                    <!-- CỘT TRÁI (LEFT COLUMN): 3 THẺ KPI CON SỐ XẾP DỌC -->
+                    <div class="kpi-column">
+                        <div class="kpi-box gold" onclick="switchAppTab('tab-bao-cao')" title="Bấm để xem danh sách khách hàng mới">
+                            <div class="kpi-label">Khách hàng mới</div>
+                            <div class="kpi-num" id="homeNewLeadsCount" style="color: var(--primary-gold);">00</div>
                         </div>
-                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
-                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Hotline Sếp / BGĐ</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: #0284C7; margin-top: 2px;" id="srcCountSep">42 Khách</div>
+                        <div class="kpi-box green" onclick="switchAppTab('tab-theo-doi'); filterPipeline('danglam', document.getElementById('btn-filter-danglam'));" title="Bấm để xem các dự án xưởng đang làm">
+                            <div class="kpi-label">Dự án đang làm</div>
+                            <div class="kpi-num" id="homeInProductionCount" style="color: #059669;">11</div>
                         </div>
-                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
-                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Zalo Sang</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: #059669; margin-top: 2px;" id="srcCountSang">24 Khách</div>
-                        </div>
-                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
-                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Khách Cũ &amp; Giới Thiệu</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: #7C3AED; margin-top: 2px;" id="srcCountCu">19 Khách</div>
+                        <div class="kpi-box blue" onclick="switchAppTab('tab-theo-doi'); filterPipeline('tiemnang', document.getElementById('btn-filter-tiemnang'));" title="Bấm để xem các dự án có tick Tiềm năng">
+                            <div class="kpi-label">Dự án tiềm năng</div>
+                            <div class="kpi-num" id="homePotentialCount" style="color: #0284C7;">08</div>
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-gold" onclick="switchAppTab('tab-don-hang-moi')">📝 Lên Đơn Mới (PO)</button>
-                        <button class="btn" onclick="switchAppTab('tab-theo-doi')">🔍 Tra Cứu &amp; Cập Nhật Dự Án</button>
-                        <button class="btn" onclick="switchAppTab('tab-bao-cao')">📊 Xuất Báo Cáo Hiện Trạng</button>
-                    </div>
-                </div>
-
-                <!-- TÓM TẮT DỰ ÁN TRỌNG TÂM -->
-                <div class="card">
-                    <div class="card-header">
-                        <span>⚡ 5 DEAL BÁO GIÁ TRỌNG TÂM &amp; TIẾN ĐỘ XƯỞNG</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;">
-                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border-left: 3px solid var(--info); border: 1px solid #E2E8F0; border-left-width: 3px;">
-                            <div style="font-weight: 800; color: #0284C7; font-size: 0.85rem; margin-bottom: 6px;">🧾 Deal Báo Giá Cần Chốt Cọc:</div>
-                            <ul style="font-size: 0.78rem; color: #334155; line-height: 1.6; padding-left: 16px;">
-                                <li><strong>Ga Thủ Thiêm (Sơn Kim Land):</strong> Phương án sa bàn trung tâm, đợi duyệt ngân sách.</li>
-                                <li><strong>Schneider Electric:</strong> Mô hình tủ điện công nghiệp - Bình Dương.</li>
-                                <li><strong>Ciri - Sơn Đồng Hà Nội:</strong> Ms Hường (0919 703 689), đang bám sát gửi biểu giá.</li>
-                                <li><strong>ICONIA 84/88:</strong> Chờ bản vẽ CAD mặt bằng cập nhật.</li>
-                                <li><strong>KCN Lê Minh Xuân:</strong> Dự án quy hoạch sa bàn lớn khu công nghiệp.</li>
-                            </ul>
+                    <!-- CỘT PHẢI (RIGHT COLUMN): KHỐI PHÂN BỔ NGUỒN KHÁCH HÀNG THỰC TẾ -->
+                    <div class="card source-card">
+                        <div class="card-header">
+                            <span>🎯 PHÂN BỔ NGUỒN KHÁCH HÀNG THỰC TẾ</span>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);" id="sourceScopeLabel">Theo bộ lọc hiện tại</span>
                         </div>
-                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border-left: 3px solid var(--slate-gray); border: 1px solid #E2E8F0; border-left-width: 3px;">
-                            <div style="font-weight: 800; color: #475569; font-size: 0.85rem; margin-bottom: 6px;">🏗️ Tiến Độ Thi Công Xưởng (11 Dự Án):</div>
-                            <ul style="font-size: 0.78rem; color: #334155; line-height: 1.6; padding-left: 16px;">
-                                <li><strong>KCN Trần Anh Tân Phú (Huynh):</strong> Kính đã giao 22/8, bục gỗ xưởng A. Vũ, tiến độ 50%.</li>
-                                <li><strong>Tôn Hoa Sen (Sếp Tiến):</strong> Đã gửi duyệt thiết kế làm bằng vật liệu tôn thật.</li>
-                                <li><strong>BV 175 lần 2 (Huynh):</strong> Đã khảo sát thực tế bo góc, đang chờ số liệu kính/gỗ.</li>
-                                <li><strong>EZ Land (Thế Anh):</strong> Bục gỗ kính đã đặt, thi công bản đồ treo tường 1.6x1.2m.</li>
-                            </ul>
+                        <div class="source-distribution-grid">
+                            <div class="source-kpi-item">
+                                <div class="source-kpi-title">Zalo / Hotline Tiến</div>
+                                <div class="source-kpi-value" style="color: var(--primary-gold);" id="srcCountTien">0 Khách</div>
+                            </div>
+                            <div class="source-kpi-item">
+                                <div class="source-kpi-title">Hotline Sếp / BGĐ</div>
+                                <div class="source-kpi-value" style="color: #0284C7;" id="srcCountSep">0 Khách</div>
+                            </div>
+                            <div class="source-kpi-item">
+                                <div class="source-kpi-title">Zalo Sang</div>
+                                <div class="source-kpi-value" style="color: #059669;" id="srcCountSang">0 Khách</div>
+                            </div>
+                            <div class="source-kpi-item">
+                                <div class="source-kpi-title">Khách Cũ &amp; Giới Thiệu</div>
+                                <div class="source-kpi-value" style="color: #7C3AED;" id="srcCountCu">0 Khách</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3335,8 +3382,8 @@
 
     // 3. BỘ LỌC TỔNG THỜI GIAN (GLOBAL DATE/PERIOD FILTER)
     let currentPeriodFilter = 'week';
-    let filterDateStart = new Date(2026, 7, 24); // 24/08/2026 (Chu kỳ tuần gần nhất)
-    let filterDateEnd = new Date(2026, 8, 7, 23, 59, 59); // 07/09/2026
+    let filterDateStart = new Date(2026, 8, 7, 0, 0, 0); // Thứ Hai 07/09/2026
+    let filterDateEnd = new Date(2026, 8, 13, 23, 59, 59); // Chủ Nhật 13/09/2026
 
     function parseRecordDate(dateStr) {
         if (!dateStr) return null;
@@ -3369,9 +3416,13 @@
         const today = new Date(2026, 8, 7); // 07/09/2026
 
         if (period === 'week') {
-            filterDateStart = new Date(2026, 7, 24); // 24/08/2026 (Chu kỳ tuần gần nhất)
-            filterDateEnd = new Date(2026, 8, 7, 23, 59, 59);
-            document.getElementById('filterActiveText').innerText = 'Tuần này (24/08 - 07/09/2026)';
+            filterDateStart = new Date(2026, 8, 7, 0, 0, 0); // Thứ Hai 07/09/2026
+            filterDateEnd = new Date(2026, 8, 13, 23, 59, 59); // Chủ Nhật 13/09/2026
+            document.getElementById('filterActiveText').innerText = 'Tuần này (07/09 - 13/09/2026)';
+        } else if (period === '7days') {
+            filterDateStart = new Date(2026, 8, 1, 0, 0, 0); // 01/09/2026
+            filterDateEnd = new Date(2026, 8, 7, 23, 59, 59); // 07/09/2026
+            document.getElementById('filterActiveText').innerText = '7 ngày gần nhất (01/09 - 07/09/2026)';
         } else if (period === 'month') {
             filterDateStart = new Date(2026, 8, 1); // 01/09/2026
             filterDateEnd = new Date(2026, 8, 30, 23, 59, 59);
