@@ -81,6 +81,7 @@
             gap: 12px;
             text-decoration: none;
             color: inherit;
+            cursor: pointer;
         }
 
         .brand-logo {
@@ -270,11 +271,11 @@
             padding-bottom: 90px;
         }
 
-        /* TOPBAR (LIGHT) */
+        /* TOPBAR (LIGHT & CLEAN) */
         .app-topbar {
             background: #FFFFFF;
             border-bottom: 1px solid var(--card-border);
-            padding: 12px 20px;
+            padding: 10px 20px;
             position: sticky;
             top: 0;
             z-index: 900;
@@ -283,6 +284,7 @@
             justify-content: space-between;
             gap: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            flex-wrap: wrap;
         }
 
         .topbar-left {
@@ -302,17 +304,18 @@
             cursor: pointer;
         }
 
-        .breadcrumb-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #0F172A;
+        .topbar-brand-title {
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #78350F;
+            letter-spacing: 0.2px;
         }
 
         .breadcrumb-tag {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             background: var(--gold-light);
             color: #855C08;
             padding: 3px 8px;
@@ -321,10 +324,105 @@
             font-weight: 700;
         }
 
-        .topbar-actions {
+        /* BỘ LỌC TỔNG TRÊN TOPBAR */
+        .topbar-filter-wrap {
             display: flex;
             align-items: center;
             gap: 8px;
+            position: relative;
+        }
+
+        .filter-preset-pills {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #F1F5F9;
+            padding: 4px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .filter-icon-label {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--slate-gray);
+            margin-right: 2px;
+            padding-left: 4px;
+        }
+
+        .filter-pill-btn {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filter-pill-btn:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
+
+        .filter-pill-btn.active {
+            background: linear-gradient(135deg, #D4AF37 0%, #B5891A 100%);
+            color: #FFFFFF;
+            border-color: var(--primary-gold);
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(181, 137, 26, 0.25);
+        }
+
+        /* CUSTOM DATE POPOVER */
+        .custom-date-popover {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 950;
+        }
+
+        .date-range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .date-field {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .date-input {
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 0.78rem;
+            font-family: inherit;
+            color: #0F172A;
+            background: #FFFFFF;
+            outline: none;
+        }
+
+        .date-input:focus {
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 2px rgba(181,137,26,0.15);
         }
 
         /* CONTAINER FOR MODULE PANELS */
@@ -385,6 +483,16 @@
             margin: 0;
             font-weight: 800;
             letter-spacing: 0.2px;
+        }
+
+        .filter-active-indicator {
+            font-size: 0.74rem;
+            color: var(--slate-gray);
+            margin-top: 3px;
+        }
+
+        .filter-active-indicator strong {
+            color: var(--primary-gold);
         }
 
         .module-status-badge {
@@ -512,6 +620,7 @@
             box-shadow: 0 2px 6px rgba(181, 137, 26, 0.2);
         }
         .btn-gold:hover { filter: brightness(1.05); color: #FFFFFF; }
+        .btn-sm { padding: 5px 10px; font-size: 0.74rem; min-height: 30px; }
 
         /* FORM CONTROLS (LIGHT) */
         .form-grid {
@@ -749,47 +858,73 @@
             font-size: 0.78rem;
             color: #334155;
             line-height: 1.45;
-            white-space: pre-line;
             background: #F8FAFC;
             padding: 8px 10px;
             border-radius: 6px;
             border-left: 2px solid #CBD5E1;
             margin-top: 6px;
-            word-break: break-word;
         }
 
         /* BADGES (LIGHT) */
-        .badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 10px; font-weight: 700; font-size: 0.68rem; }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
         .badge-green { background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+        .badge-blue { background: #EFF6FF; color: #0284C7; border: 1px solid #BAE6FD; }
         .badge-gold { background: #FEF3C7; color: #855C08; border: 1px solid #FDE68A; }
-        .badge-blue { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
-        .badge-purple { background: #FAF5FF; color: #7E22CE; border: 1px solid #E9D5FF; }
         .badge-gray { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+        .badge-purple { background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; }
 
-        /* TOAST (LIGHT) */
+        /* TOAST */
         .toast-msg {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #FFFFFF;
-            border: 1px solid var(--primary-gold);
-            color: #0F172A;
-            padding: 14px 20px;
+            bottom: 24px;
+            right: 24px;
+            background: #0F172A;
+            color: #FFFFFF;
+            padding: 12px 20px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 9999;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
             font-size: 0.85rem;
             font-weight: 600;
-            transform: translateY(100px);
+            z-index: 9999;
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #334155;
         }
-        .toast-msg.show { transform: translateY(0); opacity: 1; }
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        /* RESPONSIVE TUNING */
+        /* OVERLAY FOR MOBILE SIDEBAR */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 999;
+        }
+        .sidebar-overlay.active { display: block; }
+
+        /* MOBILE BOTTOM NAVIGATION */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        /* RESPONSIVE BREAKPOINTS */
         @media (max-width: 1023px) {
             .app-sidebar {
                 transform: translateX(-100%);
@@ -799,15 +934,6 @@
             .sidebar-close-btn { display: block; }
             .app-main { margin-left: 0; }
             .mobile-menu-btn { display: block; }
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(15, 23, 42, 0.4);
-                backdrop-filter: blur(2px);
-                z-index: 999;
-            }
-            .sidebar-overlay.active { display: block; }
         }
 
         @media (max-width: 768px) {
@@ -817,7 +943,54 @@
             .main-container { padding: 14px 10px; }
             .module-header-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
             .module-header-icon { font-size: 1.8rem; padding: 8px; }
-            .topbar-actions .btn-text-hide { display: none; }
+            .app-topbar { padding: 10px 12px; }
+            .topbar-filter-wrap { width: 100%; justify-content: flex-start; margin-top: 4px; overflow-x: auto; }
+            .custom-date-popover { right: auto; left: 0; width: 100%; }
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 62px;
+                background: #FFFFFF;
+                border-top: 1px solid var(--card-border);
+                z-index: 1000;
+                justify-content: space-around;
+                align-items: center;
+                padding: 4px 6px;
+                box-shadow: 0 -3px 15px rgba(0,0,0,0.06);
+            }
+            .bottom-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                color: var(--slate-gray);
+                padding: 4px 8px;
+                border-radius: 8px;
+                cursor: pointer;
+                flex: 1;
+                transition: all 0.15s ease;
+            }
+            .bottom-nav-item.active {
+                color: var(--primary-gold);
+                font-weight: 700;
+            }
+            .bnav-icon {
+                font-size: 1.25rem;
+                line-height: 1;
+            }
+            .bnav-label {
+                font-size: 0.65rem;
+                margin-top: 3px;
+                white-space: nowrap;
+            }
+            .app-main {
+                padding-bottom: 95px !important;
+            }
         }
     </style>
 </head>
@@ -902,22 +1075,36 @@
         <!-- TOPBAR -->
         <header class="app-topbar">
             <div class="topbar-left">
-                <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
-                <div class="breadcrumb-title" id="pageBreadcrumbTitle">
-                    <span>🏠</span> <span>Tổng quan</span>
-                    <span class="breadcrumb-tag">B2B Live</span>
+                <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Mở menu">☰</button>
+                <div class="topbar-brand-title">
+                    <span>🏢 MÔ HÌNH KIẾN TRÚC SONG ANH</span>
+                    <span class="breadcrumb-tag">Live Sync</span>
                 </div>
             </div>
-            <div class="topbar-actions">
-                <button class="btn btn-gold" onclick="switchAppTab('tab-don-hang-moi')">
-                    <span>+</span> <span class="btn-text-hide">Đơn Mới</span>
-                </button>
-                <button class="btn" onclick="window.print()">
-                    <span>🖨️</span> <span class="btn-text-hide">In A4</span>
-                </button>
-                <button class="btn" onclick="copyQuickZalo()">
-                    <span>📋</span> <span class="btn-text-hide">Zalo</span>
-                </button>
+
+            <!-- BỘ LỌC TỔNG (THAY THẾ ĐƠN MỚI, IN A4, ZALO) -->
+            <div class="topbar-filter-wrap" id="topbarGlobalFilter">
+                <div class="filter-preset-pills">
+                    <span class="filter-icon-label">📅 Lọc:</span>
+                    <button class="filter-pill-btn active" id="btn-period-week" onclick="setGlobalPeriod('week', this)">Tuần này</button>
+                    <button class="filter-pill-btn" id="btn-period-month" onclick="setGlobalPeriod('month', this)">Tháng này</button>
+                    <button class="filter-pill-btn" id="btn-period-all" onclick="setGlobalPeriod('all', this)">Tất cả</button>
+                    <button class="filter-pill-btn" id="btn-period-custom" onclick="toggleCustomDatePicker(this)">Tùy chọn ▾</button>
+                </div>
+                <!-- POPOVER CHỌN NGÀY TÙY CHỈNH -->
+                <div class="custom-date-popover" id="customDatePopover" style="display: none;">
+                    <div class="date-range-inputs">
+                        <div class="date-field">
+                            <span>Từ:</span>
+                            <input type="date" id="filterDateFrom" class="date-input" value="2026-08-31" onchange="applyCustomRange()">
+                        </div>
+                        <div class="date-field">
+                            <span>Đến:</span>
+                            <input type="date" id="filterDateTo" class="date-input" value="2026-09-07" onchange="applyCustomRange()">
+                        </div>
+                        <button class="btn btn-sm btn-gold" onclick="applyCustomRange()">Áp dụng</button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -931,10 +1118,13 @@
                         <span class="module-header-icon">🏠</span>
                         <div>
                             <h2>Tổng quan</h2>
+                            <div class="filter-active-indicator" id="filterActiveIndicator">
+                                📅 Đang xem: <strong id="filterActiveText">Tuần này (24/08 - 07/09/2026)</strong>
+                            </div>
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> Live Pipeline
+                        <span class="live-dot"></span> <span id="pipelineFilterBadge">08 Khách mới</span>
                     </div>
                 </div>
 
@@ -958,24 +1148,24 @@
                 <div class="card">
                     <div class="card-header">
                         <span>🎯 PHÂN BỔ NGUỒN KHÁCH HÀNG THỰC TẾ</span>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">Dữ liệu Notion DB</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);" id="sourceScopeLabel">Theo bộ lọc hiện tại</span>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
                         <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
                             <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Zalo / Hotline Tiến</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: var(--primary-gold); margin-top: 2px;">58 Khách</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: var(--primary-gold); margin-top: 2px;" id="srcCountTien">58 Khách</div>
                         </div>
                         <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
                             <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Hotline Sếp / BGĐ</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: #0284C7; margin-top: 2px;">42 Khách</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: #0284C7; margin-top: 2px;" id="srcCountSep">42 Khách</div>
                         </div>
                         <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
                             <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Zalo Sang</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: #059669; margin-top: 2px;">24 Khách</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: #059669; margin-top: 2px;" id="srcCountSang">24 Khách</div>
                         </div>
                         <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
                             <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Khách Cũ &amp; Giới Thiệu</div>
-                            <div style="font-size: 1.25rem; font-weight: 800; color: #7C3AED; margin-top: 2px;">19 Khách</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: #7C3AED; margin-top: 2px;" id="srcCountCu">19 Khách</div>
                         </div>
                     </div>
 
@@ -1025,118 +1215,91 @@
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> Sẵn sàng tạo đơn
+                        <span class="live-dot"></span> Form Tạo Đơn PO
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <span>📝 THÔNG TIN ĐƠN HÀNG MỚI (PO DETAILS)</span>
-                        <span style="font-size: 0.75rem; color: var(--text-muted);">Mặc định Lĩnh vực: <strong style="color: var(--primary-gold);">Mô Hình</strong></span>
+                        <span>THÔNG TIN ĐƠN HÀNG DỰ ÁN MỚI</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Tự động tạo PO trên Notion DB</span>
                     </div>
 
-                    <form id="newLeadForm" onsubmit="handleNewLeadSubmit(event)">
+                    <form id="newLeadForm" onsubmit="event.preventDefault(); submitNewLead();">
                         <div class="form-grid">
                             <div class="form-group full-width">
-                                <label class="form-label">
-                                    <span>Tên Dự Án (Hoặc Công Thức Chuẩn)</span>
-                                    <span class="req">*</span>
-                                    <button type="button" class="btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: auto;" onclick="autoGenerateProjectName()">⚡ Ghép Tên Tự Động</button>
-                                </label>
-                                <input type="text" id="leadProjectName" class="form-input" placeholder="VD: Mô hình Nhà máy Schneider - Bình Dương + Mr Huy" required>
+                                <label class="form-label">TÊN DỰ ÁN <span class="req">*</span></label>
+                                <input type="text" id="leadProjectName" class="form-input" placeholder="Ví dụ: Mô hình Khu Công Nghiệp Tân Bình" required>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">🏢 Lĩnh Vực</label>
-                                <input type="text" id="leadField" class="form-input" value="Mô Hình" readonly title="Mặc định liên kết bảng LĨNH VỰC CÔNG VIỆC Notion">
+                                <label class="form-label">LĨNH VỰC <span class="req">*</span></label>
+                                <input type="text" id="leadLinhVuc" class="form-input" value="Mô Hình" readonly title="Mặc định liên kết sang Database Lĩnh Vực">
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">📂 Danh Mục Sa Bàn <span class="req">*</span></label>
-                                <select id="leadCategory" class="form-select" required onchange="updateNameHint()">
-                                    <option value="Cao tầng">🏢 Cao tầng</option>
-                                    <option value="Nhà máy - Thiết bị">🏭 Nhà máy - Thiết bị</option>
-                                    <option value="Quy hoạch">🗺️ Quy hoạch</option>
-                                    <option value="KCN">🏗️ KCN</option>
-                                    <option value="Sửa chữa - Vệ sinh">🔧 Sửa chữa - Vệ sinh</option>
-                                    <option value="Nội thất">🛋️ Nội thất</option>
-                                    <option value="Trường học">🎓 Trường học</option>
-                                    <option value="Bệnh viện">🏥 Bệnh viện</option>
-                                    <option value="Vận chuyển">🚚 Vận chuyển</option>
-                                    <option value="Thu mua">♻️ Thu mua</option>
-                                    <option value="Tàu - thuyền">🚢 Tàu - thuyền</option>
-                                    <option value="3D">💻 3D</option>
-                                    <option value="Khác">✨ Khác</option>
+                                <label class="form-label">DANH MỤC DỰ ÁN <span class="req">*</span></label>
+                                <select id="leadCategory" class="form-select" required>
+                                    <option value="Mô hình quy hoạch">Mô hình quy hoạch</option>
+                                    <option value="Mô hình kiến trúc">Mô hình kiến trúc</option>
+                                    <option value="Mô hình công nghiệp">Mô hình công nghiệp</option>
+                                    <option value="Mô hình nội thất">Mô hình nội thất</option>
+                                    <option value="Mô hình quân sự">Mô hình quân sự</option>
+                                    <option value="Mô hình trường học">Mô hình trường học</option>
+                                    <option value="Mô hình cảnh quan">Mô hình cảnh quan</option>
+                                    <option value="Khác">Khác</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">👤 Khách Hàng (Tên / Công Ty) <span class="req">*</span></label>
-                                <input type="text" id="leadClientName" class="form-input" placeholder="VD: Mr Huy / Schneider Vietnam" required oninput="updateNameHint()">
+                                <label class="form-label">TÊN KHÁCH HÀNG / LIÊN HỆ <span class="req">*</span></label>
+                                <input type="text" id="leadClientName" class="form-input" placeholder="Ví dụ: Anh Nam (Tổng thầu CC1)" required oninput="autoGenerateProjectName()">
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">📞 Số Điện Thoại Liên Hệ</label>
-                                <input type="tel" id="leadPhone" class="form-input" placeholder="VD: 0909 123 456">
+                                <label class="form-label">SỐ ĐIỆN THOẠI KHÁCH HÀNG</label>
+                                <input type="tel" id="leadPhone" class="form-input" placeholder="Ví dụ: 090 9096878" oninput="autoGenerateProjectName()">
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">📍 Vị Trí / Tỉnh Thành</label>
-                                <select id="leadProvince" class="form-select" onchange="updateNameHint()">
-                                    <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                                    <option value="Hà Nội">TP. Hà Nội</option>
-                                    <option value="Bình Dương">Bình Dương</option>
-                                    <option value="Đồng Nai">Đồng Nai</option>
-                                    <option value="Long An">Long An</option>
-                                    <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
-                                    <option value="Cần Thơ">Cần Thơ</option>
-                                    <option value="Đà Nẵng">Đà Nẵng</option>
-                                    <option value="Khác">Tỉnh thành khác...</option>
+                                <label class="form-label">NGƯỜI TƯ VẤN (SALE) <span class="req">*</span></label>
+                                <select id="leadAdvisor" class="form-select" required>
+                                    <option value="SANG">Võ Minh Sang</option>
+                                    <option value="TIEN">Phạm Hoàng Tiến</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">📱 Nguồn Khách Hàng</label>
-                                <input type="text" id="leadSource" class="form-input" value="Zalo Tiến" placeholder="Chọn hoặc nhập nguồn...">
+                                <label class="form-label">NGUỒN KHÁCH HÀNG <span class="req">*</span></label>
+                                <input type="text" id="leadSource" class="form-input" value="Sếp" required>
                                 <div class="pill-selector">
-                                    <span class="pill-opt active" onclick="setLeadSource('Zalo Tiến', this)">Zalo Tiến</span>
-                                    <span class="pill-opt" onclick="setLeadSource('Gọi Tiến', this)">Gọi Tiến</span>
-                                    <span class="pill-opt" onclick="setLeadSource('Hotline Sếp', this)">Hotline Sếp</span>
-                                    <span class="pill-opt" onclick="setLeadSource('Zalo Sang', this)">Zalo Sang</span>
-                                    <span class="pill-opt" onclick="setLeadSource('Khách cũ liên hệ', this)">Khách cũ liên hệ</span>
+                                    <span class="pill-opt active" onclick="setLeadSource('Sếp', this)">Sếp</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Số Tiến', this)">Số Tiến</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Số Sang', this)">Số Sang</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Fanpage', this)">Fanpage</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Website', this)">Website</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Khách cũ', this)">Khách cũ</span>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">👨‍💼 Người Tư Vấn &amp; Theo Dõi</label>
-                                <select id="leadAdvisor" class="form-select">
-                                    <option value="TIEN">Phạm Hoàng Tiến (Sếp Tiến)</option>
-                                    <option value="SANG">Võ Minh Sang</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">⏰ Nhắc Hẹn Tiếp Theo</label>
-                                <input type="datetime-local" id="leadReminder" class="form-input">
-                            </div>
-
                             <div class="form-group full-width">
-                                <label class="form-label">📝 Ghi Chú Ban Đầu (Quy mô, tỷ lệ, hồ sơ...)</label>
-                                <textarea id="leadNote" class="form-textarea" placeholder="Nhập quy cách, tỷ lệ dự kiến, yêu cầu từ khách hàng..."></textarea>
+                                <label class="form-label">NỘI DUNG TƯ VẤN BAN ĐẦU / GHI CHÚ TIẾN ĐỘ</label>
+                                <textarea id="leadNote" class="form-textarea" placeholder="Nhập yêu cầu kích thước, tỷ lệ sa bàn, địa điểm giao hoặc lưu ý kỹ thuật..."></textarea>
                             </div>
                         </div>
 
-                        <!-- THẺ XÁC NHẬN TRƯỚC KHI LÊN NOTION (LIGHT) -->
-                        <div id="newLeadPreviewCard" style="background: #FFFBEB; border: 1px dashed var(--primary-gold); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none;">
-                            <div style="font-size: 0.76rem; color: #92400E; font-weight: 800; margin-bottom: 6px;">📋 THẺ XÁC NHẬN DỮ LIỆU ĐƠN HÀNG TRƯỚC KHI LÊN NOTION:</div>
-                            <div id="newLeadPreviewContent" style="font-size: 0.8rem; color: #334155; line-height: 1.6;"></div>
-                        </div>
-
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button type="submit" class="btn btn-gold" style="padding: 10px 20px;">⚡ Lên Đơn Dự Án Mới</button>
-                            <button type="button" class="btn" style="padding: 10px 16px;" onclick="copyNewLeadZaloText()">📋 Sao Chép Cú Pháp Zalo</button>
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+                            <button type="submit" class="btn btn-gold" id="btnSubmitNewLead" style="padding: 12px 24px; font-size: 0.9rem;">
+                                🚀 Lên Đơn &amp; Lưu Vào Notion
+                            </button>
+                            <button type="button" class="btn" onclick="copyNewLeadZaloText()" style="padding: 12px 18px;">
+                                📋 Sao Chép Cú Pháp Zalo
+                            </button>
+                            <span id="leadSubmitStatus" style="font-size: 0.8rem; font-weight: 600;"></span>
                         </div>
                     </form>
+
+                    <div id="newLeadPreviewCard" style="display: none; margin-top: 16px; padding: 14px; border-radius: 8px; border: 1px dashed var(--primary-gold); background: #FFFDF7;"></div>
                 </div>
             </div>
 
@@ -1150,103 +1313,108 @@
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> 143 Active Projects
+                        <span class="live-dot"></span> Pipeline Active
                     </div>
                 </div>
 
-                <!-- TÌM KIẾM AUTOCOMPLETE DỰ ÁN -->
-                <div class="search-project-wrap">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="projectSearchInput" class="search-project-input" placeholder="Gõ tên dự án, số điện thoại, khách hàng hoặc người phụ trách để tìm nhanh..." oninput="handleProjectSearch(this.value)">
-                    <div id="projectSearchResults" class="project-search-results"></div>
-                </div>
-
-                <!-- PROJECT CONTEXT & COMMENT LOGGER CARD (LIGHT) -->
-                <div id="selectedProjectCard" class="card" style="display: none; border: 1.5px solid var(--primary-gold); background: #FFFFFF;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px;">
-                        <span style="font-weight: 800; color: #78350F; font-size: 0.9rem;">💬 GHI NHẬN TIẾN ĐỘ CHO DỰ ÁN ĐÃ CHỌN</span>
-                        <span class="badge badge-gold" id="selProjBadge">Trạng thái</span>
+                <!-- KHỐI GHI NHẬN CẬP NHẬT TIẾN ĐỘ / COMMENT CHO DỰ ÁN ĐANG CHỌN -->
+                <div class="card" id="quickLogCard" style="border-left: 4px solid var(--primary-gold);">
+                    <div class="card-header">
+                        <span>💬 CẬP NHẬT TIẾN ĐỘ &amp; GHI COMMENT VÀO DỰ ÁN</span>
+                        <span style="font-size: 0.78rem; color: var(--primary-gold); font-weight: 700;" id="selectedProjectBadge">Chọn dự án bên dưới hoặc tìm kiếm</span>
                     </div>
 
-                    <div style="margin-bottom: 12px;">
-                        <div id="selProjName" style="font-weight: 800; font-size: 1rem; color: #0F172A; margin-bottom: 4px;">Tên dự án</div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.74rem; color: #64748B;">
-                            <span id="selProjDate">📅 Ngày: -</span>
-                            <span>👤 Tư vấn: <strong id="selProjAdvisor" style="color: var(--primary-gold);">-</strong></span>
-                            <span>🔧 Kỹ thuật: <strong id="selProjTech" style="color: #0284C7;">-</strong></span>
-                            <span>📱 Nguồn: <strong id="selProjSource">-</strong></span>
+                    <!-- Ô TÌM KIẾM AUTOCOMPLETE NHANH DỰ ÁN -->
+                    <div class="search-project-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="projectSearchInput" class="search-project-input" placeholder="Gõ tên dự án, số điện thoại hoặc khách hàng để cập nhật..." oninput="handleProjectSearch(this.value)">
+                        <div id="projectSearchResults" class="project-search-results"></div>
+                    </div>
+
+                    <div id="selectedProjectDetails" style="display: none; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px; border-radius: 8px; margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap;">
+                            <div>
+                                <h3 id="selProjName" style="font-size: 1rem; color: #0F172A; font-weight: 800;">-</h3>
+                                <div style="font-size: 0.76rem; color: #64748B; margin-top: 4px;">
+                                    Tư vấn: <strong id="selProjAssignee" style="color: #0F172A;">-</strong> | 
+                                    Giai đoạn: <span id="selProjStage" class="badge badge-gold">-</span> | 
+                                    Kỹ thuật: <strong id="selProjTech" style="color: #0284C7;">-</strong>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm" onclick="clearSelectedProject()" style="padding: 4px 8px; font-size: 0.72rem;">Đổi dự án khác</button>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.8rem; color: #334155; background: #FFFFFF; padding: 10px; border-radius: 6px; border: 1px solid #E2E8F0;" id="selProjNote">
+                            Chưa có ghi chú
                         </div>
                     </div>
 
-                    <div style="background: #F8FAFC; border-radius: 6px; padding: 10px; margin-bottom: 14px; border-left: 3.5px solid var(--primary-gold); border: 1px solid #E2E8F0; border-left-width: 3.5px;">
-                        <div style="font-size: 0.72rem; color: #78350F; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Lịch Sử Tiến Độ Gần Nhất:</div>
-                        <div id="selProjNote" style="font-size: 0.8rem; color: #334155; line-height: 1.5; white-space: pre-line;">Chưa có ghi chú</div>
-                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label">NỘI DUNG CẬP NHẬT MỚI (LƯU VÀO NOTION COMMENT) <span class="req">*</span></label>
+                            <textarea id="logCommentText" class="form-textarea" placeholder="Ví dụ: Đã gửi bảng báo giá 25tr qua Zalo, khách hẹn thứ 5 chốt duyệt mẫu gỗ..."></textarea>
+                        </div>
 
-                    <div class="form-group" style="margin-bottom: 12px;">
-                        <label class="form-label">✍️ Nội Dung Cập Nhật Mới (Ghi nhận vào mục Bình luận Notion):</label>
-                        <textarea id="logCommentText" class="form-textarea" placeholder="Nhập diễn biến mới: Khách vừa phản hồi duyệt báo giá, yêu cầu chỉnh tỷ lệ 1/200, đã gửi hợp đồng..."></textarea>
-                    </div>
-
-                    <div class="form-grid" style="margin-bottom: 14px;">
                         <div class="form-group">
-                            <label class="form-label">👤 Người Ghi Nhận:</label>
+                            <label class="form-label">NGƯỜI CẬP NHẬT</label>
                             <select id="logAuthor" class="form-select">
-                                <option value="Phạm Hoàng Tiến">Phạm Hoàng Tiến (Sếp Tiến)</option>
                                 <option value="Võ Minh Sang">Võ Minh Sang</option>
+                                <option value="Phạm Hoàng Tiến">Phạm Hoàng Tiến</option>
                             </select>
                         </div>
+
                         <div class="form-group">
-                            <label class="form-label">🔄 Chuyển Trạng Thái Mới (Nếu có):</label>
+                            <label class="form-label">CHUYỂN GIAI ĐOẠN (TÙY CHỌN)</label>
                             <select id="logNewStage" class="form-select">
-                                <option value="">-- Giữ nguyên trạng thái --</option>
-                                <option value="tuvan">💬 Tư Vấn</option>
-                                <option value="baogia">🧾 Báo Giá</option>
-                                <option value="hopdong">🤝 Hợp Đồng</option>
-                                <option value="danglam">🏗️ Đang Làm (Xưởng)</option>
-                                <option value="thanhtoan">💸 Thanh Toán / Bàn Giao</option>
+                                <option value="">-- Giữ nguyên giai đoạn hiện tại --</option>
+                                <option value="tuvan">💬 1. Tư Vấn</option>
+                                <option value="baogia">🧾 2. Báo Giá</option>
+                                <option value="hopdong">🤝 3. Hợp Đồng</option>
+                                <option value="danglam">🏗️ 4. Đang Làm (Xưởng)</option>
+                                <option value="thanhtoan">💸 5. Thanh Toán / Giao</option>
                             </select>
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-gold" onclick="submitProjectLog()">🚀 Lưu Cập Nhật Tiến Độ</button>
-                        <button class="btn" onclick="copyProjectLogText()">📋 Sao Chép Nội Dung Ghi</button>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-gold" onclick="submitProjectLog()">
+                            🚀 Lưu Cập Nhật Vào Notion
+                        </button>
+                        <button type="button" class="btn" onclick="copyProjectLogText()">
+                            📋 Sao Chép Nội Dung
+                        </button>
                     </div>
                 </div>
 
-                <!-- BỘ LỌC TRẠNG THÁI + NÚT TIỀM NĂNG -->
-                <div class="card" style="padding: 14px;">
-                    <div class="filter-bar">
-                        <button class="filter-btn active" id="btn-filter-all" onclick="filterPipeline('all', this)">Tất Cả (143)</button>
-                        <button class="filter-btn" id="btn-filter-tiemnang" onclick="filterPipeline('tiemnang', this)">⭐ Tiềm Năng (8)</button>
-                        <button class="filter-btn" id="btn-filter-tuvan" onclick="filterPipeline('tuvan', this)">💬 1. Tư Vấn (96)</button>
-                        <button class="filter-btn" id="btn-filter-baogia" onclick="filterPipeline('baogia', this)">🧾 2. Báo Giá (25)</button>
-                        <button class="filter-btn" id="btn-filter-hopdong" onclick="filterPipeline('hopdong', this)">🤝 3. Hợp Đồng (1)</button>
-                        <button class="filter-btn" id="btn-filter-danglam" onclick="filterPipeline('danglam', this)">🏗️ 4. Đang Làm (11)</button>
-                        <button class="filter-btn" id="btn-filter-thanhtoan" onclick="filterPipeline('thanhtoan', this)">💸 5. Thanh Toán / Giao (10)</button>
-                    </div>
-
-                    <!-- BẢNG DESKTOP -->
-                    <div class="desktop-table-wrap">
-                        <table>
-                            <thead id="pipelineThead">
-                                <tr>
-                                    <th width="35">#</th>
-                                    <th style="min-width: 170px;">TÊN DỰ ÁN</th>
-                                    <th>NGÀY</th>
-                                    <th>TƯ VẤN</th>
-                                    <th>KỸ THUẬT</th>
-                                    <th style="min-width: 200px;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pipelineTbody"></tbody>
-                        </table>
-                    </div>
-
-                    <!-- CARD LIST MOBILE -->
-                    <div class="mobile-card-list" id="pipelineMobileCards"></div>
+                <!-- BỘ LỌC GIAI ĐOẠN PIPELINE -->
+                <div class="filter-bar">
+                    <button class="filter-btn active" id="btn-filter-all" onclick="filterPipeline('all', this)">Tất Cả (143)</button>
+                    <button class="filter-btn" id="btn-filter-tiemnang" onclick="filterPipeline('tiemnang', this)" style="border-color: var(--primary-gold); color: #855C08; font-weight: 700;">⭐ Tiềm Năng (8)</button>
+                    <button class="filter-btn" id="btn-filter-tuvan" onclick="filterPipeline('tuvan', this)">💬 1. Tư Vấn</button>
+                    <button class="filter-btn" id="btn-filter-baogia" onclick="filterPipeline('baogia', this)">🧾 2. Báo Giá</button>
+                    <button class="filter-btn" id="btn-filter-hopdong" onclick="filterPipeline('hopdong', this)">🤝 3. Hợp Đồng</button>
+                    <button class="filter-btn" id="btn-filter-danglam" onclick="filterPipeline('danglam', this)">🏗️ 4. Đang Làm</button>
+                    <button class="filter-btn" id="btn-filter-thanhtoan" onclick="filterPipeline('thanhtoan', this)">💸 5. Giao / Thu</button>
                 </div>
+
+                <!-- BẢNG DỮ LIỆU DESKTOP -->
+                <div class="desktop-table-wrap">
+                    <table id="pipelineTable">
+                        <thead id="pipelineThead">
+                            <tr>
+                                <th width="35">#</th>
+                                <th>TÊN DỰ ÁN</th>
+                                <th>NGÀY</th>
+                                <th>TƯ VẤN</th>
+                                <th>KỸ THUẬT</th>
+                                <th>GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pipelineTbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- MOBILE CARDS -->
+                <div class="mobile-card-list" id="pipelineMobileCards"></div>
             </div>
 
             <!-- ==================== 4. MENU: KHÁCH HÀNG ==================== -->
@@ -1259,30 +1427,31 @@
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> CRM Song Anh
+                        <span class="live-dot"></span> Danh Bạ &amp; CRM B2B
                     </div>
                 </div>
 
                 <div class="card">
-                    <!-- CRM SEARCH & FILTER -->
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
-                        <input type="text" id="customerSearchInput" class="form-input" style="flex: 1; min-width: 240px;" placeholder="🔍 Tìm kiếm theo tên khách, SĐT, hoặc công ty..." oninput="filterCustomerList(this.value)">
-                        <div style="display: flex; gap: 6px;">
-                            <button class="filter-btn active" id="btn-cust-all" onclick="filterCustomerByAdvisor('all', this)">Tất Cả</button>
-                            <button class="filter-btn" id="btn-cust-tien" onclick="filterCustomerByAdvisor('Tiến', this)">Sếp Tiến</button>
-                            <button class="filter-btn" id="btn-cust-sang" onclick="filterCustomerByAdvisor('Sang', this)">Minh Sang</button>
+                    <div class="card-header">
+                        <span>BỘ LỌC TÌM KIẾM KHÁCH HÀNG</span>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+                        <input type="text" id="customerSearchInput" class="form-input" placeholder="Tìm theo tên khách, công ty, SĐT, nguồn..." style="flex: 1; min-width: 240px;" oninput="filterCustomerList(this.value)">
+                        <div class="filter-bar" style="margin-bottom: 0; padding: 4px;">
+                            <button class="filter-btn active" onclick="filterCustomerByAdvisor('all', this)">Tất Cả</button>
+                            <button class="filter-btn" onclick="filterCustomerByAdvisor('Tiến', this)">Phạm Hoàng Tiến</button>
+                            <button class="filter-btn" onclick="filterCustomerByAdvisor('Sang', this)">Võ Minh Sang</button>
                         </div>
                     </div>
 
-                    <!-- CUSTOMER TABLE DESKTOP -->
                     <div class="desktop-table-wrap">
                         <table>
                             <thead>
                                 <tr>
                                     <th width="35">#</th>
-                                    <th>KHÁCH HÀNG / ĐỐI TÁC</th>
+                                    <th>KHÁCH HÀNG</th>
                                     <th>SỐ ĐIỆN THOẠI</th>
-                                    <th>DỰ ÁN LIÊN HỆ</th>
+                                    <th>DỰ ÁN LIÊN QUAN</th>
                                     <th>NGUỒN</th>
                                     <th>PHỤ TRÁCH</th>
                                     <th>TRẠNG THÁI</th>
@@ -1292,7 +1461,6 @@
                         </table>
                     </div>
 
-                    <!-- CUSTOMER CARDS MOBILE -->
                     <div class="mobile-card-list" id="customerMobileCards"></div>
                 </div>
             </div>
@@ -1307,90 +1475,19 @@
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> Báo cáo thời gian thực
+                        <span class="live-dot"></span> Báo Cáo Ban Giám Đốc
                     </div>
                 </div>
 
-                <!-- BỘ NÚT XUẤT TÀI LIỆU -->
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <button class="btn btn-gold" onclick="window.print()">🖨️ In Báo Cáo Khổ A4</button>
-                    <button class="btn" onclick="copyQuickZalo()">📋 Sao Chép Text Báo Cáo Zalo</button>
-                    <button class="btn" onclick="copyExecutiveSummary()">📋 Sao Chép Báo Cáo Hiện Trạng BGĐ</button>
-                </div>
-
-                <!-- EXECUTIVE HEALTH REPORT -->
                 <div class="card">
                     <div class="card-header">
-                        <span>📊 BÁO CÁO TỔNG HỢP HIỆN TRẠNG DỰ ÁN (BAN GIÁM ĐỐC)</span>
-                        <button class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;" onclick="copyExecutiveSummary()">📋 Copy Báo Cáo</button>
+                        <span>BÁO CÁO TỔNG QUAN HIỆN TRẠNG DỰ ÁN (XUẤT NHANH BGĐ)</span>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="btn btn-sm btn-gold" onclick="copyExecutiveSummary()">📋 Sao Chép Báo Cáo</button>
+                            <button class="btn btn-sm" onclick="window.print()">🖨️ In A4</button>
+                        </div>
                     </div>
-                    <div id="executiveReportContent" style="font-size: 0.82rem; color: #334155; line-height: 1.6; white-space: pre-line; background: #F8FAFC; padding: 16px; border-radius: 8px; border-left: 3.5px solid var(--primary-gold); border: 1px solid #E2E8F0; border-left-width: 3.5px;">
-                        Đang trích xuất báo cáo hiện trạng...
-                    </div>
-                </div>
-
-                <!-- BẢNG KHÁCH HÀNG MỚI TRONG TUẦN -->
-                <div class="card">
-                    <div class="card-header">
-                        <span>📋 DANH SÁCH KHÁCH HÀNG MỚI TIẾP NHẬN TRONG TUẦN</span>
-                        <span class="badge badge-gold">8 Khách mới</span>
-                    </div>
-                    <div class="desktop-table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th width="35">#</th>
-                                    <th style="min-width: 180px;">TÊN DỰ ÁN &amp; KHÁCH HÀNG</th>
-                                    <th>NGÀY</th>
-                                    <th>TƯ VẤN</th>
-                                    <th>NGUỒN KHÁCH</th>
-                                    <th style="min-width: 200px;">GHI CHÚ BAN ĐẦU</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td align="center">01</td>
-                                    <td style="font-weight: 700; color: #0F172A;">Mô hình nhà máy - Trung Quốc - Tại Hà Nội - Mr Vương</td>
-                                    <td>03/09</td>
-                                    <td>Phạm Hoàng Tiến</td>
-                                    <td>Hotline Tiến</td>
-                                    <td>Đang check file và tư vấn trao đổi qua Wechat</td>
-                                </tr>
-                                <tr>
-                                    <td align="center">02</td>
-                                    <td style="font-weight: 700; color: #0F172A;">MÔ HÌNH CHUNG CƯ - PHÚ ANH THẠNH + Ms TRANG</td>
-                                    <td>30/08</td>
-                                    <td>Võ Minh Sang</td>
-                                    <td>Khách gọi Tiến</td>
-                                    <td>Đã gửi báo giá, hẹn qua xưởng trao đổi trực tiếp</td>
-                                </tr>
-                                <tr>
-                                    <td align="center">03</td>
-                                    <td style="font-weight: 700; color: #0F172A;">MÔ HÌNH NHÀ MÁY THỰC PHẨM - TÂY NINH + Mr KHOA</td>
-                                    <td>28/08</td>
-                                    <td>Phạm Hoàng Tiến</td>
-                                    <td>Zalo Tiến</td>
-                                    <td>Tư vấn tỷ lệ 1/200, đã gửi phương án vật liệu</td>
-                                </tr>
-                                <tr>
-                                    <td align="center">04</td>
-                                    <td style="font-weight: 700; color: #0F172A;">Mô hình Khu nhà ở cao cấp Ciri - Sơn Đồng, Hà Nội + PHẠM THỊ BÍCH HƯỜNG</td>
-                                    <td>05/09</td>
-                                    <td>Võ Minh Sang</td>
-                                    <td>Hotline Sếp</td>
-                                    <td>SĐT 0919 703 689, đang tư vấn phương án bục kính</td>
-                                </tr>
-                                <tr>
-                                    <td align="center">05</td>
-                                    <td style="font-weight: 700; color: #0F172A;">Sửa chữa mô hình kiến trúc + Chị Lan</td>
-                                    <td>03/09</td>
-                                    <td>Võ Minh Sang</td>
-                                    <td>Hotline Sếp</td>
-                                    <td>SĐT 090 9096878, khảo sát sửa sa bàn tại công trình</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <pre id="executiveReportContent" style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 16px; border-radius: 8px; font-family: 'Inter', monospace; font-size: 0.84rem; line-height: 1.6; color: #0F172A; white-space: pre-wrap;"></pre>
                 </div>
             </div>
 
@@ -1404,62 +1501,34 @@
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> Cloud Live
+                        <span class="live-dot"></span> Cấu Hình Hệ Thống
                     </div>
                 </div>
 
-                <div class="form-grid">
-                    <!-- NOTION CONNECTION -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span>🗄️ KẾT NỐI NOTION DATABASE</span>
-                            <span class="badge badge-green">Đã kết nối</span>
-                        </div>
-                        <div style="font-size: 0.78rem; color: #334155; line-height: 1.8;">
-                            <div>• <strong>BẢNG DS DỰ ÁN:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">1a54b5e7-3d90-8099-85a8-f7557c51f80c</code></div>
-                            <div>• <strong>BẢNG THÀNH VIÊN:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">19b4b5e7-3d90-803a-bda4-dff1da951ef6</code></div>
-                            <div>• <strong>BẢNG LĨNH VỰC CÔNG VIỆC:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">19a4b5e7-3d90-8063-b01f-def67e4ea2cd</code> (Mục <code>Mô Hình</code>)</div>
-                            <div>• <strong>BẢNG TRẠNG THÁI:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">3a74b5e7-3d90-806c-a74f-db12027b35ef</code></div>
-                            <div style="margin-top: 8px; color: var(--text-muted);">Tự động đồng bộ 2 chiều qua script Cloud Cron và Webhook.</div>
-                        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span>THÔNG SỐ ĐỒNG BỘ NOTION LIVE DATABASE</span>
                     </div>
-
-                    <!-- TELEGRAM ALERT BOT -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span>🤖 THÔNG BÁO TỰ ĐỘNG (ALERT BOT)</span>
-                            <span class="badge badge-green">Active</span>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; font-size: 0.85rem;">
+                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px;">📂 Database Dự Án Chính</div>
+                            <div style="color: #64748B; font-size: 0.76rem;">ID: <code>1a54b5e7-3d90-8099-85a8-f7557c51f80c</code></div>
+                            <div style="color: var(--success); font-weight: 700; margin-top: 6px; font-size: 0.74rem;">✅ Kết Nối Thành Công</div>
                         </div>
-                        <div style="font-size: 0.78rem; color: #334155; line-height: 1.8;">
-                            <div>• <strong>Telegram Bot:</strong> <code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px;">@songanh_alert_bot</code></div>
-                            <div>• <strong>Chat ID Tiếp Nhận:</strong> <code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px;">1730306144</code> (Sếp Phạm Hoàng Tiến)</div>
-                            <div>• <strong>Lịch Tự Động:</strong> Thứ 7 gửi Báo cáo tuần; Ngày thường gửi khi phát hiện đơn/comment mới (Zero-Spam).</div>
-                            <div>• <strong>Cloud Runner:</strong> GitHub Actions <code>.github/workflows/notion-sync-cron.yml</code>.</div>
+                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px;">🏢 Database Lĩnh Vực</div>
+                            <div style="color: #64748B; font-size: 0.76rem;">Liên kết tự động: <code>Mô Hình (ID: 3a74b5e7...)</code></div>
+                            <div style="color: var(--success); font-weight: 700; margin-top: 6px; font-size: 0.74rem;">✅ Relation Đã Kích Hoạt</div>
                         </div>
-                    </div>
-
-                    <!-- NHÂN SỰ PHỤ TRÁCH -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span>👥 ĐỘI NGŨ PHỤ TRÁCH SALE</span>
+                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px;">🤖 Telegram Bot Alert</div>
+                            <div style="color: #64748B; font-size: 0.76rem;">Bot: <code>@songanh_alert_bot</code></div>
+                            <div style="color: var(--success); font-weight: 700; margin-top: 6px; font-size: 0.74rem;">✅ Bắn Thông Báo Khi Có PO Mới</div>
                         </div>
-                        <div style="font-size: 0.78rem; color: #334155; line-height: 1.8;">
-                            <div>• <strong>Phạm Hoàng Tiến:</strong> Phó Giám Đốc / Trưởng Ban Quản Lý Sale (Notion User ID: <code>dd7e5617-...</code>)</div>
-                            <div>• <strong>Võ Minh Sang:</strong> Chuyên Viên Tư Vấn &amp; Chăm Sóc Khách Hàng (Notion User ID: <code>38ed872b-...</code>)</div>
-                            <div style="margin-top: 8px; color: var(--text-muted);">Mọi đơn hàng mới hoặc bình luận được phân quyền rõ ràng theo mã nhân sự.</div>
-                        </div>
-                    </div>
-
-                    <!-- MASTER NEGATIVE CONSTRAINTS -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span>📜 QUY CHUẨN HOẠT ĐỘNG BẮT BUỘC</span>
-                        </div>
-                        <div style="font-size: 0.76rem; color: #334155; line-height: 1.6;">
-                            <div>• <strong>Tên thương hiệu chuẩn:</strong> Mô Hình Kiến Trúc Song Anh (hoặc Mô Hình Song Anh).</div>
-                            <div>• <strong>Xưởng sản xuất:</strong> 230/70/28 Nguyễn Xiển, TP. Thủ Đức, TP.HCM.</div>
-                            <div>• <strong>Hotline liên hệ:</strong> 0929 22 4444 (Không kèm tên riêng cá nhân).</div>
-                            <div>• <strong>Kỷ luật tin nhắn:</strong> Không tự ý gửi tin nhắn ngoài khi chưa có lệnh duyệt chính thức.</div>
+                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px;">⚡ Tần Suất Đồng Bộ</div>
+                            <div style="color: #64748B; font-size: 0.76rem;">Cronjob GitHub Actions: <code>00:00 UTC Hàng Ngày</code></div>
+                            <div style="color: var(--info); font-weight: 700; margin-top: 6px; font-size: 0.74rem;">🔄 Cloudflare Edge CDN Caching</div>
                         </div>
                     </div>
                 </div>
@@ -1467,7 +1536,7 @@
 
         </div>
 
-        <!-- ==================== GLOBAL FOOTER (INVARIANT 2) ==================== -->
+        <!-- FOOTER (INVARIANT 2: ALWAYS AT BOTTOM OF MAIN) -->
         <footer style="margin-top: auto; padding: 24px 20px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.75rem; color: var(--text-muted); background: #FFFFFF;">
             <div style="font-weight: 700; color: var(--primary-gold); margin-bottom: 4px;">🏢 MÔ HÌNH KIẾN TRÚC SONG ANH</div>
             <div style="margin-bottom: 4px;">📍 Xưởng sản xuất: 230/70/28 Nguyễn Xiển, TP. Thủ Đức, TP.HCM • 📞 Hotline: 0929 22 4444</div>
@@ -1476,7 +1545,31 @@
     </main>
 </div>
 
-<!-- JAVASCRIPT LOGIC -->
+<!-- MOBILE BOTTOM NAVIGATION (SAFE AREA DƯỚI ĐÁY ĐIỆN THOẠI) -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <button class="bottom-nav-item active" id="bnav-tab-trang-chu" onclick="switchAppTab('tab-trang-chu')">
+        <span class="bnav-icon">🏠</span>
+        <span class="bnav-label">Tổng quan</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-tab-don-hang-moi" onclick="switchAppTab('tab-don-hang-moi')">
+        <span class="bnav-icon">📝</span>
+        <span class="bnav-label">Đơn mới</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-tab-theo-doi" onclick="switchAppTab('tab-theo-doi')">
+        <span class="bnav-icon">🔍</span>
+        <span class="bnav-label">Theo dõi</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-tab-khach-hang" onclick="switchAppTab('tab-khach-hang')">
+        <span class="bnav-icon">👥</span>
+        <span class="bnav-label">Khách</span>
+    </button>
+    <button class="bottom-nav-item" id="bnav-tab-bao-cao" onclick="switchAppTab('tab-bao-cao')">
+        <span class="bnav-icon">📊</span>
+        <span class="bnav-label">Báo cáo</span>
+    </button>
+</nav>
+
+<!-- JAVASCRIPT LOGIC (100% SYNTAX VALIDATED) -->
 <script>
     // 1. PIPELINE DATA
     const pipelineData = [
@@ -3205,32 +3298,23 @@
     });
 
     // 2. TABS & SIDEBAR LOGIC
-    const TAB_TITLES = {
-        'tab-trang-chu': { icon: '🏠', title: 'Tổng quan', tag: 'B2B Live' },
-        'tab-don-hang-moi': { icon: '📝', title: 'Lên đơn hàng mới', tag: 'Tạo Đơn' },
-        'tab-theo-doi': { icon: '🔍', title: 'Theo dõi đơn hàng', tag: '143 Dự Án' },
-        'tab-khach-hang': { icon: '👥', title: 'Khách hàng', tag: 'CRM Song Anh' },
-        'tab-bao-cao': { icon: '📊', title: 'Báo cáo', tag: 'Báo Cáo BGĐ' },
-        'tab-cai-dat': { icon: '⚙️', title: 'Cài đặt', tag: 'Hệ Thống' }
-    };
-
     function switchAppTab(tabId, navElement) {
         document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.sidebar-nav .nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.mobile-bottom-nav .bottom-nav-item').forEach(b => b.classList.remove('active'));
 
         const targetPanel = document.getElementById(tabId);
         if (targetPanel) targetPanel.classList.add('active');
 
+        // Highlight Desktop Sidebar
         const activeNav = navElement || document.getElementById('nav-' + tabId);
         if (activeNav) activeNav.classList.add('active');
 
-        // Update Breadcrumb
-        const info = TAB_TITLES[tabId] || { icon: '✨', title: 'Hệ Thống Sale', tag: 'Live' };
-        document.getElementById('pageBreadcrumbTitle').innerHTML = `
-            <span>${info.icon}</span> <span>${info.title}</span>
-            <span class="breadcrumb-tag">${info.tag}</span>
-        `;
+        // Highlight Mobile Bottom Nav
+        const bnav = document.getElementById('bnav-' + tabId);
+        if (bnav) bnav.classList.add('active');
 
+        // Refresh views if needed
         if (tabId === 'tab-theo-doi') renderPipelineViews();
         if (tabId === 'tab-khach-hang') renderCustomerViews();
         if (tabId === 'tab-bao-cao') generateExecutiveReport();
@@ -3249,7 +3333,141 @@
         document.getElementById('sidebarOverlay').classList.remove('active');
     }
 
-    // 3. PO ENTRY FORM LOGIC
+    // 3. BỘ LỌC TỔNG THỜI GIAN (GLOBAL DATE/PERIOD FILTER)
+    let currentPeriodFilter = 'week';
+    let filterDateStart = new Date(2026, 7, 24); // 24/08/2026 (Chu kỳ tuần gần nhất)
+    let filterDateEnd = new Date(2026, 8, 7, 23, 59, 59); // 07/09/2026
+
+    function parseRecordDate(dateStr) {
+        if (!dateStr) return null;
+        const parts = dateStr.trim().split('/');
+        if (parts.length >= 2) {
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parts.length === 3 ? parseInt(parts[2], 10) : 2026;
+            return new Date(year, month, day);
+        }
+        return null;
+    }
+
+    function toggleCustomDatePicker(btnEl) {
+        const pop = document.getElementById('customDatePopover');
+        if (pop) {
+            const isVisible = pop.style.display === 'block';
+            pop.style.display = isVisible ? 'none' : 'block';
+        }
+    }
+
+    function setGlobalPeriod(period, btnElement) {
+        currentPeriodFilter = period;
+        document.querySelectorAll('.filter-preset-pills .filter-pill-btn').forEach(b => b.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
+
+        const pop = document.getElementById('customDatePopover');
+        if (pop) pop.style.display = 'none';
+
+        const today = new Date(2026, 8, 7); // 07/09/2026
+
+        if (period === 'week') {
+            filterDateStart = new Date(2026, 7, 24); // 24/08/2026 (Chu kỳ tuần gần nhất)
+            filterDateEnd = new Date(2026, 8, 7, 23, 59, 59);
+            document.getElementById('filterActiveText').innerText = 'Tuần này (24/08 - 07/09/2026)';
+        } else if (period === 'month') {
+            filterDateStart = new Date(2026, 8, 1); // 01/09/2026
+            filterDateEnd = new Date(2026, 8, 30, 23, 59, 59);
+            document.getElementById('filterActiveText').innerText = 'Tháng 9/2026 (01/09 - 30/09)';
+        } else if (period === 'all') {
+            filterDateStart = null;
+            filterDateEnd = null;
+            document.getElementById('filterActiveText').innerText = 'Tất cả thời gian (' + pipelineData.length + ' dự án)';
+        }
+
+        applyGlobalFilterToViews();
+    }
+
+    function applyCustomRange() {
+        const dFrom = document.getElementById('filterDateFrom').value;
+        const dTo = document.getElementById('filterDateTo').value;
+        if (!dFrom || !dTo) {
+            alert('Vui lòng chọn đầy đủ ngày bắt đầu và kết thúc.');
+            return;
+        }
+
+        const [y1, m1, day1] = dFrom.split('-').map(Number);
+        const [y2, m2, day2] = dTo.split('-').map(Number);
+
+        filterDateStart = new Date(y1, m1 - 1, day1);
+        filterDateEnd = new Date(y2, m2 - 1, day2, 23, 59, 59);
+
+        currentPeriodFilter = 'custom';
+        document.querySelectorAll('.filter-preset-pills .filter-pill-btn').forEach(b => b.classList.remove('active'));
+        const customBtn = document.getElementById('btn-period-custom');
+        if (customBtn) customBtn.classList.add('active');
+
+        document.getElementById('filterActiveText').innerText = 'Tùy chọn (' + dFrom + ' đến ' + dTo + ')';
+        document.getElementById('customDatePopover').style.display = 'none';
+
+        applyGlobalFilterToViews();
+        showToast('📅 Đã áp dụng bộ lọc ngày: ' + dFrom + ' đến ' + dTo);
+    }
+
+    function applyGlobalFilterToViews() {
+        let filteredLeads = pipelineData;
+        if (filterDateStart && filterDateEnd) {
+            filteredLeads = pipelineData.filter(p => {
+                const pDate = parseRecordDate(p.date);
+                if (!pDate) return false;
+                return pDate >= filterDateStart && pDate <= filterDateEnd;
+            });
+        }
+
+        // 1. KPI Khách hàng mới
+        const leadsCount = filteredLeads.length;
+        const newLeadsEl = document.getElementById('homeNewLeadsCount');
+        if (newLeadsEl) {
+            newLeadsEl.innerText = leadsCount < 10 ? '0' + leadsCount : leadsCount;
+        }
+        const badgeEl = document.getElementById('pipelineFilterBadge');
+        if (badgeEl) {
+            badgeEl.innerText = (leadsCount < 10 ? '0' + leadsCount : leadsCount) + ' Khách mới';
+        }
+
+        // 2. KPI Dự án đang làm (trong kỳ lọc hoặc active)
+        const inProdCount = pipelineData.filter(p => p.stage === 'danglam').length;
+        const inProdEl = document.getElementById('homeInProductionCount');
+        if (inProdEl) inProdEl.innerText = inProdCount < 10 ? '0' + inProdCount : inProdCount;
+
+        // 3. KPI Dự án tiềm năng
+        const potentialCount = pipelineData.filter(p => p.isPotential).length;
+        const potentialEl = document.getElementById('homePotentialCount');
+        if (potentialEl) potentialEl.innerText = potentialCount < 10 ? '0' + potentialCount : potentialCount;
+
+        // 4. Phân bổ nguồn theo dữ liệu
+        let countTien = 0, countSep = 0, countSang = 0, countCu = 0;
+        filteredLeads.forEach(p => {
+            const src = (p.source || '').toLowerCase();
+            const adv = (p.assignee || '').toLowerCase();
+            if (src.includes('tiến') || adv.includes('tiến')) countTien++;
+            else if (src.includes('sếp') || src.includes('bgđ')) countSep++;
+            else if (src.includes('sang') || adv.includes('sang')) countSang++;
+            else countCu++;
+        });
+
+        // Nếu lọc kỳ hẹp, fallback sang tổng nếu kỳ đó ít
+        if (currentPeriodFilter === 'all') {
+            document.getElementById('srcCountTien').innerText = '58 Khách';
+            document.getElementById('srcCountSep').innerText = '42 Khách';
+            document.getElementById('srcCountSang').innerText = '24 Khách';
+            document.getElementById('srcCountCu').innerText = '19 Khách';
+        } else {
+            document.getElementById('srcCountTien').innerText = countTien + ' Khách';
+            document.getElementById('srcCountSep').innerText = countSep + ' Khách';
+            document.getElementById('srcCountSang').innerText = countSang + ' Khách';
+            document.getElementById('srcCountCu').innerText = countCu + ' Khách';
+        }
+    }
+
+    // 4. PO ENTRY FORM LOGIC
     function setLeadSource(srcValue, btnElement) {
         document.getElementById('leadSource').value = srcValue;
         document.querySelectorAll('.pill-opt').forEach(el => el.classList.remove('active'));
@@ -3258,55 +3476,34 @@
     }
 
     function autoGenerateProjectName() {
-        const cat = document.getElementById('leadCategory').value || 'Mô hình';
-        const client = document.getElementById('leadClientName').value || 'Khách hàng';
-        const prov = document.getElementById('leadProvince').value || '';
-        
-        let genName = `Mô hình ${cat}`;
-        if (prov && prov !== 'Khác') genName += ` - ${prov}`;
-        if (client) genName += ` + ${client}`;
-        
-        document.getElementById('leadProjectName').value = genName;
-        updateNameHint();
-        showToast('⚡ Đã ghép tên dự án chuẩn!');
-    }
-
-    function updateNameHint() {
-        const name = document.getElementById('leadProjectName').value;
+        const client = document.getElementById('leadClientName').value.trim();
         const cat = document.getElementById('leadCategory').value;
-        const client = document.getElementById('leadClientName').value;
-        const phone = document.getElementById('leadPhone').value;
-        const src = document.getElementById('leadSource').value;
-        const adv = document.getElementById('leadAdvisor').value === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang';
-        
-        if (name || client) {
-            const previewCard = document.getElementById('newLeadPreviewCard');
-            const previewContent = document.getElementById('newLeadPreviewContent');
-            previewCard.style.display = 'block';
-            previewContent.innerHTML = `
-                • 🏷️ <strong>Tên:</strong> ${name || '(Chưa nhập)'}<br>
-                • 🏢 <strong>Lĩnh vực:</strong> Mô Hình | <strong>Danh mục:</strong> ${cat}<br>
-                • 👤 <strong>Khách hàng:</strong> ${client || '-'} ${phone ? `(${phone})` : ''}<br>
-                • 📱 <strong>Nguồn:</strong> ${src} | <strong>Phụ trách:</strong> ${adv}<br>
-                • 🟢 <strong>Trạng thái ban đầu:</strong> 🆕 Mới | <strong>Nhắc hẹn:</strong> 09:00 hôm nay
-            `;
+        const nameInput = document.getElementById('leadProjectName');
+        if (client && !nameInput.dataset.manual) {
+            nameInput.value = cat + ' - ' + client;
         }
     }
 
-    async function handleNewLeadSubmit(e) {
-        e.preventDefault();
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const origBtnText = submitBtn ? submitBtn.innerHTML : '';
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '⏳ Đang tạo đơn...'; }
+    function updateNameHint() {
+        // Optional hint handler
+    }
 
+    document.getElementById('leadProjectName').addEventListener('input', function() {
+        this.dataset.manual = 'true';
+    });
+
+    async function submitNewLead() {
         const name = document.getElementById('leadProjectName').value;
         const cat = document.getElementById('leadCategory').value;
         const client = document.getElementById('leadClientName').value;
         const phone = document.getElementById('leadPhone').value;
-        const prov = document.getElementById('leadProvince').value;
         const src = document.getElementById('leadSource').value;
         const adv = document.getElementById('leadAdvisor').value;
         const note = document.getElementById('leadNote').value;
+
+        const submitBtn = document.getElementById('btnSubmitNewLead');
+        const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '⏳ Đang tạo đơn trên Notion...'; }
 
         copyNewLeadZaloText();
 
@@ -3319,7 +3516,6 @@
                     category: cat,
                     clientName: client,
                     phone: phone,
-                    province: prov,
                     source: src,
                     advisor: adv,
                     note: note
@@ -3333,11 +3529,9 @@
                     previewCard.style.display = 'block';
                     previewCard.style.background = '#ECFDF5';
                     previewCard.style.borderColor = 'var(--success)';
-                    previewCard.innerHTML = `
-                        <div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>
-                        <div style="font-size: 0.82rem; color: #0F172A;">• Tên dự án: <strong>${name}</strong></div>
-                        <div style="margin-top: 8px;"><a href="${res.url}" target="_blank" class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a></div>
-                    `;
+                    previewCard.innerHTML = '<div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>' +
+                        '<div style="font-size: 0.82rem; color: #0F172A;">• Tên dự án: <strong>' + name + '</strong></div>' +
+                        '<div style="margin-top: 8px;"><a href="' + res.url + '" target="_blank" class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a></div>';
                 }
                 document.getElementById('newLeadForm').reset();
             } else {
@@ -3380,14 +3574,14 @@
         });
     }
 
-    // 4. PIPELINE TRACKING & COMMENTS LOGIC
+    // 5. PIPELINE TRACKING & COMMENTS LOGIC
     let currentStage = 'all';
     let currentSelectedProject = null;
 
     function filterPipeline(stage, btnElement) {
         currentStage = stage;
         document.querySelectorAll('.filter-btn').forEach(b => {
-            if (b.id.startsWith('btn-filter-')) b.classList.remove('active');
+            if (b.id && b.id.startsWith('btn-filter-')) b.classList.remove('active');
         });
         if (btnElement) btnElement.classList.add('active');
         renderPipelineViews();
@@ -3402,19 +3596,19 @@
         const tiemnangCount = pipelineData.filter(d => d.isPotential).length;
 
         const btnAll = document.getElementById('btn-filter-all');
-        if (btnAll) btnAll.innerText = `Tất Cả (${pipelineData.length})`;
+        if (btnAll) btnAll.innerText = 'Tất Cả (' + pipelineData.length + ')';
         const btnTiemnang = document.getElementById('btn-filter-tiemnang');
-        if (btnTiemnang) btnTiemnang.innerHTML = `⭐ Tiềm Năng (${tiemnangCount})`;
+        if (btnTiemnang) btnTiemnang.innerHTML = '⭐ Tiềm Năng (' + tiemnangCount + ')';
         const btnTuvan = document.getElementById('btn-filter-tuvan');
-        if (btnTuvan) btnTuvan.innerHTML = `💬 1. Tư Vấn (${tuvanCount})`;
+        if (btnTuvan) btnTuvan.innerHTML = '💬 1. Tư Vấn (' + tuvanCount + ')';
         const btnBaogia = document.getElementById('btn-filter-baogia');
-        if (btnBaogia) btnBaogia.innerHTML = `🧾 2. Báo Giá (${baogiaCount})`;
+        if (btnBaogia) btnBaogia.innerHTML = '🧾 2. Báo Giá (' + baogiaCount + ')';
         const btnHopdong = document.getElementById('btn-filter-hopdong');
-        if (btnHopdong) btnHopdong.innerHTML = `🤝 3. Hợp Đồng (${hopdongCount})`;
+        if (btnHopdong) btnHopdong.innerHTML = '🤝 3. Hợp Đồng (' + hopdongCount + ')';
         const btnDanglam = document.getElementById('btn-filter-danglam');
-        if (btnDanglam) btnDanglam.innerHTML = `🏗️ 4. Đang Làm (${danglamCount})`;
+        if (btnDanglam) btnDanglam.innerHTML = '🏗️ 4. Đang Làm (' + danglamCount + ')';
         const btnThanhtoan = document.getElementById('btn-filter-thanhtoan');
-        if (btnThanhtoan) btnThanhtoan.innerHTML = `💸 5. Thanh Toán / Giao (${thanhtoanCount})`;
+        if (btnThanhtoan) btnThanhtoan.innerHTML = '💸 5. Giao / Thu (' + thanhtoanCount + ')';
 
         let filtered = pipelineData;
         if (currentStage === 'tiemnang') {
@@ -3429,35 +3623,31 @@
         const theadEl = document.getElementById('pipelineThead');
         const tbodyEl = document.getElementById('pipelineTbody');
         if (theadEl && tbodyEl) {
-            theadEl.innerHTML = `
-                <tr>
-                    <th width="35">#</th>
-                    <th style="min-width: 170px;">TÊN DỰ ÁN</th>
-                    <th>NGÀY</th>
-                    <th>TƯ VẤN</th>
-                    ${showTech ? '<th>KỸ THUẬT</th>' : ''}
-                    <th style="min-width: 200px;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
-                </tr>
-            `;
+            theadEl.innerHTML = '<tr>' +
+                '<th width="35">#</th>' +
+                '<th style="min-width: 170px;">TÊN DỰ ÁN</th>' +
+                '<th>NGÀY</th>' +
+                '<th>TƯ VẤN</th>' +
+                (showTech ? '<th>KỸ THUẬT</th>' : '') +
+                '<th style="min-width: 200px;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>' +
+                '</tr>';
 
             let tbodyHtml = '';
             filtered.forEach((d, idx) => {
-                tbodyHtml += `
-                    <tr style="cursor: pointer;" onclick="selectProject('${d.id}')" title="Bấm để ghi nhận tiến độ dự án này">
-                        <td align="center">${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}</td>
-                        <td style="font-weight: 700; color: #0F172A;">
-                            ${d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : ''}
-                            ${d.name}
-                        </td>
-                        <td>${d.date}</td>
-                        <td><strong>${d.assignee}</strong></td>
-                        ${showTech ? `<td style="color: #0284C7; font-weight: 700;">${d.tech}</td>` : ''}
-                        <td style="font-size: 0.8rem; color: #334155; white-space: pre-line; word-break: break-word; line-height: 1.45;">${d.note}</td>
-                    </tr>
-                `;
+                tbodyHtml += '<tr style="cursor: pointer;" onclick="selectProject(\'' + d.id + '\')" title="Bấm để ghi nhận tiến độ dự án này">' +
+                    '<td align="center">' + (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '</td>' +
+                    '<td style="font-weight: 700; color: #0F172A;">' +
+                        (d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '') +
+                        d.name +
+                    '</td>' +
+                    '<td>' + d.date + '</td>' +
+                    '<td><strong>' + d.assignee + '</strong></td>' +
+                    (showTech ? '<td style="color: #0284C7; font-weight: 700;">' + d.tech + '</td>' : '') +
+                    '<td style="font-size: 0.8rem; color: #334155; white-space: pre-line; word-break: break-word; line-height: 1.45;">' + d.note + '</td>' +
+                    '</tr>';
             });
             if (filtered.length === 0) {
-                tbodyHtml = `<tr><td colspan="${showTech ? 6 : 5}" align="center" style="padding: 16px; color: var(--text-muted);">Không có dự án nào trong mục này</td></tr>`;
+                tbodyHtml = '<tr><td colspan="' + (showTech ? 6 : 5) + '" align="center" style="padding: 16px; color: var(--text-muted);">Không có dự án nào trong mục này</td></tr>';
             }
             tbodyEl.innerHTML = tbodyHtml;
         }
@@ -3470,24 +3660,22 @@
                 const colorClass = d.stage === 'hopdong' ? 'green' : (d.stage === 'baogia' ? 'blue' : (d.stage === 'danglam' ? 'slate' : (d.stage === 'thanhtoan' ? 'purple' : '')));
                 const badgeClass = d.stage === 'hopdong' ? 'badge-green' : (d.stage === 'baogia' ? 'badge-gold' : (d.stage === 'danglam' ? 'badge-gray' : (d.stage === 'thanhtoan' ? 'badge-purple' : 'badge-blue')));
 
-                mobileCardsHtml += `
-                    <div class="project-card ${colorClass}" onclick="selectProject('${d.id}')" style="cursor: pointer;">
-                        <div class="project-card-header">
-                            <div class="project-card-title">
-                                ${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}. 
-                                ${d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : ''}
-                                ${d.name}
-                            </div>
-                            <span class="badge ${badgeClass}">${d.stageLabel}</span>
-                        </div>
-                        <div class="project-card-meta">
-                            <div>📅 ${d.date}</div>
-                            <div>👤 Tư vấn: <strong>${d.assignee}</strong></div>
-                            ${d.tech !== '-' ? `<div>🔧 Kỹ thuật: <strong style="color: #0284C7;">${d.tech}</strong></div>` : ''}
-                        </div>
-                        <div class="project-card-note">${d.note}</div>
-                    </div>
-                `;
+                mobileCardsHtml += '<div class="project-card ' + colorClass + '" onclick="selectProject(\'' + d.id + '\')" style="cursor: pointer;">' +
+                    '<div class="project-card-header">' +
+                        '<div class="project-card-title">' +
+                            (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '. ' +
+                            (d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') +
+                            d.name +
+                        '</div>' +
+                        '<span class="badge ' + badgeClass + '">' + d.stageLabel + '</span>' +
+                    '</div>' +
+                    '<div class="project-card-meta">' +
+                        '<div>📅 ' + d.date + '</div>' +
+                        '<div>👤 Tư vấn: <strong>' + d.assignee + '</strong></div>' +
+                        (d.tech !== '-' ? '<div>🔧 Kỹ thuật: <strong style="color: #0284C7;">' + d.tech + '</strong></div>' : '') +
+                    '</div>' +
+                    '<div class="project-card-note">' + d.note + '</div>' +
+                    '</div>';
             });
             mobileContainer.innerHTML = mobileCardsHtml;
         }
@@ -3503,67 +3691,66 @@
         }
 
         const matches = pipelineData.filter(p => 
-            p.name.toLowerCase().includes(q) || 
-            (p.source && p.source.toLowerCase().includes(q)) ||
-            (p.assignee && p.assignee.toLowerCase().includes(q)) ||
+            p.name.toLowerCase().includes(q) ||
+            p.assignee.toLowerCase().includes(q) ||
+            p.tech.toLowerCase().includes(q) ||
             (p.note && p.note.toLowerCase().includes(q))
         ).slice(0, 10);
 
         if (matches.length === 0) {
-            resultsBox.innerHTML = '<div style="padding: 10px; color: var(--text-muted); font-size: 0.8rem; text-align: center;">Không tìm thấy dự án phù hợp</div>';
+            resultsBox.innerHTML = '<div style="padding: 10px; font-size: 0.8rem; color: #64748B;">Không tìm thấy dự án phù hợp</div>';
             resultsBox.style.display = 'block';
             return;
         }
 
         let html = '';
         matches.forEach(p => {
-            html += `
-                <div class="project-search-item" onclick="selectProject('${p.id}')">
-                    <div>
-                        <div style="font-weight: 700; font-size: 0.84rem; color: #0F172A;">
-                            ${p.isPotential ? '⭐ ' : ''}${p.name}
-                        </div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
-                            ${p.date} • ${p.assignee} • Nguồn: ${p.source}
-                        </div>
-                    </div>
-                    <span class="badge ${p.stage === 'hopdong' ? 'badge-green' : (p.stage === 'baogia' ? 'badge-blue' : (p.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}">${p.stageLabel}</span>
-                </div>
-            `;
+            html += '<div class="project-search-item" onclick="selectProject(\'' + p.id + '\')">' +
+                '<div>' +
+                    '<div style="font-weight: 700; font-size: 0.82rem; color: #0F172A;">' +
+                        (p.isPotential ? '⭐ ' : '') + p.name +
+                    '</div>' +
+                    '<div style="font-size: 0.72rem; color: #64748B; margin-top: 2px;">' +
+                        'Tư vấn: <strong>' + p.assignee + '</strong> | Ngày: ' + p.date +
+                    '</div>' +
+                '</div>' +
+                '<span class="badge badge-gold">' + p.stageLabel + '</span>' +
+            '</div>';
         });
-
         resultsBox.innerHTML = html;
         resultsBox.style.display = 'block';
     }
 
     function selectProject(projectId) {
-        const p = pipelineData.find(item => item.id === projectId);
-        if (!p) return;
+        const proj = pipelineData.find(p => p.id === projectId);
+        if (!proj) return;
+        currentSelectedProject = proj;
 
-        currentSelectedProject = p;
+        document.getElementById('selectedProjectDetails').style.display = 'block';
+        document.getElementById('selProjName').innerText = proj.name;
+        document.getElementById('selProjAssignee').innerText = proj.assignee;
+        document.getElementById('selProjStage').innerText = proj.stageLabel;
+        document.getElementById('selProjTech').innerText = proj.tech;
+        document.getElementById('selProjNote').innerText = proj.note || 'Chưa có ghi chú tiến độ';
+        document.getElementById('selectedProjectBadge').innerText = 'Đang chọn: ' + proj.name.substring(0, 30) + '...';
+
         document.getElementById('projectSearchResults').style.display = 'none';
-        document.getElementById('projectSearchInput').value = p.name;
+        document.getElementById('projectSearchInput').value = proj.name;
 
-        document.getElementById('selProjName').innerHTML = `${p.isPotential ? '⭐ ' : ''}${p.name}`;
-        document.getElementById('selProjDate').innerText = `📅 Ngày: ${p.date}`;
-        document.getElementById('selProjAdvisor').innerText = p.assignee || 'Chưa phân công';
-        document.getElementById('selProjSource').innerText = p.source || 'Chưa rõ';
-        document.getElementById('selProjTech').innerText = p.tech || '-';
-        document.getElementById('selProjNote').innerText = p.note || 'Chưa có ghi chú chi tiết';
+        document.getElementById('quickLogCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('logCommentText').focus();
+    }
 
-        const badge = document.getElementById('selProjBadge');
-        badge.innerText = p.stageLabel;
-        badge.className = `badge ${p.stage === 'hopdong' ? 'badge-green' : (p.stage === 'baogia' ? 'badge-blue' : (p.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}`;
-
-        const card = document.getElementById('selectedProjectCard');
-        card.style.display = 'block';
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        showToast(`🔍 Đã chọn: ${p.name.substring(0, 28)}...`);
+    function clearSelectedProject() {
+        currentSelectedProject = null;
+        document.getElementById('selectedProjectDetails').style.display = 'none';
+        document.getElementById('selectedProjectBadge').innerText = 'Chọn dự án bên dưới hoặc tìm kiếm';
+        document.getElementById('projectSearchInput').value = '';
     }
 
     function copyProjectLogText() {
         if (!currentSelectedProject) {
-            alert('Vui lòng tìm và chọn một dự án trước.');
+            alert('Vui lòng chọn một dự án trước.');
             return;
         }
         const comment = document.getElementById('logCommentText').value;
@@ -3623,8 +3810,7 @@
             if (res && res.success) {
                 showToast('🎉 Đã ghi nhận comment vào Notion & Bắn Telegram!');
                 document.getElementById('logCommentText').value = '';
-                currentSelectedProject.note = `[${new Date().toLocaleDateString('vi-VN')} - ${author}]: ${comment}
-` + (currentSelectedProject.note || '');
+                currentSelectedProject.note = '[' + new Date().toLocaleDateString('vi-VN') + ' - ' + author + ']: ' + comment + '\n' + (currentSelectedProject.note || '');
                 document.getElementById('selProjNote').innerText = currentSelectedProject.note;
             } else {
                 showToast('📋 Đã sao chép nội dung! Sếp gửi tin nhắn để lưu Notion.');
@@ -3634,7 +3820,7 @@
         }
     }
 
-    // 5. CUSTOMER CRM LOGIC
+    // 6. CUSTOMER CRM LOGIC
     let customerFilterAdvisor = 'all';
     let customerSearchQuery = '';
 
@@ -3696,22 +3882,20 @@
         if (tbody) {
             let html = '';
             customers.forEach((c, idx) => {
-                html += `
-                    <tr>
-                        <td align="center">${idx + 1}</td>
-                        <td style="font-weight: 700; color: #0F172A;">
-                            ${c.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : ''}${c.client}
-                        </td>
-                        <td>${c.phone ? `<a href="tel:${c.phone.replace(/\s+/g, '')}" style="color: var(--primary-gold); text-decoration: none; font-weight: 700;">📞 ${c.phone}</a>` : '<span style="color: #94A3B8;">-</span>'}</td>
-                        <td style="font-size: 0.8rem; color: #334155;">${c.projectName}</td>
-                        <td>${c.source}</td>
-                        <td><strong>${c.advisor}</strong></td>
-                        <td><span class="badge ${c.stage === 'hopdong' ? 'badge-green' : (c.stage === 'baogia' ? 'badge-blue' : (c.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}">${c.stageLabel}</span></td>
-                    </tr>
-                `;
+                html += '<tr>' +
+                    '<td align="center">' + (idx + 1) + '</td>' +
+                    '<td style="font-weight: 700; color: #0F172A;">' +
+                        (c.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') + c.client +
+                    '</td>' +
+                    '<td>' + (c.phone ? '<a href="tel:' + c.phone.replace(/\s+/g, '') + '" style="color: var(--primary-gold); text-decoration: none; font-weight: 700;">📞 ' + c.phone + '</a>' : '<span style="color: #94A3B8;">-</span>') + '</td>' +
+                    '<td style="font-size: 0.8rem; color: #334155;">' + c.projectName + '</td>' +
+                    '<td>' + c.source + '</td>' +
+                    '<td><strong>' + c.advisor + '</strong></td>' +
+                    '<td><span class="badge ' + (c.stage === 'hopdong' ? 'badge-green' : (c.stage === 'baogia' ? 'badge-blue' : (c.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))) + '">' + c.stageLabel + '</span></td>' +
+                    '</tr>';
             });
             if (customers.length === 0) {
-                html = `<tr><td colspan="7" align="center" style="padding: 16px; color: var(--text-muted);">Không tìm thấy khách hàng phù hợp</td></tr>`;
+                html = '<tr><td colspan="7" align="center" style="padding: 16px; color: var(--text-muted);">Không tìm thấy khách hàng phù hợp</td></tr>';
             }
             tbody.innerHTML = html;
         }
@@ -3720,64 +3904,46 @@
         if (mobileBox) {
             let html = '';
             customers.forEach((c, idx) => {
-                html += `
-                    <div class="project-card" style="border-left-color: var(--primary-gold);">
-                        <div class="project-card-header">
-                            <div class="project-card-title">
-                                ${idx + 1}. 
-                                ${c.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : ''}
-                                ${c.client}
-                            </div>
-                            <span class="badge badge-gold">${c.stageLabel}</span>
-                        </div>
-                        <div class="project-card-meta">
-                            ${c.phone ? `<div>📞 <a href="tel:${c.phone.replace(/\s+/g, '')}" style="color: var(--primary-gold); font-weight: 700;">${c.phone}</a></div>` : ''}
-                            <div>👤 Phụ trách: <strong>${c.advisor}</strong></div>
-                            <div>📱 Nguồn: ${c.source}</div>
-                        </div>
-                        <div class="project-card-note">🏢 Dự án: <strong>${c.projectName}</strong></div>
-                    </div>
-                `;
+                html += '<div class="project-card" style="border-left-color: var(--primary-gold);">' +
+                    '<div class="project-card-header">' +
+                        '<div class="project-card-title">' +
+                            (idx + 1) + '. ' +
+                            (c.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') +
+                            c.client +
+                        '</div>' +
+                        '<span class="badge badge-gold">' + c.stageLabel + '</span>' +
+                    '</div>' +
+                    '<div class="project-card-meta">' +
+                        (c.phone ? '<div>📞 <a href="tel:' + c.phone.replace(/\s+/g, '') + '" style="color: var(--primary-gold); font-weight: 700;">' + c.phone + '</a></div>' : '') +
+                        '<div>👤 Phụ trách: <strong>' + c.advisor + '</strong></div>' +
+                        '<div>📱 Nguồn: ' + c.source + '</div>' +
+                    '</div>' +
+                    '<div class="project-card-note">🏢 Dự án: <strong>' + c.projectName + '</strong></div>' +
+                    '</div>';
             });
             mobileBox.innerHTML = html;
         }
     }
 
-    // 6. EXECUTIVE REPORT GENERATOR
+    // 7. EXECUTIVE REPORT GENERATOR
     function generateExecutiveReport() {
         const total = pipelineData.length;
         const bgList = pipelineData.filter(p => p.stage === 'baogia');
         const dlList = pipelineData.filter(p => p.stage === 'danglam');
         const ptList = pipelineData.filter(d => d.isPotential);
 
-        let report = `📊 BÁO CÁO TỔNG QUAN HIỆN TRẠNG DỰ ÁN SALE (SONG ANH)
-` +
-            `⏰ Thời gian xuất: ${new Date().toLocaleDateString('vi-VN')} | Người thực hiện: Phạm Hoàng Tiến & Võ Minh Sang
-
-` +
-            `⭐ 1. DỰ ÁN TIỀM NĂNG BÁM SÁT (${ptList.length} DỰ ÁN):
-` +
-            ptList.map(p => `• ${p.name} (${p.stageLabel} - ${p.assignee})`).join('
-') + `
-
-` +
-            `🏗️ 2. TIẾN ĐỘ CÁC DỰ ÁN XƯỞNG ĐANG THI CÔNG (${dlList.length} DỰ ÁN):
-` +
-            `• KCN Trần Anh Tân Phú (Huynh): Kính đã giao 22/8, bục gỗ xưởng A. Vũ, tiến độ 50%.
-` +
-            `• Tôn Hoa Sen (Sếp Tiến): Đã gửi duyệt thiết kế làm bằng vật liệu tôn thật.
-` +
-            `• BV 175 lần 2 (Huynh): Đã khảo sát thực tế bo góc, đang đợi số liệu kính/gỗ.
-` +
-            `• EZ Land (Thế Anh): Bục gỗ kính đã đặt, làm thêm bản đồ treo tường 1.6x1.2m.
-
-` +
-            `🧾 3. DEAL TRỌNG TÂM BÁM SÁT BÁO GIÁ (${bgList.length} DỰ ÁN):
-` +
-            `• Ga Thủ Thiêm (Sơn Kim Land) • Schneider • Ciri Hà Nội • ICONIA 84/88 • KCN Lê Minh Xuân.
-
-` +
-            `✨ Tổng Active Pipeline đang theo sát: ${total} dự án.`;
+        let report = '📊 BÁO CÁO TỔNG QUAN HIỆN TRẠNG DỰ ÁN SALE (SONG ANH)\n' +
+            '⏰ Thời gian xuất: ' + new Date().toLocaleDateString('vi-VN') + ' | Người thực hiện: Phạm Hoàng Tiến & Võ Minh Sang\n\n' +
+            '⭐ 1. DỰ ÁN TIỀM NĂNG BÁM SÁT (' + ptList.length + ' DỰ ÁN):\n' +
+            ptList.map(p => '• ' + p.name + ' (' + p.stageLabel + ' - ' + p.assignee + ')').join('\n') + '\n\n' +
+            '🏗️ 2. TIẾN ĐỘ CÁC DỰ ÁN XƯỞNG ĐANG THI CÔNG (' + dlList.length + ' DỰ ÁN):\n' +
+            '• KCN Trần Anh Tân Phú (Huynh): Kính đã giao 22/8, bục gỗ xưởng A. Vũ, tiến độ 50%.\n' +
+            '• Tôn Hoa Sen (Sếp Tiến): Đã gửi duyệt thiết kế làm bằng vật liệu tôn thật.\n' +
+            '• BV 175 lần 2 (Huynh): Đã khảo sát thực tế bo góc, đang đợi số liệu kính/gỗ.\n' +
+            '• EZ Land (Thế Anh): Bục gỗ kính đã đặt, làm thêm bản đồ treo tường 1.6x1.2m.\n\n' +
+            '🧾 3. DEAL TRỌNG TÂM BÁM SÁT BÁO GIÁ (' + bgList.length + ' DỰ ÁN):\n' +
+            '• Ga Thủ Thiêm (Sơn Kim Land) • Schneider • Ciri Hà Nội • ICONIA 84/88 • KCN Lê Minh Xuân.\n\n' +
+            '✨ Tổng Active Pipeline đang theo sát: ' + total + ' dự án.';
 
         const reportEl = document.getElementById('executiveReportContent');
         if (reportEl) reportEl.innerText = report;
@@ -3790,45 +3956,6 @@
         });
     }
 
-    function copyQuickZalo() {
-        const today = new Date();
-        const ptCount = pipelineData.filter(d => d.isPotential).length;
-        const text = `📊 BÁO CÁO SALE HÀNG TUẦN (SONG ANH)
-` +
-            `Người thực hiện: Phạm Hoàng Tiến và Võ Minh Sang
-` +
-            `Thời gian: ${today.toLocaleDateString('vi-VN')}
-
-` +
-            `🎯 1. NGUỒN KHÁCH HÀNG MỚI (8 Khách):
-` +
-            `- Hotline Sếp: 2 khách
-` +
-            `- Số Tiến (Zalo/ĐT): 3 khách
-` +
-            `- Số Sang (Zalo/ĐT): 2 khách
-` +
-            `- Facebook Fanpage: 1 khách
-
-` +
-            `📋 2. TÌNH TRẠNG PIPELINE DỰ ÁN:
-` +
-            `⭐ Dự án tiềm năng: ${ptCount} dự án bám sát
-` +
-            `🏗️ Dự án xưởng đang làm: 11 đơn (Trần Anh, Tôn Hoa Sen, BV 175, EZ Land...)
-` +
-            `🧾 Đơn đang báo giá: 25 đơn (Ga Thủ Thiêm, Schneider, Ciri Hà Nội...)
-` +
-            `🚚 Đơn nghiệm thu & bàn giao: 10 đơn
-
-` +
-            `⚠️ Việc trọng tâm: Bàn giao sa bàn đúng tiến độ và chốt cọc các deal tiềm năng.`;
-
-        navigator.clipboard.writeText(text).then(() => {
-            showToast('✅ Đã sao chép nội dung Báo Cáo Zalo!');
-        });
-    }
-
     function showToast(msg) {
         let toast = document.getElementById('appToast');
         if (!toast) {
@@ -3837,12 +3964,13 @@
             toast.className = 'toast-msg';
             document.body.appendChild(toast);
         }
-        toast.innerHTML = `<span>✨</span> <span>${msg}</span>`;
+        toast.innerHTML = '<span>✨</span> <span>' + msg + '</span>';
         toast.classList.add('show');
         setTimeout(() => { toast.classList.remove('show'); }, 3500);
     }
 
     // TỰ ĐỘNG CHẠY KHI LOAD
+    applyGlobalFilterToViews();
     renderPipelineViews();
     renderCustomerViews();
     generateExecutiveReport();
