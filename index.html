@@ -611,6 +611,37 @@
             line-height: 1.2;
         }
 
+        /* STAGE SUMMARY PILLS FOR HOME TABLE */
+        .home-stage-summary-wrap {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .stage-pill-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            user-select: none;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .stage-pill-box:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .stage-pill-box.gold { background: #FEF3C7; border: 1px solid #FDE68A; color: #855C08; }
+        .stage-pill-box.blue { background: #EFF6FF; border: 1px solid #BAE6FD; color: #0284C7; }
+        .stage-pill-box.green { background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; }
+        .stage-pill-box.purple { background: #F5F3FF; border: 1px solid #DDD6FE; color: #7C3AED; }
+        .stage-pill-box.gray { background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569; }
+
         .kpi-box {
             background: #FFFFFF;
             border: 1px solid var(--card-border);
@@ -1248,6 +1279,61 @@
                                 <div class="source-kpi-value" style="color: #7C3AED;" id="srcCountCu">0 Khách</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- ==================== BẢNG THEO DÕI TỔNG QUAN TÌNH TRẠNG DỰ ÁN ==================== -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1rem;">📋 BẢNG THEO DÕI TỔNG QUAN TÌNH TRẠNG DỰ ÁN</span>
+                            <span class="badge badge-gold" id="homeTableTotalBadge">0 Dự án</span>
+                        </div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);" id="homeTableScopeSubtitle">Hiển thị động theo bộ lọc: Tuần này (07/09 - 13/09/2026)</span>
+                    </div>
+
+                    <!-- HÀNG TÓM TẮT NHANH 5 TRẠNG THÁI CHUẨN NOTION TRONG KỲ LỌC -->
+                    <div class="home-stage-summary-wrap">
+                        <div class="stage-pill-box gold">
+                            <span>💬 Tư vấn:</span> <strong id="homeStageTuvanCount" style="font-size: 0.9rem;">0</strong>
+                        </div>
+                        <div class="stage-pill-box blue">
+                            <span>🧾 Báo giá:</span> <strong id="homeStageBaogiaCount" style="font-size: 0.9rem;">0</strong>
+                        </div>
+                        <div class="stage-pill-box green">
+                            <span>🤝 Hợp đồng:</span> <strong id="homeStageHopdongCount" style="font-size: 0.9rem;">0</strong>
+                        </div>
+                        <div class="stage-pill-box purple">
+                            <span>🏗️ Đang làm:</span> <strong id="homeStageDanglamCount" style="font-size: 0.9rem;">0</strong>
+                        </div>
+                        <div class="stage-pill-box gray">
+                            <span>💸 Giao/Thu:</span> <strong id="homeStageThanhtoanCount" style="font-size: 0.9rem;">0</strong>
+                        </div>
+                    </div>
+
+                    <!-- BẢNG DỮ LIỆU DESKTOP (>= 768px) -->
+                    <div class="desktop-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="40" style="text-align: center;">#</th>
+                                    <th style="min-width: 200px;">TÊN DỰ ÁN</th>
+                                    <th width="90">NGÀY LIÊN HỆ</th>
+                                    <th style="min-width: 140px;">KHÁCH HÀNG</th>
+                                    <th width="130">GIAI ĐOẠN / TRẠNG THÁI</th>
+                                    <th width="130">TƯ VẤN</th>
+                                    <th style="min-width: 240px;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="homeProjectTableBody">
+                                <!-- Dynamic rows rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- CARD LIST MOBILE (< 768px) -->
+                    <div class="mobile-card-list" id="homeProjectMobileCards" style="margin-top: 10px;">
+                        <!-- Dynamic mobile cards rendered by JS -->
                     </div>
                 </div>
             </div>
@@ -3515,6 +3601,150 @@
             document.getElementById('srcCountSep').innerText = countSep + ' Khách';
             document.getElementById('srcCountSang').innerText = countSang + ' Khách';
             document.getElementById('srcCountCu').innerText = countCu + ' Khách';
+        }
+
+        // 5. Render Bảng Theo Dõi Tổng Quan Dự Án Trên Trang Chủ
+        renderHomeProjectTable(filteredLeads);
+    }
+
+    function renderHomeProjectTable(leads) {
+        // Cập nhật Subtitle theo kỳ lọc
+        const subtitleEl = document.getElementById('homeTableScopeSubtitle');
+        if (subtitleEl) {
+            let filterName = 'Tuần này (07/09 - 13/09/2026)';
+            if (currentPeriodFilter === '7days') filterName = '7 ngày qua (01/09 - 07/09/2026)';
+            else if (currentPeriodFilter === 'month') filterName = 'Tháng 9/2026 (01/09 - 30/09)';
+            else if (currentPeriodFilter === 'all') filterName = 'Tất cả thời gian';
+            else if (currentPeriodFilter === 'custom') {
+                const dFrom = document.getElementById('filterDateFrom') ? document.getElementById('filterDateFrom').value : '';
+                const dTo = document.getElementById('filterDateTo') ? document.getElementById('filterDateTo').value : '';
+                filterName = 'Tùy chọn (' + dFrom + ' đến ' + dTo + ')';
+            }
+            subtitleEl.innerText = 'Hiển thị động theo bộ lọc: ' + filterName;
+        }
+
+        const totalBadge = document.getElementById('homeTableTotalBadge');
+        if (totalBadge) {
+            totalBadge.innerText = (leads.length < 10 ? '0' + leads.length : leads.length) + ' Dự án';
+        }
+
+        // Đếm số lượng theo 5 trạng thái chuẩn Notion
+        let cTuvan = 0, cBaogia = 0, cHopdong = 0, cDanglam = 0, cThanhtoan = 0;
+        leads.forEach(d => {
+            if (d.stage === 'tuvan') cTuvan++;
+            else if (d.stage === 'baogia') cBaogia++;
+            else if (d.stage === 'hopdong') cHopdong++;
+            else if (d.stage === 'danglam') cDanglam++;
+            else if (d.stage === 'thanhtoan') cThanhtoan++;
+        });
+
+        const elTuvan = document.getElementById('homeStageTuvanCount');
+        if (elTuvan) elTuvan.innerText = cTuvan;
+        const elBaogia = document.getElementById('homeStageBaogiaCount');
+        if (elBaogia) elBaogia.innerText = cBaogia;
+        const elHopdong = document.getElementById('homeStageHopdongCount');
+        if (elHopdong) elHopdong.innerText = cHopdong;
+        const elDanglam = document.getElementById('homeStageDanglamCount');
+        if (elDanglam) elDanglam.innerText = cDanglam;
+        const elThanhtoan = document.getElementById('homeStageThanhtoanCount');
+        if (elThanhtoan) elThanhtoan.innerText = cThanhtoan;
+
+        // Render Desktop Table Body
+        const tbody = document.getElementById('homeProjectTableBody');
+        if (tbody) {
+            if (leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" align="center" style="padding: 24px; color: var(--text-muted); font-size: 0.85rem;">Không có dự án nào phát sinh trong khoảng thời gian đã chọn</td></tr>';
+            } else {
+                let html = '';
+                leads.forEach((d, idx) => {
+                    let client = '-';
+                    let phone = '';
+                    if (d.name.includes('+')) {
+                        client = d.name.split('+').pop().trim();
+                    } else if (d.name.includes('-')) {
+                        const parts = d.name.split('-');
+                        if (parts.length > 2) client = parts.pop().trim();
+                    }
+                    const phoneMatch = ((d.note || '') + ' ' + (d.name || '')).match(/(0\d{9,10}|\d{4}\s\d{3}\s\d{3})/);
+                    if (phoneMatch) phone = phoneMatch[0];
+                    const clientDisplay = d.client || (client !== '-' ? client : (d.source ? 'Nguồn ' + d.source : 'Khách liên hệ'));
+                    const fullClient = clientDisplay + (phone ? ' (' + phone + ')' : '');
+
+                    // Badge trạng thái chuẩn màu sắc
+                    let badgeClass = 'badge-gold';
+                    let stageText = '💬 Tư vấn';
+                    if (d.stage === 'baogia') { badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
+                    else if (d.stage === 'hopdong') { badgeClass = 'badge-green'; stageText = '🤝 Hợp đồng'; }
+                    else if (d.stage === 'danglam') { badgeClass = 'badge-purple'; stageText = '🏗️ Đang làm'; }
+                    else if (d.stage === 'thanhtoan') { badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
+                    else if (d.stageLabel) { stageText = d.stageLabel; }
+
+                    html += '<tr style="cursor: pointer;" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + d.id + '\');" title="Bấm để xem chi tiết và cập nhật dự án">' +
+                        '<td align="center" style="color: var(--text-muted); font-weight: 700;">' + (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '</td>' +
+                        '<td style="font-weight: 700; color: #0F172A;">' +
+                            (d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '') +
+                            d.name +
+                        '</td>' +
+                        '<td style="white-space: nowrap; color: #475569; font-weight: 600;">' + (d.date || '-') + '</td>' +
+                        '<td style="color: #334155; font-weight: 500;">' + fullClient + '</td>' +
+                        '<td><span class="badge ' + badgeClass + '">' + stageText + '</span></td>' +
+                        '<td><strong style="color: #0F172A;">' + (d.assignee || '-') + '</strong></td>' +
+                        '<td style="font-size: 0.8rem; color: #475569; line-height: 1.45; word-break: break-word; white-space: pre-line;">' + (d.note || '-') + '</td>' +
+                        '</tr>';
+                });
+                tbody.innerHTML = html;
+            }
+        }
+
+        // Render Mobile Card List (< 768px)
+        const mobileContainer = document.getElementById('homeProjectMobileCards');
+        if (mobileContainer) {
+            if (leads.length === 0) {
+                mobileContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.85rem; background: #FFFFFF; border-radius: 8px; border: 1px dashed #CBD5E1;">Không có dự án nào phát sinh trong khoảng thời gian đã chọn</div>';
+            } else {
+                let mHtml = '';
+                leads.forEach((d, idx) => {
+                    let client = '-';
+                    let phone = '';
+                    if (d.name.includes('+')) {
+                        client = d.name.split('+').pop().trim();
+                    } else if (d.name.includes('-')) {
+                        const parts = d.name.split('-');
+                        if (parts.length > 2) client = parts.pop().trim();
+                    }
+                    const phoneMatch = ((d.note || '') + ' ' + (d.name || '')).match(/(0\d{9,10}|\d{4}\s\d{3}\s\d{3})/);
+                    if (phoneMatch) phone = phoneMatch[0];
+                    const clientDisplay = d.client || (client !== '-' ? client : (d.source ? 'Nguồn ' + d.source : 'Khách liên hệ'));
+                    const fullClient = clientDisplay + (phone ? ' (' + phone + ')' : '');
+
+                    let colorClass = 'gold';
+                    let badgeClass = 'badge-gold';
+                    let stageText = '💬 Tư vấn';
+                    if (d.stage === 'baogia') { colorClass = 'blue'; badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
+                    else if (d.stage === 'hopdong') { colorClass = 'green'; badgeClass = 'badge-green'; stageText = '🤝 Hợp đồng'; }
+                    else if (d.stage === 'danglam') { colorClass = 'purple'; badgeClass = 'badge-purple'; stageText = '🏗️ Đang làm'; }
+                    else if (d.stage === 'thanhtoan') { colorClass = 'slate'; badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
+                    else if (d.stageLabel) { stageText = d.stageLabel; }
+
+                    mHtml += '<div class="project-card ' + colorClass + '" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + d.id + '\');" style="cursor: pointer;">' +
+                        '<div class="project-card-header">' +
+                            '<div class="project-card-title">' +
+                                (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '. ' +
+                                (d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') +
+                                d.name +
+                            '</div>' +
+                            '<span class="badge ' + badgeClass + '">' + stageText + '</span>' +
+                        '</div>' +
+                        '<div class="project-card-meta">' +
+                            '<span>📅 ' + (d.date || '-') + '</span>' +
+                            '<span>👤 ' + fullClient + '</span>' +
+                            '<span>🎯 <strong>' + (d.assignee || '-') + '</strong></span>' +
+                        '</div>' +
+                        (d.note ? '<div style="font-size: 0.76rem; color: #475569; background: #F8FAFC; padding: 6px 8px; border-radius: 6px; line-height: 1.4; margin-top: 4px; border: 1px solid #F1F5F9;">' + d.note + '</div>' : '') +
+                        '</div>';
+                });
+                mobileContainer.innerHTML = mHtml;
+            }
         }
     }
 
