@@ -1,18 +1,18 @@
 /**
- * Cloudflare Worker for Song Anh Sales System (songanh-sale)
+ * Production Cloudflare Worker for Song Anh Sales System (songanh-sale)
  * Routes:
- * - POST /api/create-lead: Tao du an moi tren Notion va ban Telegram
- * - POST /api/add-comment: Ghi comment tien do vao Notion va cap nhat trang thai va ban Telegram
- * - GET  /api/project-comments: Lay comment gan nhat tu Notion
- * - GET  /api/health: Kiem tra trang thai worker
- * - GET  /*: Phuc vu Static Assets
+ * - POST /api/create-lead: Tạo dự án mới trên Notion & gửi Telegram
+ * - POST /api/add-comment: Ghi comment tiến độ vào trang Notion & cập nhật trạng thái & gửi Telegram
+ * - GET  /api/project-comments?page_id=xxx: Lấy danh sách bình luận Notion
+ * - GET  /api/health: Health check
+ * - GET  /*: Live proxy static assets trực tiếp từ GitHub repo (luôn đồng bộ tự động)
  */
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Xu ly CORS Preflight
+    // 1. CORS Preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
@@ -30,11 +30,14 @@ export default {
       'Content-Type': 'application/json; charset=utf-8',
     };
 
-    // 1. Health Check
+    // 2. Health check
     if (url.pathname === '/api/health') {
-      return new Response(JSON.stringify({ status: 'ok', service: 'songanh-sale', time: new Date().toISOString() }), {
-        headers: corsHeaders,
-      });
+      return new Response(JSON.stringify({
+        status: 'ok',
+        service: 'songanh-sale',
+        version: '3.0.0',
+        time: new Date().toISOString()
+      }), { headers: corsHeaders });
     }
 
     const NOTION_TOKEN = env.NOTION_TOKEN;
@@ -42,14 +45,14 @@ export default {
     const TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = env.TELEGRAM_CHAT_ID || '1730306144';
 
-    // 2. Endpoint: POST /api/create-lead
+    // 3. Endpoint: POST /api/create-lead
     if (url.pathname === '/api/create-lead' && request.method === 'POST') {
       try {
         const body = await request.json();
         const { projectName, category, clientName, phone, source, advisor, note, province } = body;
 
         if (!projectName || !projectName.trim()) {
-          return new Response(JSON.stringify({ success: false, error: 'Vui long nhap ten du an!' }), {
+          return new Response(JSON.stringify({ success: false, error: 'Vui lòng nhập tên dự án!' }), {
             status: 400,
             headers: corsHeaders,
           });
@@ -58,7 +61,7 @@ export default {
         const isTien = (advisor || '').toUpperCase() === 'TIEN';
         const advisorRelId = isTien ? '19d4b5e7-3d90-80ad-8fee-f81c3b11fd69' : '3894b5e7-3d90-8019-ab3e-f390d0d794a1';
         const advisorUserId = isTien ? 'dd7e5617-a24c-4a2c-8d3c-92ffd2517c44' : '38ed872b-594c-8151-8ff6-000286cb9f7a';
-        const advisorName = isTien ? 'Pham Hoang Tien' : 'Vo Minh Sang';
+        const advisorName = isTien ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang';
 
         const vnDate = new Date(Date.now() + 7 * 3600 * 1000);
         const todayStr = vnDate.toISOString().split('T')[0];
@@ -68,10 +71,10 @@ export default {
             title: [{ text: { content: projectName.trim() } }]
           },
           'LĨNH VỰC': {
-            relation: [{ id: '19a4b5e7-3d90-8022-9844-d93fd68a0812' }]
+            relation: [{ id: '19a4b5e7-3d90-8022-9844-d93fd68a0812' }] // Mô Hình
           },
           'Trạng thái dự án': {
-            relation: [{ id: '3a74b5e7-3d90-8087-a904-c25e61ae36da' }]
+            relation: [{ id: '3a74b5e7-3d90-8087-a904-c25e61ae36da' }] // 💬 Tư vấn / 🆕 Mới
           },
           'Người theo': {
             relation: [{ id: advisorRelId }]
@@ -83,7 +86,7 @@ export default {
             date: { start: todayStr }
           },
           'Nhắc hẹn': {
-            date: { start: todayStr + 'T09:00:00+07:00' }
+            date: { start: `${todayStr}T09:00:00+07:00` }
           }
         };
 
@@ -121,7 +124,7 @@ export default {
         const notionRes = await fetch('https://api.notion.com/v1/pages', {
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer ' + NOTION_TOKEN,
+            'Authorization': `Bearer ${NOTION_TOKEN}`,
             'Notion-Version': '2022-06-28',
             'Content-Type': 'application/json',
           },
@@ -133,38 +136,37 @@ export default {
 
         const resJson = await notionRes.json();
         if (!notionRes.ok) {
-          return new Response(JSON.stringify({ success: false, error: resJson.message || 'Loi Notion API', details: resJson }), {
+          return new Response(JSON.stringify({ success: false, error: resJson.message || 'Lỗi Notion API', details: resJson }), {
             status: 500,
             headers: corsHeaders,
           });
         }
 
+        // Gửi Telegram ping
         try {
-          const tgMsg = '🆕 *DỰ ÁN MỚI LÊN ĐƠN (WEB APP)*\n' +
-            '• *Tên dự án:* ' + projectName.trim() + '\n' +
-            '• *Khách hàng:* ' + (clientName || 'Chưa rõ') + (phone ? ' (' + phone + ')' : '') + '\n' +
-            '• *Lĩnh vực:* Mô Hình | *Danh mục:* ' + (category || 'Mô hình') + '\n' +
-            '• *Nguồn khách:* ' + (source || 'Zalo') + '\n' +
-            '• *Phụ trách:* ' + advisorName + '\n' +
-            (note ? '• *Ghi chú:* ' + note + '\n' : '') +
-            '• *Nhắc hẹn:* 09:00 hôm nay\n' +
-            '• *Trạng thái:* 🆕 Mới (💬 Tư vấn)\n\n' +
-            '🔗 [Mở trên Notion](' + resJson.url + ')';
+          const tgMsg = `🆕 *DỰ ÁN MỚI LÊN ĐƠN (WEB APP)*\\n` +
+            `• *Tên dự án:* *${projectName.trim()}*\\n` +
+            `• *Khách hàng:* ${clientName || 'Chưa rõ'} ${phone ? `(${phone})` : ''}\\n` +
+            `• *Lĩnh vực:* Mô Hình | *Danh mục:* ${category || 'Mô hình'}\\n` +
+            `• *Nguồn khách:* ${source || 'Zalo'}\\n` +
+            `• *Phụ trách:* ${advisorName}\\n` +
+            (note ? `• *Ghi chú:* ${note}\\n` : '') +
+            `• *Nhắc hẹn:* 09:00 hôm nay\\n` +
+            `• *Trạng thái:* 🆕 Mới (💬 Tư vấn)\\n\\n` +
+            `🔗 [Mở trên Notion](${resJson.url})`;
 
-          if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-            await fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: tgMsg,
-                parse_mode: 'Markdown',
-                disable_web_page_preview: true,
-              }),
-            });
-          }
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: tgMsg,
+              parse_mode: 'Markdown',
+              disable_web_page_preview: true,
+            }),
+          });
         } catch (tgErr) {
-          console.error('Loi Telegram:', tgErr);
+          console.error('Lỗi Telegram:', tgErr);
         }
 
         return new Response(JSON.stringify({
@@ -183,7 +185,7 @@ export default {
       }
     }
 
-    // 3. Endpoint: POST /api/add-comment
+    // 4. Endpoint: POST /api/add-comment
     if (url.pathname === '/api/add-comment' && request.method === 'POST') {
       try {
         const body = await request.json();
@@ -199,19 +201,20 @@ export default {
         const authorName = author || 'Sếp Tiến';
         const vnDate = new Date(Date.now() + 7 * 3600 * 1000);
         const dateStr = vnDate.toLocaleDateString('vi-VN');
-        const prefix = '[' + authorName + ' - ' + dateStr + ']: ';
+        const prefix = `[${authorName} - ${dateStr}]: `;
 
+        // Ghi comment vào Notion
         const commentRes = await fetch('https://api.notion.com/v1/comments', {
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer ' + NOTION_TOKEN,
+            'Authorization': `Bearer ${NOTION_TOKEN}`,
             'Notion-Version': '2022-06-28',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             parent: { page_id: projectId },
             rich_text: [
-              { text: { content: prefix + commentText.trim() } }
+              { text: { content: `${prefix}${commentText.trim()}` } }
             ],
           }),
         });
@@ -224,6 +227,7 @@ export default {
           });
         }
 
+        // Cập nhật trạng thái dự án nếu có
         let statusUpdated = false;
         let statusLabel = '';
         if (newStatus) {
@@ -237,10 +241,10 @@ export default {
           };
           const statusItem = statusMap[newStatus];
           if (statusItem) {
-            await fetch('https://api.notion.com/v1/pages/' + projectId, {
+            await fetch(`https://api.notion.com/v1/pages/${projectId}`, {
               method: 'PATCH',
               headers: {
-                'Authorization': 'Bearer ' + NOTION_TOKEN,
+                'Authorization': `Bearer ${NOTION_TOKEN}`,
                 'Notion-Version': '2022-06-28',
                 'Content-Type': 'application/json',
               },
@@ -257,27 +261,26 @@ export default {
           }
         }
 
+        // Gửi Telegram ping
         try {
-          const statusNote = statusUpdated ? '\n• *Chuyển trạng thái:* `' + statusLabel + '`' : '';
+          const statusNote = statusUpdated ? `\\n• *Chuyển trạng thái:* \`${statusLabel}\`` : '';
           const timeStr = vnDate.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
-          const tgMsg = '💬 *CẬP NHẬT TIẾN ĐỘ DỰ ÁN (WEB APP)*\n' +
-            '• *Dự án:* *' + (projectName || 'Dự án') + '*\n' +
-            '• *Người cập nhật:* ' + authorName + statusNote + '\n' +
-            '• *Nội dung:* "' + commentText.trim() + '"\n' +
-            '⏰ *Thời gian:* ' + timeStr;
+          const tgMsg = `💬 *CẬP NHẬT TIẾN ĐỘ DỰ ÁN (WEB APP)*\\n` +
+            `• *Dự án:* *${projectName || 'Dự án'}*\\n` +
+            `• *Người cập nhật:* ${authorName}${statusNote}\\n` +
+            `• *Nội dung:* "${commentText.trim()}"\\n` +
+            `⏰ *Thời gian:* ${timeStr}`;
 
-          if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-            await fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: tgMsg,
-                parse_mode: 'Markdown',
-                disable_web_page_preview: true,
-              }),
-            });
-          }
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: tgMsg,
+              parse_mode: 'Markdown',
+              disable_web_page_preview: true,
+            }),
+          });
         } catch (tgErr) {
           console.error('Lỗi Telegram:', tgErr);
         }
@@ -298,7 +301,7 @@ export default {
       }
     }
 
-    // 4. Endpoint: GET /api/project-comments?page_id=xxx
+    // 5. Endpoint: GET /api/project-comments
     if (url.pathname === '/api/project-comments') {
       const pageId = url.searchParams.get('page_id');
       if (!pageId) {
@@ -308,9 +311,9 @@ export default {
         });
       }
       try {
-        const res = await fetch('https://api.notion.com/v1/comments?block_id=' + pageId, {
+        const res = await fetch(`https://api.notion.com/v1/comments?block_id=${pageId}`, {
           headers: {
-            'Authorization': 'Bearer ' + NOTION_TOKEN,
+            'Authorization': `Bearer ${NOTION_TOKEN}`,
             'Notion-Version': '2022-06-28',
           },
         });
@@ -331,11 +334,41 @@ export default {
       }
     }
 
-    // 5. Fallback Static Assets
-    if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
+    // 6. Static Asset Proxy từ GitHub Repo (luôn đồng bộ theo commit mới nhất)
+    let filePath = url.pathname;
+    if (filePath === '/' || filePath === '') {
+      filePath = '/index.html';
     }
 
-    return new Response('Song Anh Sale Worker Active', { status: 200 });
+    const githubRawBase = 'https://raw.githubusercontent.com/hoangtien1300/songanh-sale/main';
+    const targetUrl = `${githubRawBase}${filePath}`;
+
+    try {
+      const ghRes = await fetch(targetUrl, {
+        cf: {
+          cacheTtl: 60, // Cache 60s trên Edge để phản hồi tức thì
+          cacheEverything: true
+        }
+      });
+
+      if (ghRes.ok) {
+        const ct = filePath.endsWith('.html') ? 'text/html; charset=utf-8' :
+                   (filePath.endsWith('.css') ? 'text/css; charset=utf-8' :
+                   (filePath.endsWith('.js') ? 'application/javascript; charset=utf-8' :
+                   (filePath.endsWith('.json') ? 'application/json; charset=utf-8' : 'text/plain')));
+        
+        return new Response(ghRes.body, {
+          status: ghRes.status,
+          headers: {
+            'Content-Type': ct,
+            'Cache-Control': 'public, max-age=60, s-maxage=120',
+          }
+        });
+      }
+    } catch (fetchErr) {
+      console.error('Lỗi fetch static từ GitHub:', fetchErr);
+    }
+
+    return new Response('404 Not Found', { status: 404 });
   }
 };
