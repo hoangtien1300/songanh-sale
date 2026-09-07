@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hệ Thống Quản Lý & Tác Nghiệp Sale - Mô Hình Song Anh</title>
+    <!-- VIETNAMESE OPTIMIZED FONTS: PLUS JAKARTA SANS & INTER -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --sidebar-width: 260px;
@@ -29,7 +30,15 @@
             --purple: #7C3AED;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
         body { background-color: var(--body-bg); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
 
         /* APP LAYOUT */
@@ -93,7 +102,7 @@
             font-size: 0.98rem;
             font-weight: 800;
             color: #0F172A;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.3px;
             line-height: 1.2;
         }
 
@@ -371,18 +380,11 @@
         }
 
         .module-header-title h2 {
-            font-size: 1.18rem;
+            font-size: 1.25rem;
             color: #78350F;
-            margin: 0 0 4px 0;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-        }
-
-        .module-header-desc {
-            font-size: 0.78rem;
-            color: #64748B;
             margin: 0;
-            line-height: 1.4;
+            font-weight: 800;
+            letter-spacing: 0.2px;
         }
 
         .module-status-badge {
@@ -423,10 +425,11 @@
             gap: 8px;
         }
 
-        .kpi-grid {
+        /* 3 CLEAN KPI CARDS FOR HOME */
+        .kpi-grid-3 {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
             margin-bottom: 20px;
         }
 
@@ -434,13 +437,21 @@
             background: #FFFFFF;
             border: 1px solid var(--card-border);
             border-radius: 10px;
-            padding: 14px 16px;
+            padding: 16px 18px;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .kpi-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+            border-color: var(--primary-gold);
         }
 
         .kpi-box::before {
@@ -455,63 +466,22 @@
 
         .kpi-box.green::before { background: var(--success); }
         .kpi-box.blue::before { background: var(--info); }
-        .kpi-box.slate::before { background: var(--slate-gray); }
+        .kpi-box.gold::before { background: var(--primary-gold); }
 
         .kpi-label {
-            font-size: 0.72rem;
+            font-size: 0.76rem;
             text-transform: uppercase;
             color: #64748B;
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
         }
 
         .kpi-num {
-            font-size: 1.8rem;
+            font-size: 2.1rem;
             font-weight: 800;
             color: #0F172A;
             margin-top: 4px;
             line-height: 1;
-        }
-
-        /* URGENT HIGHLIGHT CARDS (LIGHT) */
-        .urgent-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .urgent-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 8px;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-
-        .urgent-card.red { border-left: 4px solid var(--danger); background: #FEF2F2; }
-        .urgent-card.amber { border-left: 4px solid var(--warning); background: #FFFBEB; }
-        .urgent-card.green { border-left: 4px solid var(--success); background: #ECFDF5; }
-
-        .urgent-card-title {
-            font-size: 0.82rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .urgent-card.red .urgent-card-title { color: #DC2626; }
-        .urgent-card.amber .urgent-card-title { color: #D97706; }
-        .urgent-card.green .urgent-card-title { color: #059669; }
-
-        .urgent-card-desc {
-            font-size: 0.76rem;
-            color: #334155;
-            line-height: 1.4;
         }
 
         /* BUTTONS (LIGHT) */
@@ -843,7 +813,7 @@
         @media (max-width: 768px) {
             .desktop-table-wrap { display: none; }
             .mobile-card-list { display: flex; }
-            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .kpi-grid-3 { grid-template-columns: 1fr; }
             .main-container { padding: 14px 10px; }
             .module-header-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
             .module-header-icon { font-size: 1.8rem; padding: 8px; }
@@ -934,7 +904,7 @@
             <div class="topbar-left">
                 <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
                 <div class="breadcrumb-title" id="pageBreadcrumbTitle">
-                    <span>🏠</span> <span>Trang Chủ Điều Hành</span>
+                    <span>🏠</span> <span>Tổng quan</span>
                     <span class="breadcrumb-tag">B2B Live</span>
                 </div>
             </div>
@@ -960,48 +930,27 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">🏠</span>
                         <div>
-                            <h2>TRANG CHỦ ĐIỀU HÀNH &amp; HIỆN TRẠNG SALE</h2>
-                            <p class="module-header-desc">Bảng tổng quan chỉ số nhịp tim, cảnh báo mốc tiến độ gấp và phân bổ nguồn khách hàng thời gian thực</p>
+                            <h2>Tổng quan</h2>
                         </div>
                     </div>
                     <div class="module-status-badge">
-                        <span class="live-dot"></span> Pipeline: 143 Dự Án
+                        <span class="live-dot"></span> Live Pipeline
                     </div>
                 </div>
 
-                <!-- CẢNH BÁO MỐC GẤP -->
-                <div class="urgent-grid">
-                    <div class="urgent-card red">
-                        <div class="urgent-card-title">🚨 KĐT Nam Đàn (Nghệ An)</div>
-                        <div class="urgent-card-desc">Bàn giao ngày <strong>11/09</strong> cho sự kiện <strong>12/09</strong>. Đã gửi Đề nghị thanh toán đợt 2. Cần theo sát nghiệm thu xưởng!</div>
+                <!-- 3 THẺ KPI CHUẨN YÊU CẦU: KHÁCH HÀNG MỚI, DỰ ÁN ĐANG LÀM, DỰ ÁN TIỀM NĂNG -->
+                <div class="kpi-grid-3">
+                    <div class="kpi-box gold" onclick="switchAppTab('tab-bao-cao')" title="Bấm để xem danh sách khách hàng mới">
+                        <div class="kpi-label">Khách hàng mới</div>
+                        <div class="kpi-num" id="homeNewLeadsCount" style="color: var(--primary-gold);">08</div>
                     </div>
-                    <div class="urgent-card amber">
-                        <div class="urgent-card-title">⏳ Diamond Home (Long Xuyên)</div>
-                        <div class="urgent-card-desc">Hạn hoàn thiện sa bàn <strong>15/09</strong> cho lễ ra mắt <strong>17/09</strong>. Bám sát tiến độ hoàn thiện chi tiết.</div>
+                    <div class="kpi-box green" onclick="switchAppTab('tab-theo-doi'); filterPipeline('danglam', document.getElementById('btn-filter-danglam'));" title="Bấm để xem các dự án xưởng đang làm">
+                        <div class="kpi-label">Dự án đang làm</div>
+                        <div class="kpi-num" id="homeInProductionCount" style="color: #059669;">11</div>
                     </div>
-                    <div class="urgent-card green">
-                        <div class="urgent-card-title">🏭 Nhà máy Makita - Toda</div>
-                        <div class="urgent-card-desc">Dự án đã hoàn tất giai đoạn gia công, đang tiến hành thủ tục nghiệm thu xuất xưởng và bàn giao khách hàng.</div>
-                    </div>
-                </div>
-
-                <!-- 4 THẺ KPI LỚN -->
-                <div class="kpi-grid">
-                    <div class="kpi-box">
-                        <div class="kpi-label">Tổng Active Pipeline</div>
-                        <div class="kpi-num" id="homeTotalActive" style="color: var(--primary-gold);">143</div>
-                    </div>
-                    <div class="kpi-box green">
-                        <div class="kpi-label">Hợp đồng chốt / Đang làm</div>
-                        <div class="kpi-num" id="homeContractCount" style="color: #059669;">01</div>
-                    </div>
-                    <div class="kpi-box blue">
-                        <div class="kpi-label">Đang theo sát báo giá</div>
-                        <div class="kpi-num" id="homeQuoteCount" style="color: #0284C7;">25</div>
-                    </div>
-                    <div class="kpi-box slate">
-                        <div class="kpi-label">Xưởng đang thi công</div>
-                        <div class="kpi-num" id="homeProductionCount" style="color: #475569;">11</div>
+                    <div class="kpi-box blue" onclick="switchAppTab('tab-theo-doi'); filterPipeline('tiemnang', document.getElementById('btn-filter-tiemnang'));" title="Bấm để xem các dự án có tick Tiềm năng">
+                        <div class="kpi-label">Dự án tiềm năng</div>
+                        <div class="kpi-num" id="homePotentialCount" style="color: #0284C7;">08</div>
                     </div>
                 </div>
 
@@ -1012,21 +961,21 @@
                         <span style="font-size: 0.78rem; color: var(--text-muted);">Dữ liệu Notion DB</span>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Zalo / Hotline Tiến</div>
-                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary-gold);">58 Khách</div>
+                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
+                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Zalo / Hotline Tiến</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: var(--primary-gold); margin-top: 2px;">58 Khách</div>
                         </div>
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Hotline Sếp / BGĐ</div>
-                            <div style="font-size: 1.15rem; font-weight: 800; color: #0284C7;">42 Khách</div>
+                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
+                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Hotline Sếp / BGĐ</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: #0284C7; margin-top: 2px;">42 Khách</div>
                         </div>
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Zalo Sang</div>
-                            <div style="font-size: 1.15rem; font-weight: 800; color: #059669;">24 Khách</div>
+                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
+                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Zalo Sang</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: #059669; margin-top: 2px;">24 Khách</div>
                         </div>
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Khách Cũ &amp; Giới Thiệu</div>
-                            <div style="font-size: 1.15rem; font-weight: 800; color: #7C3AED;">19 Khách</div>
+                        <div class="kpi-box" style="flex: 1; min-width: 180px; padding: 12px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; cursor: default;">
+                            <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">Khách Cũ &amp; Giới Thiệu</div>
+                            <div style="font-size: 1.25rem; font-weight: 800; color: #7C3AED; margin-top: 2px;">19 Khách</div>
                         </div>
                     </div>
 
@@ -1072,8 +1021,7 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">📝</span>
                         <div>
-                            <h2>LÊN ĐƠN HÀNG MỚI (PO ENTRY FORM)</h2>
-                            <p class="module-header-desc">Hệ thống tạo đơn hàng sa bàn kiến trúc chuẩn hóa, tự động ghép tên và đồng bộ trực tiếp Notion Database</p>
+                            <h2>Lên đơn hàng mới</h2>
                         </div>
                     </div>
                     <div class="module-status-badge">
@@ -1198,8 +1146,7 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">🔍</span>
                         <div>
-                            <h2>THEO DÕI ĐƠN HÀNG &amp; CẬP NHẬT TIẾN ĐỘ</h2>
-                            <p class="module-header-desc">Quản lý toàn bộ 143+ dự án active, lọc 5 trạng thái, tìm kiếm tức thì và ghi nhận comment tiến độ</p>
+                            <h2>Theo dõi đơn hàng</h2>
                         </div>
                     </div>
                     <div class="module-status-badge">
@@ -1268,10 +1215,11 @@
                     </div>
                 </div>
 
-                <!-- BỘ LỌC 5 TRẠNG THÁI -->
+                <!-- BỘ LỌC TRẠNG THÁI + NÚT TIỀM NĂNG -->
                 <div class="card" style="padding: 14px;">
                     <div class="filter-bar">
                         <button class="filter-btn active" id="btn-filter-all" onclick="filterPipeline('all', this)">Tất Cả (143)</button>
+                        <button class="filter-btn" id="btn-filter-tiemnang" onclick="filterPipeline('tiemnang', this)">⭐ Tiềm Năng (8)</button>
                         <button class="filter-btn" id="btn-filter-tuvan" onclick="filterPipeline('tuvan', this)">💬 1. Tư Vấn (96)</button>
                         <button class="filter-btn" id="btn-filter-baogia" onclick="filterPipeline('baogia', this)">🧾 2. Báo Giá (25)</button>
                         <button class="filter-btn" id="btn-filter-hopdong" onclick="filterPipeline('hopdong', this)">🤝 3. Hợp Đồng (1)</button>
@@ -1307,8 +1255,7 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">👥</span>
                         <div>
-                            <h2>QUẢN LÝ KHÁCH HÀNG &amp; ĐỐI TÁC</h2>
-                            <p class="module-header-desc">Danh bạ khách hàng liên kết trực tiếp từ 143+ hồ sơ dự án và Bảng Thành Viên Notion</p>
+                            <h2>Khách hàng</h2>
                         </div>
                     </div>
                     <div class="module-status-badge">
@@ -1356,8 +1303,7 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">📊</span>
                         <div>
-                            <h2>TRUNG TÂM BÁO CÁO &amp; XUẤT TÀI LIỆU</h2>
-                            <p class="module-header-desc">Báo cáo Sale hàng tuần, phân tích hiện trạng rủi ro dự án và công cụ xuất tài liệu A4 / Zalo</p>
+                            <h2>Báo cáo</h2>
                         </div>
                     </div>
                     <div class="module-status-badge">
@@ -1454,8 +1400,7 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">⚙️</span>
                         <div>
-                            <h2>CẤU HÌNH HỆ THỐNG &amp; KẾT NỐI LIVE</h2>
-                            <p class="module-header-desc">Quản lý kết nối cơ sở dữ liệu Notion, Telegram Alert Bot, đội ngũ phụ trách và quy chuẩn vận hành</p>
+                            <h2>Cài đặt</h2>
                         </div>
                     </div>
                     <div class="module-status-badge">
@@ -3253,14 +3198,20 @@
     }
 ];
 
+    // Danh sách 8 dự án có tick Tiềm năng = true trên Notion
+    const potentialIdList = new Set(["3cd4b5e7-3d90-8032-81a5-e80b991d7455", "3cb4b5e7-3d90-8087-9b01-d7facf649e0e", "3c44b5e7-3d90-80ef-9dd3-ee091ed3bbea", "3c44b5e7-3d90-80c6-81da-dd806ea69bed", "3c44b5e7-3d90-803b-ac88-e27eb4fbe5f3", "3bf4b5e7-3d90-80c0-8fa7-e993b56e0b27", "3bb4b5e7-3d90-8026-8d97-c05c7d167767", "3a44b5e7-3d90-8057-9d8f-dfb167f7988a"]);
+    pipelineData.forEach(p => {
+        p.isPotential = potentialIdList.has(p.id);
+    });
+
     // 2. TABS & SIDEBAR LOGIC
     const TAB_TITLES = {
-        'tab-trang-chu': { icon: '🏠', title: 'Trang Chủ Điều Hành', tag: 'B2B Live' },
-        'tab-don-hang-moi': { icon: '📝', title: 'Lên Đơn Hàng Mới (PO)', tag: 'Tạo Đơn' },
-        'tab-theo-doi': { icon: '🔍', title: 'Theo Dõi Đơn Hàng & Bình Luận', tag: '143 Dự Án' },
-        'tab-khach-hang': { icon: '👥', title: 'Quản Lý Khách Hàng & Đối Tác', tag: 'CRM Song Anh' },
-        'tab-bao-cao': { icon: '📊', title: 'Trung Tâm Báo Cáo & Xuất Tài Liệu', tag: 'Báo Cáo BGĐ' },
-        'tab-cai-dat': { icon: '⚙️', title: 'Cấu Hình Hệ Thống & Kết Nối Live', tag: 'Cài Đặt' }
+        'tab-trang-chu': { icon: '🏠', title: 'Tổng quan', tag: 'B2B Live' },
+        'tab-don-hang-moi': { icon: '📝', title: 'Lên đơn hàng mới', tag: 'Tạo Đơn' },
+        'tab-theo-doi': { icon: '🔍', title: 'Theo dõi đơn hàng', tag: '143 Dự Án' },
+        'tab-khach-hang': { icon: '👥', title: 'Khách hàng', tag: 'CRM Song Anh' },
+        'tab-bao-cao': { icon: '📊', title: 'Báo cáo', tag: 'Báo Cáo BGĐ' },
+        'tab-cai-dat': { icon: '⚙️', title: 'Cài đặt', tag: 'Hệ Thống' }
     };
 
     function switchAppTab(tabId, navElement) {
@@ -3448,9 +3399,12 @@
         const hopdongCount = pipelineData.filter(d => d.stage === 'hopdong').length;
         const danglamCount = pipelineData.filter(d => d.stage === 'danglam').length;
         const thanhtoanCount = pipelineData.filter(d => d.stage === 'thanhtoan').length;
+        const tiemnangCount = pipelineData.filter(d => d.isPotential).length;
 
         const btnAll = document.getElementById('btn-filter-all');
         if (btnAll) btnAll.innerText = `Tất Cả (${pipelineData.length})`;
+        const btnTiemnang = document.getElementById('btn-filter-tiemnang');
+        if (btnTiemnang) btnTiemnang.innerHTML = `⭐ Tiềm Năng (${tiemnangCount})`;
         const btnTuvan = document.getElementById('btn-filter-tuvan');
         if (btnTuvan) btnTuvan.innerHTML = `💬 1. Tư Vấn (${tuvanCount})`;
         const btnBaogia = document.getElementById('btn-filter-baogia');
@@ -3462,9 +3416,12 @@
         const btnThanhtoan = document.getElementById('btn-filter-thanhtoan');
         if (btnThanhtoan) btnThanhtoan.innerHTML = `💸 5. Thanh Toán / Giao (${thanhtoanCount})`;
 
-        const filtered = currentStage === 'all' 
-            ? pipelineData 
-            : pipelineData.filter(d => d.stage === currentStage);
+        let filtered = pipelineData;
+        if (currentStage === 'tiemnang') {
+            filtered = pipelineData.filter(d => d.isPotential);
+        } else if (currentStage !== 'all') {
+            filtered = pipelineData.filter(d => d.stage === currentStage);
+        }
 
         const showTech = currentStage === 'danglam' || currentStage === 'thanhtoan' || currentStage === 'all';
 
@@ -3488,7 +3445,10 @@
                 tbodyHtml += `
                     <tr style="cursor: pointer;" onclick="selectProject('${d.id}')" title="Bấm để ghi nhận tiến độ dự án này">
                         <td align="center">${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}</td>
-                        <td style="font-weight: 700; color: #0F172A;">${d.name}</td>
+                        <td style="font-weight: 700; color: #0F172A;">
+                            ${d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : ''}
+                            ${d.name}
+                        </td>
                         <td>${d.date}</td>
                         <td><strong>${d.assignee}</strong></td>
                         ${showTech ? `<td style="color: #0284C7; font-weight: 700;">${d.tech}</td>` : ''}
@@ -3497,7 +3457,7 @@
                 `;
             });
             if (filtered.length === 0) {
-                tbodyHtml = `<tr><td colspan="${showTech ? 6 : 5}" align="center" style="padding: 16px; color: var(--text-muted);">Không có dự án nào trong giai đoạn này</td></tr>`;
+                tbodyHtml = `<tr><td colspan="${showTech ? 6 : 5}" align="center" style="padding: 16px; color: var(--text-muted);">Không có dự án nào trong mục này</td></tr>`;
             }
             tbodyEl.innerHTML = tbodyHtml;
         }
@@ -3513,7 +3473,11 @@
                 mobileCardsHtml += `
                     <div class="project-card ${colorClass}" onclick="selectProject('${d.id}')" style="cursor: pointer;">
                         <div class="project-card-header">
-                            <div class="project-card-title">${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}. ${d.name}</div>
+                            <div class="project-card-title">
+                                ${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}. 
+                                ${d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : ''}
+                                ${d.name}
+                            </div>
                             <span class="badge ${badgeClass}">${d.stageLabel}</span>
                         </div>
                         <div class="project-card-meta">
@@ -3556,7 +3520,9 @@
             html += `
                 <div class="project-search-item" onclick="selectProject('${p.id}')">
                     <div>
-                        <div style="font-weight: 700; font-size: 0.84rem; color: #0F172A;">${p.name}</div>
+                        <div style="font-weight: 700; font-size: 0.84rem; color: #0F172A;">
+                            ${p.isPotential ? '⭐ ' : ''}${p.name}
+                        </div>
                         <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
                             ${p.date} • ${p.assignee} • Nguồn: ${p.source}
                         </div>
@@ -3578,7 +3544,7 @@
         document.getElementById('projectSearchResults').style.display = 'none';
         document.getElementById('projectSearchInput').value = p.name;
 
-        document.getElementById('selProjName').innerText = p.name;
+        document.getElementById('selProjName').innerHTML = `${p.isPotential ? '⭐ ' : ''}${p.name}`;
         document.getElementById('selProjDate').innerText = `📅 Ngày: ${p.date}`;
         document.getElementById('selProjAdvisor').innerText = p.assignee || 'Chưa phân công';
         document.getElementById('selProjSource').innerText = p.source || 'Chưa rõ';
@@ -3706,7 +3672,8 @@
                 source: p.source || 'Zalo',
                 advisor: p.assignee || 'Chưa rõ',
                 stageLabel: p.stageLabel,
-                stage: p.stage
+                stage: p.stage,
+                isPotential: p.isPotential
             };
         });
 
@@ -3732,7 +3699,9 @@
                 html += `
                     <tr>
                         <td align="center">${idx + 1}</td>
-                        <td style="font-weight: 700; color: #0F172A;">${c.client}</td>
+                        <td style="font-weight: 700; color: #0F172A;">
+                            ${c.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : ''}${c.client}
+                        </td>
                         <td>${c.phone ? `<a href="tel:${c.phone.replace(/\s+/g, '')}" style="color: var(--primary-gold); text-decoration: none; font-weight: 700;">📞 ${c.phone}</a>` : '<span style="color: #94A3B8;">-</span>'}</td>
                         <td style="font-size: 0.8rem; color: #334155;">${c.projectName}</td>
                         <td>${c.source}</td>
@@ -3754,7 +3723,11 @@
                 html += `
                     <div class="project-card" style="border-left-color: var(--primary-gold);">
                         <div class="project-card-header">
-                            <div class="project-card-title">${idx + 1}. ${c.client}</div>
+                            <div class="project-card-title">
+                                ${idx + 1}. 
+                                ${c.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : ''}
+                                ${c.client}
+                            </div>
                             <span class="badge badge-gold">${c.stageLabel}</span>
                         </div>
                         <div class="project-card-meta">
@@ -3775,19 +3748,17 @@
         const total = pipelineData.length;
         const bgList = pipelineData.filter(p => p.stage === 'baogia');
         const dlList = pipelineData.filter(p => p.stage === 'danglam');
+        const ptList = pipelineData.filter(d => d.isPotential);
 
         let report = `📊 BÁO CÁO TỔNG QUAN HIỆN TRẠNG DỰ ÁN SALE (SONG ANH)
 ` +
             `⏰ Thời gian xuất: ${new Date().toLocaleDateString('vi-VN')} | Người thực hiện: Phạm Hoàng Tiến & Võ Minh Sang
 
 ` +
-            `🚨 1. DỰ ÁN MỐC SỰ KIỆN GẤP & BÀN GIAO:
+            `⭐ 1. DỰ ÁN TIỀM NĂNG BÁM SÁT (${ptList.length} DỰ ÁN):
 ` +
-            `• Sa bàn KĐT Nam Đàn (Nghệ An): Bàn giao 11/09 cho sự kiện 12/09 (Đã gửi ĐNTT đợt 2).
-` +
-            `• Sa bàn Diamond Home (Long Xuyên): Hoàn thành 15/09 cho sự kiện 17/09.
-` +
-            `• Nhà máy Makita - Toda: Đang nghiệm thu & thủ tục xuất xưởng bàn giao.
+            ptList.map(p => `• ${p.name} (${p.stageLabel} - ${p.assignee})`).join('
+') + `
 
 ` +
             `🏗️ 2. TIẾN ĐỘ CÁC DỰ ÁN XƯỞNG ĐANG THI CÔNG (${dlList.length} DỰ ÁN):
@@ -3821,6 +3792,7 @@
 
     function copyQuickZalo() {
         const today = new Date();
+        const ptCount = pipelineData.filter(d => d.isPotential).length;
         const text = `📊 BÁO CÁO SALE HÀNG TUẦN (SONG ANH)
 ` +
             `Người thực hiện: Phạm Hoàng Tiến và Võ Minh Sang
@@ -3841,16 +3813,16 @@
 ` +
             `📋 2. TÌNH TRẠNG PIPELINE DỰ ÁN:
 ` +
-            `✅ Đơn chốt mới / HĐ: 1 đơn
+            `⭐ Dự án tiềm năng: ${ptCount} dự án bám sát
 ` +
-            `🧾 Đơn đang theo sát báo giá: 25 đơn (Ga Thủ Thiêm, Schneider, Ciri Hà Nội...)
+            `🏗️ Dự án xưởng đang làm: 11 đơn (Trần Anh, Tôn Hoa Sen, BV 175, EZ Land...)
 ` +
-            `🏗️ Dự án xưởng đang thi công: 11 đơn (Nam Đàn, Trần Anh, Tôn Hoa Sen, BV 175, EZ Land...)
+            `🧾 Đơn đang báo giá: 25 đơn (Ga Thủ Thiêm, Schneider, Ciri Hà Nội...)
 ` +
-            `🚚 Đơn nghiệm thu & bàn giao: 10 đơn (Makita - Toda...)
+            `🚚 Đơn nghiệm thu & bàn giao: 10 đơn
 
 ` +
-            `⚠️ Việc trọng tâm: Bàn giao sa bàn KĐT Nam Đàn (11/09) & Diamond Home (15/09).`;
+            `⚠️ Việc trọng tâm: Bàn giao sa bàn đúng tiến độ và chốt cọc các deal tiềm năng.`;
 
         navigator.clipboard.writeText(text).then(() => {
             showToast('✅ Đã sao chép nội dung Báo Cáo Zalo!');
