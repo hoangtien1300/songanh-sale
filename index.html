@@ -4211,7 +4211,8 @@
     }
 
     // 2. TABS & SIDEBAR LOGIC
-    function switchAppTab(tabId, navElement) {
+    function switchAppTab(tabId, navElement, updateHash = true) {
+        if (!tabId) tabId = 'tab-trang-chu';
         document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.sidebar-nav .nav-link').forEach(l => l.classList.remove('active'));
         document.querySelectorAll('.mobile-bottom-nav .bottom-nav-item').forEach(b => b.classList.remove('active'));
@@ -4226,6 +4227,14 @@
         // Highlight Mobile Bottom Nav
         const bnav = document.getElementById('bnav-' + tabId);
         if (bnav) bnav.classList.add('active');
+
+        // 🚀 Lưu trạng thái để khi F5 / Reload trang không bị quay về trang chủ
+        try {
+            localStorage.setItem('songanh_sale_active_tab', tabId);
+            if (updateHash && window.location.hash !== '#' + tabId) {
+                history.replaceState(null, null, '#' + tabId);
+            }
+        } catch(e) {}
 
         // Refresh views if needed
         if (tabId === 'tab-theo-doi') renderPipelineViews();
@@ -5433,6 +5442,32 @@
     renderPipelineViews();
     renderCustomerViews();
     generateExecutiveReport();
+
+    // 🚀 PERSISTENT RELOAD (F5) ROUTING: Khôi phục tab đang mở khi người dùng refresh
+    (function initActiveTab() {
+        try {
+            let targetTab = 'tab-trang-chu';
+            const hashTab = window.location.hash.replace(/^#/, '').trim();
+            const savedTab = localStorage.getItem('songanh_sale_active_tab');
+            if (hashTab && document.getElementById(hashTab)) {
+                targetTab = hashTab;
+            } else if (savedTab && document.getElementById(savedTab)) {
+                targetTab = savedTab;
+            }
+            if (targetTab !== 'tab-trang-chu') {
+                switchAppTab(targetTab, null, false);
+            }
+        } catch(e) {
+            console.warn('Tab init router error:', e);
+        }
+    })();
+
+    window.addEventListener('hashchange', () => {
+        const hashTab = window.location.hash.replace(/^#/, '').trim();
+        if (hashTab && document.getElementById(hashTab)) {
+            switchAppTab(hashTab, null, false);
+        }
+    });
 
     // Tự động đồng bộ ngầm sau mỗi 2 phút (120,000ms)
     setInterval(function() {
