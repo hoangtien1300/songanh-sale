@@ -370,6 +370,376 @@
             .kpi-num { font-size: 1.5rem; }
             .kpi-label { font-size: 0.68rem; }
         }
+    
+        /* ==================== WORKSPACE & TOOL STYLES ==================== */
+        .module-header-banner {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+            border: 1px solid var(--primary-gold);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+        }
+        .module-header-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .module-header-icon {
+            font-size: 2.2rem;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .module-header-title h2 {
+            font-size: 1.15rem;
+            color: var(--primary-gold);
+            margin: 0 0 4px 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .module-header-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.4;
+        }
+        .module-status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(52, 211, 153, 0.15);
+            color: #34D399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #34D399;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #34D399;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Sub-navigation Pills */
+        .subnav-pills {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .subnav-pills::-webkit-scrollbar { display: none; }
+        .subnav-pill {
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: #1E293B;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 42px;
+        }
+        .subnav-pill:hover {
+            color: #FFF;
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+        .subnav-pill.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+            color: var(--primary-gold);
+            border-color: var(--primary-gold);
+        }
+
+        /* Form Controls & Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #CBD5E1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .form-label .req { color: #EF4444; }
+        .form-input, .form-select, .form-textarea {
+            background: #0F172A;
+            border: 1px solid #334155;
+            color: #FFF;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            font-family: inherit;
+            min-height: 42px;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+        .form-textarea {
+            min-height: 90px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .form-input[readonly] {
+            background: #1E293B;
+            color: #94A3B8;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        /* Source Pills Selector */
+        .pill-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .pill-opt {
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: #0F172A;
+            border: 1px solid #334155;
+            color: #94A3B8;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .pill-opt:hover { color: #FFF; border-color: #64748B; }
+        .pill-opt.active {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--primary-gold);
+            border-color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        /* Autocomplete Search Box */
+        .search-project-wrap {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .search-project-input {
+            width: 100%;
+            background: #0F172A;
+            border: 1px solid var(--primary-gold);
+            color: #FFF;
+            padding: 12px 16px 12px 42px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: var(--primary-gold);
+        }
+        .project-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1E293B;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 99;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            margin-top: 4px;
+        }
+        .project-search-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid #334155;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+        .project-search-item:hover {
+            background: #334155;
+        }
+        .project-search-item:last-child { border-bottom: none; }
+
+        /* Project Quick Info Card */
+        .project-context-card {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .project-context-card.show { display: block; }
+        .project-context-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #1E293B;
+            padding-bottom: 10px;
+        }
+        .project-context-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+            line-height: 1.4;
+        }
+        .project-meta-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .meta-chip {
+            font-size: 0.74rem;
+            background: #1E293B;
+            color: #CBD5E1;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+        }
+        .meta-chip strong { color: #FFF; }
+
+        /* Comment Timeline */
+        .comment-timeline {
+            background: #1E293B;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--primary-gold);
+        }
+        .timeline-title {
+            font-size: 0.78rem;
+            color: var(--primary-gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .timeline-item {
+            font-size: 0.8rem;
+            color: #E2E8F0;
+            line-height: 1.5;
+            padding: 6px 0;
+            border-bottom: 1px dashed #334155;
+            white-space: pre-line;
+        }
+        .timeline-item:last-child { border-bottom: none; }
+
+        /* Action Feedback Toast */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            border: 1px solid var(--primary-gold);
+            color: #FFF;
+            padding: 14px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            font-size: 0.85rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-msg.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Health Check Metric Cards */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .health-card {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 14px 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .health-card.urgent { border-left: 4px solid #EF4444; }
+        .health-card.warning { border-left: 4px solid #F59E0B; }
+        .health-card.success { border-left: 4px solid #10B981; }
+        .health-card-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .health-card.urgent .health-card-title { color: #F87171; }
+        .health-card.warning .health-card-title { color: #FBBF24; }
+        .health-card.success .health-card-title { color: #34D399; }
+        .health-card-count {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #FFF;
+            margin-bottom: 4px;
+        }
+        .health-card-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
     </style>
 </head>
 <body>
@@ -389,11 +759,11 @@
     </div>
 </div>
 
-<!-- NAVBAR TOP TINH GỌN (CHỈ GIỮ HẠNG MỤC BÁO CÁO) -->
+<!-- NAVBAR TOP (BÁO CÁO & TÁC NGHIỆP SALE) -->
 <div class="navbar">
     <!-- 1. BÁO CÁO -->
     <div class="nav-item">
-        <button class="nav-btn active" onclick="switchTab('tab-report', this)">
+        <button class="nav-btn active" id="btn-nav-report" onclick="switchTab('tab-report', this)">
             📊 Báo Cáo ▾
         </button>
         <div class="dropdown-menu">
@@ -403,9 +773,286 @@
             <a class="dropdown-item" onclick="scrollToSection('sec-pipeline')">📊 Chi Tiết Trạng Thái</a>
         </div>
     </div>
+    <!-- 2. TÁC NGHIỆP SALE -->
+    <div class="nav-item">
+        <button class="nav-btn" id="btn-nav-workspace" onclick="switchTab('tab-workspace', this)">
+            🛠️ Tác Nghiệp Sale ▾
+        </button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" onclick="switchTab('tab-workspace', document.getElementById('btn-nav-workspace')); switchWorkspaceSubTab('subtab-new-lead');">📝 Lên Đơn Mới (PO)</a>
+            <a class="dropdown-item" onclick="switchTab('tab-workspace', document.getElementById('btn-nav-workspace')); switchWorkspaceSubTab('subtab-quick-log');">💬 Cập Nhật & Comment</a>
+            <a class="dropdown-item" onclick="switchTab('tab-workspace', document.getElementById('btn-nav-workspace')); switchWorkspaceSubTab('subtab-health-check');">📊 Đánh Giá Hiện Trạng</a>
+        </div>
+    </div>
 </div>
 
 <div class="container">
+
+
+    <!-- ==================== TAB 2: TÁC NGHIỆP & CẬP NHẬT TIẾN ĐỘ ==================== -->
+    <div id="tab-workspace" class="tab-pane module-panel">
+        
+        <!-- MODULE HEADER BANNER (INVARIANT 1) -->
+        <div class="module-header-banner">
+            <div class="module-header-title">
+                <span class="module-header-icon">🛠️</span>
+                <div>
+                    <h2>TÁC NGHIỆP & CẬP NHẬT TIẾN ĐỘ DỰ ÁN SALE</h2>
+                    <p class="module-header-desc">Hệ thống hỗ trợ Phạm Hoàng Tiến & Võ Minh Sang tạo đơn mới, cập nhật comment tiến độ và đánh giá sức khỏe dự án</p>
+                </div>
+            </div>
+            <div class="module-status-badge">
+                <span class="live-dot"></span> Sẵn sàng tác nghiệp
+            </div>
+        </div>
+
+        <!-- SUB-NAV PILLS -->
+        <div class="subnav-pills">
+            <button class="subnav-pill active" id="btn-subtab-new-lead" onclick="switchWorkspaceSubTab('subtab-new-lead')">
+                📝 Lên Đơn Mới (PO)
+            </button>
+            <button class="subnav-pill" id="btn-subtab-quick-log" onclick="switchWorkspaceSubTab('subtab-quick-log')">
+                💬 Cập Nhật & Comment Tiến Độ
+            </button>
+            <button class="subnav-pill" id="btn-subtab-health-check" onclick="switchWorkspaceSubTab('subtab-health-check')">
+                📊 Đánh Giá & Báo Cáo Hiện Trạng
+            </button>
+        </div>
+
+        <!-- SUB-PANE 1: LÊN ĐƠN HÀNG MỚI (NEW LEAD / PO) -->
+        <div id="subtab-new-lead" class="workspace-subpane active">
+            <div class="card">
+                <div class="card-header">
+                    <span>📝 THÔNG TIN ĐƠN HÀNG MỚI (PO ENTRY FORM)</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Mặc định Lĩnh vực: <strong style="color: var(--primary-gold);">Mô Hình</strong></span>
+                </div>
+                
+                <form id="newLeadForm" onsubmit="handleNewLeadSubmit(event)">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <span>Tên Dự Án (Hoặc Công Thức Chuẩn)</span>
+                                <span class="req">*</span>
+                                <button type="button" class="btn" style="padding: 2px 8px; font-size: 0.7rem; margin-left: auto;" onclick="autoGenerateProjectName()">⚡ Ghép Tên Tự Động</button>
+                            </label>
+                            <input type="text" id="leadProjectName" class="form-input" placeholder="VD: Mô hình Nhà máy Schneider - Bình Dương + Mr Huy" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">🏢 Lĩnh Vực</label>
+                            <input type="text" id="leadField" class="form-input" value="Mô Hình" readonly title="Mặc định liên kết bảng LĨNH VỰC CÔNG VIỆC">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">📂 Danh Mục Sa Bàn <span class="req">*</span></label>
+                            <select id="leadCategory" class="form-select" required onchange="updateNameHint()">
+                                <option value="Cao tầng">🏢 Cao tầng</option>
+                                <option value="Nhà máy - Thiết bị">🏭 Nhà máy - Thiết bị</option>
+                                <option value="Quy hoạch">🗺️ Quy hoạch</option>
+                                <option value="KCN">🏗️ KCN</option>
+                                <option value="Sửa chữa - Vệ sinh">🔧 Sửa chữa - Vệ sinh</option>
+                                <option value="Nội thất">🛋️ Nội thất</option>
+                                <option value="Trường học">🎓 Trường học</option>
+                                <option value="Bệnh viện">🏥 Bệnh viện</option>
+                                <option value="Vận chuyển">🚚 Vận chuyển</option>
+                                <option value="Thu mua">♻️ Thu mua</option>
+                                <option value="Tàu - thuyền">🚢 Tàu - thuyền</option>
+                                <option value="3D">💻 3D</option>
+                                <option value="Khác">✨ Khác</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">👤 Khách Hàng (Tên / Công Ty) <span class="req">*</span></label>
+                            <input type="text" id="leadClientName" class="form-input" placeholder="VD: Mr Huy / Schneider Vietnam" required oninput="updateNameHint()">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">📞 Số Điện Thoại Liên Hệ</label>
+                            <input type="tel" id="leadPhone" class="form-input" placeholder="VD: 0909 123 456">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">📍 Vị Trí / Tỉnh Thành</label>
+                            <select id="leadProvince" class="form-select" onchange="updateNameHint()">
+                                <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                                <option value="Hà Nội">TP. Hà Nội</option>
+                                <option value="Bình Dương">Bình Dương</option>
+                                <option value="Đồng Nai">Đồng Nai</option>
+                                <option value="Long An">Long An</option>
+                                <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                                <option value="Cần Thơ">Cần Thơ</option>
+                                <option value="Đà Nẵng">Đà Nẵng</option>
+                                <option value="Khác">Tỉnh thành khác...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">📱 Nguồn Khách Hàng</label>
+                            <input type="text" id="leadSource" class="form-input" value="Zalo Tiến" placeholder="Chọn hoặc nhập nguồn...">
+                            <div class="pill-selector">
+                                <span class="pill-opt active" onclick="setLeadSource('Zalo Tiến', this)">Zalo Tiến</span>
+                                <span class="pill-opt" onclick="setLeadSource('Gọi Tiến', this)">Gọi Tiến</span>
+                                <span class="pill-opt" onclick="setLeadSource('Hotline Sếp', this)">Hotline Sếp</span>
+                                <span class="pill-opt" onclick="setLeadSource('Zalo Sang', this)">Zalo Sang</span>
+                                <span class="pill-opt" onclick="setLeadSource('Khách cũ liên hệ', this)">Khách cũ liên hệ</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">👨‍💼 Người Tư Vấn & Theo Dõi</label>
+                            <select id="leadAdvisor" class="form-select">
+                                <option value="TIEN">Phạm Hoàng Tiến (Sếp Tiến)</option>
+                                <option value="SANG">Võ Minh Sang</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">⏰ Nhắc Hẹn Tiếp Theo</label>
+                            <input type="datetime-local" id="leadReminder" class="form-input">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">📝 Ghi Chú Ban Đầu (Quy mô, tỷ lệ, hồ sơ...)</label>
+                            <textarea id="leadNote" class="form-textarea" placeholder="Nhập quy cách, tỷ lệ dự kiến, yêu cầu từ khách hàng..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- THẺ PREVIEW TỔNG KẾT TRƯỚC KHI SUBMIT -->
+                    <div id="newLeadPreviewCard" style="background: #1E293B; border: 1px dashed var(--primary-gold); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none;">
+                        <div style="font-size: 0.76rem; color: var(--primary-gold); font-weight: 700; margin-bottom: 6px;">📋 THẺ XÁC NHẬN DỮ LIỆU ĐƠN HÀNG TRƯỚC KHI LÊN NOTION:</div>
+                        <div id="newLeadPreviewContent" style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.6;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                        <button type="button" class="btn" onclick="copyNewLeadZaloText()">📋 Sao Chép Tin Nhắn</button>
+                        <button type="submit" class="btn btn-gold" id="btnSubmitNewLead">🚀 Lên Đơn & Gửi Cho Trợ Lý AI</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SUB-PANE 2: CẬP NHẬT TIẾN ĐỘ & BÌNH LUẬN (QUICK LOG) -->
+        <div id="subtab-quick-log" class="workspace-subpane" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <span>💬 CẬP NHẬT TIẾN ĐỘ DỰ ÁN & BÌNH LUẬN NOTION</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Tìm kiếm trong <strong style="color: var(--primary-gold);" id="activeCountLog">140+</strong> dự án active</span>
+                </div>
+
+                <!-- Ô TÌM KIẾM DỰ ÁN -->
+                <div class="search-project-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="projectSearchInput" class="search-project-input" placeholder="Gõ tên dự án, tên khách hàng hoặc SĐT để chọn dự án..." oninput="handleProjectSearch(this.value)">
+                    <div id="projectSearchResults" class="project-search-results"></div>
+                </div>
+
+                <!-- THẺ CHI TIẾT DỰ ÁN ĐÃ CHỌN -->
+                <div id="selectedProjectCard" class="project-context-card">
+                    <div class="project-context-header">
+                        <div>
+                            <div class="project-context-title" id="selProjName">-</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="selProjDate">-</div>
+                        </div>
+                        <span class="badge" id="selProjBadge">-</span>
+                    </div>
+
+                    <div class="project-meta-chips">
+                        <div class="meta-chip">👤 Phụ trách: <strong id="selProjAdvisor">-</strong></div>
+                        <div class="meta-chip">📱 Nguồn: <strong id="selProjSource">-</strong></div>
+                        <div class="meta-chip">🔧 Kỹ thuật: <strong id="selProjTech">-</strong></div>
+                    </div>
+
+                    <!-- LỊCH SỬ TIẾN ĐỘ HIỆN TẠI -->
+                    <div class="comment-timeline">
+                        <div class="timeline-title">📌 Tiến độ ghi nhận hiện tại:</div>
+                        <div class="timeline-item" id="selProjNote">-</div>
+                    </div>
+
+                    <!-- KHUNG SOẠN THẢO CẬP NHẬT MỚI -->
+                    <div style="margin-top: 16px;">
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label class="form-label">
+                                <span>💬 Nội Dung Cập Nhật Mới (Ghi chú / Bình luận)</span>
+                                <span class="req">*</span>
+                            </label>
+                            <textarea id="logCommentText" class="form-textarea" placeholder="Nhập diễn biến mới nhất: Khách hẹn ngày bàn giao, phản hồi báo giá, tiến độ xưởng..."></textarea>
+                        </div>
+
+                        <div class="form-grid" style="margin-bottom: 16px;">
+                            <div class="form-group">
+                                <label class="form-label">🔄 Chuyển Trạng Thái (Nếu có thay đổi)</label>
+                                <select id="logNewStage" class="form-select">
+                                    <option value="">-- Giữ nguyên trạng thái hiện tại --</option>
+                                    <option value="tuvan">💬 1. Tư Vấn</option>
+                                    <option value="baogia">🧾 2. Báo Giá</option>
+                                    <option value="hopdong">🤝 3. Hợp Đồng</option>
+                                    <option value="danglam">🏗️ 4. Dự Án Đang Làm</option>
+                                    <option value="thanhtoan">💸 5. Thanh Toán / Giao</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">👤 Người Ghi Nhận</label>
+                                <select id="logAuthor" class="form-select">
+                                    <option value="Phạm Hoàng Tiến">Phạm Hoàng Tiến</option>
+                                    <option value="Võ Minh Sang">Võ Minh Sang</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                            <button type="button" class="btn" onclick="copyProjectLogText()">📋 Sao Chép Cập Nhật</button>
+                            <button type="button" class="btn btn-gold" onclick="submitProjectLog()">🚀 Lưu Tiến Độ Lên Notion & Telegram</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SUB-PANE 3: ĐÁNH GIÁ & BÁO CÁO HIỆN TRẠNG (HEALTH CHECK) -->
+        <div id="subtab-health-check" class="workspace-subpane" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <span>📊 ĐÁNH GIÁ HIỆN TRẠNG & RỦI RO TIẾN ĐỘ DỰ ÁN</span>
+                    <button class="btn btn-gold" style="font-size: 0.75rem;" onclick="generateExecutiveReport()">📋 Xuất Báo Cáo Tức Thì</button>
+                </div>
+
+                <!-- METRIC CARDS RỦI RO -->
+                <div class="health-grid">
+                    <div class="health-card urgent">
+                        <div class="health-card-title">🚨 Mốc Bàn Giao & Sự Kiện Gấp</div>
+                        <div class="health-card-count" id="countUrgentEvents">2</div>
+                        <div class="health-card-desc">Dự án có sự kiện cận kề: Nam Đàn (11-12/9), Diamond Home Long Xuyên (15-17/9)</div>
+                    </div>
+
+                    <div class="health-card warning">
+                        <div class="health-card-title">⏳ Đang Báo Giá Cần Chăm Sóc</div>
+                        <div class="health-card-count" id="countPendingQuotes">23</div>
+                        <div class="health-card-desc">Cần bám sát phản hồi: Ga Thủ Thiêm, Schneider, ICONIA, Lê Minh Xuân...</div>
+                    </div>
+
+                    <div class="health-card success">
+                        <div class="health-card-title">🏗️ Dự Án Đang Sản Xuất Tại Xưởng</div>
+                        <div class="health-card-count" id="countInProduction">11</div>
+                        <div class="health-card-desc">Kèm phân công Kỹ thuật: Huynh, Thế Anh, Tuấn, Nam, Hiển...</div>
+                    </div>
+                </div>
+
+                <!-- TÓM TẮT BÁO CÁO AI KHAI THÁC HIỆN TẠI -->
+                <div style="background: #0F172A; border: 1px solid var(--card-border); border-radius: 10px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-gold);">📑 BẢN TỔNG HỢP HIỆN TRẠNG TỨC THÌ (EXECUTIVE SUMMARY)</span>
+                        <button class="btn" style="font-size: 0.72rem;" onclick="copyExecutiveSummary()">📋 Sao Chép Báo Cáo</button>
+                    </div>
+                    <div id="executiveReportContent" style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.6; white-space: pre-line; background: #1E293B; padding: 14px; border-radius: 8px; border-left: 3px solid var(--primary-gold);">
+                        Đang tạo báo cáo tổng hợp...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <!-- ==================== TAB 1: BÁO CÁO SALE HÀNG TUẦN ==================== -->
     <div id="tab-report" class="tab-pane active">
@@ -581,6 +1228,13 @@
             <button class="btn btn-gold" onclick="switchTab('tab-report', document.querySelector('.navbar .nav-btn'))">Quay Lại Báo Cáo Sale</button>
         </div>
     </div>
+
+    <!-- GLOBAL FOOTER (INVARIANT 2) -->
+    <footer style="margin-top: 40px; padding: 24px 16px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.75rem; color: var(--text-muted); background: #0F172A; border-radius: 8px;">
+        <div style="font-weight: 700; color: var(--primary-gold); margin-bottom: 4px;">🏢 MÔ HÌNH KIẾN TRÚC SONG ANH</div>
+        <div style="margin-bottom: 4px;">📍 Xưởng sản xuất: 230/70/28 Nguyễn Xiển, TP. Thủ Đức, TP.HCM • 📞 Hotline: 0929 22 4444</div>
+        <div style="color: #64748B;">Hệ Thống Quản Lý & Tác Nghiệp Sale • Phụ trách: Phạm Hoàng Tiến & Võ Minh Sang • Đồng bộ Notion Live</div>
+    </footer>
 
 </div>
 
@@ -2474,6 +3128,291 @@
         navigator.clipboard.writeText(text).then(() => {
             alert("✅ Đã sao chép nội dung Báo cáo Sale! Bạn có thể dán vào Zalo gửi ngay.");
         });
+    }
+
+
+    // ==================== WORKSPACE LOGIC & EVENT HANDLERS ====================
+    let currentSelectedProject = null;
+
+    function switchWorkspaceSubTab(subPaneId) {
+        document.querySelectorAll('.workspace-subpane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.subnav-pill').forEach(el => el.classList.remove('active'));
+        
+        const target = document.getElementById(subPaneId);
+        if (target) target.style.display = 'block';
+        
+        const btn = document.getElementById('btn-' + subPaneId);
+        if (btn) btn.classList.add('active');
+
+        if (subPaneId === 'subtab-health-check') {
+            generateExecutiveReport();
+        }
+    }
+
+    function setLeadSource(srcValue, btnElement) {
+        document.getElementById('leadSource').value = srcValue;
+        document.querySelectorAll('.pill-opt').forEach(el => el.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
+        updateNameHint();
+    }
+
+    function autoGenerateProjectName() {
+        const cat = document.getElementById('leadCategory').value || 'Mô hình';
+        const client = document.getElementById('leadClientName').value || 'Khách hàng';
+        const prov = document.getElementById('leadProvince').value || '';
+        
+        let genName = `Mô hình ${cat}`;
+        if (prov && prov !== 'Khác') genName += ` - ${prov}`;
+        if (client) genName += ` + ${client}`;
+        
+        document.getElementById('leadProjectName').value = genName;
+        updateNameHint();
+        showToast('⚡ Đã ghép tên dự án chuẩn!');
+    }
+
+    function updateNameHint() {
+        const name = document.getElementById('leadProjectName').value;
+        const cat = document.getElementById('leadCategory').value;
+        const client = document.getElementById('leadClientName').value;
+        const phone = document.getElementById('leadPhone').value;
+        const src = document.getElementById('leadSource').value;
+        const adv = document.getElementById('leadAdvisor').value === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang';
+        
+        if (name || client) {
+            const previewCard = document.getElementById('newLeadPreviewCard');
+            const previewContent = document.getElementById('newLeadPreviewContent');
+            previewCard.style.display = 'block';
+            previewContent.innerHTML = `
+                • 🏷️ <strong>Tên:</strong> ${name || '(Chưa nhập)'}<br>
+                • 🏢 <strong>Lĩnh vực:</strong> Mô Hình | <strong>Danh mục:</strong> ${cat}<br>
+                • 👤 <strong>Khách hàng:</strong> ${client || '-'} ${phone ? `(${phone})` : ''}<br>
+                • 📱 <strong>Nguồn:</strong> ${src} | <strong>Phụ trách:</strong> ${adv}<br>
+                • 🟢 <strong>Trạng thái ban đầu:</strong> 🆕 Mới | <strong>Nhắc hẹn:</strong> 09:00 hôm nay
+            `;
+        }
+    }
+
+    function handleNewLeadSubmit(e) {
+        e.preventDefault();
+        const name = document.getElementById('leadProjectName').value;
+        const cat = document.getElementById('leadCategory').value;
+        const client = document.getElementById('leadClientName').value;
+        const phone = document.getElementById('leadPhone').value;
+        const src = document.getElementById('leadSource').value;
+        const adv = document.getElementById('leadAdvisor').value;
+        const note = document.getElementById('leadNote').value;
+
+        const payloadText = `Thêm dự án mới: ${name}, ${client}, ${phone}. Danh mục: ${cat}, Nguồn: ${src}, Người theo: ${adv === 'TIEN' ? 'Tiến' : 'Sang'}. Ghi chú: ${note}`;
+        
+        copyNewLeadZaloText();
+        showToast('✅ Đã sao chép thông tin dự án mới! Sếp gửi vào nhóm hoặc chat với AI Agent để lên đơn.');
+    }
+
+    function copyNewLeadZaloText() {
+        const name = document.getElementById('leadProjectName').value || 'Dự án mới';
+        const cat = document.getElementById('leadCategory').value;
+        const client = document.getElementById('leadClientName').value;
+        const phone = document.getElementById('leadPhone').value;
+        const src = document.getElementById('leadSource').value;
+        const adv = document.getElementById('leadAdvisor').value === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang';
+        const note = document.getElementById('leadNote').value;
+
+        const text = `📋 [LÊN ĐƠN DỰ ÁN MỚI]
+` +
+            `• Tên dự án: ${name}
+` +
+            `• Lĩnh vực: Mô Hình | Danh mục: ${cat}
+` +
+            `• Khách hàng: ${client} ${phone ? `(${phone})` : ''}
+` +
+            `• Nguồn: ${src} | Phụ trách: ${adv}
+` +
+            `• Nhắc hẹn: 09:00 hôm nay
+` +
+            (note ? `• Ghi chú: ${note}
+` : ``) +
+            `• Trạng thái: 🆕 Mới`;
+
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('📋 Đã sao chép cú pháp lên đơn vào Clipboard!');
+        });
+    }
+
+    // --- QUICK LOG SEARCH & AUTOCOMPLETE ---
+    function handleProjectSearch(query) {
+        const q = (query || '').toLowerCase().trim();
+        const resultsBox = document.getElementById('projectSearchResults');
+        
+        if (!q || q.length < 2) {
+            resultsBox.style.display = 'none';
+            return;
+        }
+
+        const matches = pipelineData.filter(p => 
+            p.name.toLowerCase().includes(q) || 
+            (p.source && p.source.toLowerCase().includes(q)) ||
+            (p.assignee && p.assignee.toLowerCase().includes(q)) ||
+            (p.note && p.note.toLowerCase().includes(q))
+        ).slice(0, 10);
+
+        if (matches.length === 0) {
+            resultsBox.innerHTML = '<div style="padding: 10px; color: var(--text-muted); font-size: 0.8rem; text-align: center;">Không tìm thấy dự án phù hợp</div>';
+            resultsBox.style.display = 'block';
+            return;
+        }
+
+        let html = '';
+        matches.forEach(p => {
+            html += `
+                <div class="project-search-item" onclick="selectProject('${p.id}')">
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.84rem; color: #FFF;">${p.name}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
+                            ${p.date} • ${p.assignee} • Nguồn: ${p.source}
+                        </div>
+                    </div>
+                    <span class="badge ${p.stage === 'hopdong' ? 'badge-green' : (p.stage === 'baogia' ? 'badge-blue' : (p.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}">${p.stageLabel}</span>
+                </div>
+            `;
+        });
+
+        resultsBox.innerHTML = html;
+        resultsBox.style.display = 'block';
+    }
+
+    function selectProject(projectId) {
+        const p = pipelineData.find(item => item.id === projectId);
+        if (!p) return;
+
+        currentSelectedProject = p;
+        document.getElementById('projectSearchResults').style.display = 'none';
+        document.getElementById('projectSearchInput').value = p.name;
+
+        // Populate Card
+        document.getElementById('selProjName').innerText = p.name;
+        document.getElementById('selProjDate').innerText = `Ngày liên hệ: ${p.date}`;
+        document.getElementById('selProjAdvisor').innerText = p.assignee || 'Chưa phân công';
+        document.getElementById('selProjSource').innerText = p.source || 'Chưa rõ';
+        document.getElementById('selProjTech').innerText = p.tech || '-';
+        document.getElementById('selProjNote').innerText = p.note || 'Chưa có ghi chú chi tiết';
+
+        const badge = document.getElementById('selProjBadge');
+        badge.innerText = p.stageLabel;
+        badge.className = `badge ${p.stage === 'hopdong' ? 'badge-green' : (p.stage === 'baogia' ? 'badge-blue' : (p.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}`;
+
+        document.getElementById('selectedProjectCard').classList.add('show');
+        showToast(`🔍 Đã chọn: ${p.name.substring(0, 30)}...`);
+    }
+
+    function copyProjectLogText() {
+        if (!currentSelectedProject) {
+            alert('Vui lòng tìm và chọn một dự án trước.');
+            return;
+        }
+        const comment = document.getElementById('logCommentText').value;
+        const author = document.getElementById('logAuthor').value;
+        const newStage = document.getElementById('logNewStage').options[document.getElementById('logNewStage').selectedIndex].text;
+
+        if (!comment) {
+            alert('Vui lòng nhập nội dung cập nhật tiến độ.');
+            return;
+        }
+
+        const text = `💬 [CẬP NHẬT TIẾN ĐỘ NOTION]
+` +
+            `• Dự án: ${currentSelectedProject.name}
+` +
+            `• Người ghi nhận: ${author}
+` +
+            `• Nội dung: ${comment}
+` +
+            (document.getElementById('logNewStage').value ? `• Chuyển trạng thái: ${newStage}
+` : ``);
+
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('📋 Đã sao chép nội dung cập nhật!');
+        });
+    }
+
+    function submitProjectLog() {
+        if (!currentSelectedProject) {
+            alert('Vui lòng tìm và chọn một dự án trước.');
+            return;
+        }
+        const comment = document.getElementById('logCommentText').value;
+        if (!comment) {
+            alert('Vui lòng nhập nội dung cập nhật tiến độ.');
+            return;
+        }
+
+        copyProjectLogText();
+        showToast('🚀 Đã ghi nhận cập nhật! Sếp gửi vào chat AI hoặc Zalo để hệ thống lưu trực tiếp vào comment Notion.');
+    }
+
+    // --- HEALTH CHECK REPORT GENERATOR ---
+    function generateExecutiveReport() {
+        const total = pipelineData.length;
+        const bgList = pipelineData.filter(p => p.stage === 'baogia');
+        const dlList = pipelineData.filter(p => p.stage === 'danglam');
+        const hdList = pipelineData.filter(p => p.stage === 'hopdong');
+        const ttList = pipelineData.filter(p => p.stage === 'thanhtoan');
+
+        document.getElementById('countPendingQuotes').innerText = bgList.length;
+        document.getElementById('countInProduction').innerText = dlList.length;
+
+        let report = `📊 BÁO CÁO TỔNG QUAN HIỆN TRẠNG DỰ ÁN SALE (SONG ANH)
+` +
+            `⏰ Thời gian xuất: ${new Date().toLocaleDateString('vi-VN')} | Người thực hiện: Phạm Hoàng Tiến & Võ Minh Sang
+
+` +
+            `🚨 1. DỰ ÁN MỐC SỰ KIỆN GẤP & BÀN GIAO:
+` +
+            `• Sa bàn KĐT Nam Đàn (Nghệ An): Bàn giao 11/09 cho sự kiện 12/09 (Đã gửi ĐNTT đợt 2).
+` +
+            `• Sa bàn Diamond Home (Long Xuyên): Hoàn thành 15/09 cho sự kiện 17/09.
+` +
+            `• Nhà máy Makita - Toda: Đang nghiệm thu & thủ tục bàn giao.
+
+` +
+            `🏗️ 2. TIẾN ĐỘ CÁC DỰ ÁN XƯỞNG ĐANG THI CÔNG (${dlList.length} DỰ ÁN):
+` +
+            `• KCN Trần Anh Tân Phú (Huynh): Kính đã giao 22/8, bục gỗ xưởng A. Vũ, tiến độ 50%.
+` +
+            `• Tôn Hoa Sen (Sếp Tiến): Đã gửi duyệt thiết kế làm bằng vật liệu tôn Hoa Sen.
+` +
+            `• BV 175 lần 2 (Huynh): Đã khảo sát thực tế bo góc, đang đợi số liệu kính/gỗ.
+` +
+            `• EZ Land (Thế Anh): Bục gỗ kính đã đặt, làm thêm bản đồ treo tường 1.6x1.2m.
+
+` +
+            `🧾 3. DEAL TRỌNG TÂM BÁM SÁT BÁO GIÁ (${bgList.length} DỰ ÁN):
+` +
+            `• Ga Thủ Thiêm (Sơn Kim Land) • Schneider • Ciri Hà Nội • ICONIA 84/88 • KCN Lê Minh Xuân.
+
+` +
+            `✨ Tổng Active Pipeline đang theo sát: ${total} dự án.`;
+
+        document.getElementById('executiveReportContent').innerText = report;
+    }
+
+    function copyExecutiveSummary() {
+        const text = document.getElementById('executiveReportContent').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('📋 Đã sao chép Báo Cáo Hiện Trạng vào Clipboard!');
+        });
+    }
+
+    function showToast(msg) {
+        let toast = document.getElementById('appToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'appToast';
+            toast.className = 'toast-msg';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<span>✨</span> <span>${msg}</span>`;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 3500);
     }
 
     // TỰ ĐỘNG CHẠY NGAY KHI TẢI TRANG
