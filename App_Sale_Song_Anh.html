@@ -10,25 +10,27 @@
     <style>
         :root {
             --sidebar-width: 260px;
-            --sidebar-bg: #0F172A;
-            --sidebar-border: #1E293B;
-            --primary-gold: #D4AF37;
-            --dark-gold: #B5952F;
-            --rich-black: #0B1120;
-            --card-bg: #1E293B;
-            --card-border: #334155;
+            --sidebar-bg: #FFFFFF;
+            --sidebar-border: #E2E8F0;
+            --primary-gold: #B5891A;
+            --dark-gold: #855C08;
+            --gold-light: #FEF3C7;
+            --gold-border: #FDE68A;
+            --body-bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --card-border: #E2E8F0;
             --slate-gray: #64748B;
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --info: #38BDF8;
-            --purple: #A855F7;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --success: #059669;
+            --warning: #D97706;
+            --danger: #DC2626;
+            --info: #0284C7;
+            --purple: #7C3AED;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--rich-black); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
+        body { background-color: var(--body-bg); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
 
         /* APP LAYOUT */
         .app-layout {
@@ -51,6 +53,7 @@
             z-index: 1000;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.02);
         }
 
         .sidebar-brand {
@@ -60,6 +63,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            background: #FFFFFF;
         }
 
         .brand-link {
@@ -71,8 +75,8 @@
         }
 
         .brand-logo {
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
-            color: #0F172A;
+            background: linear-gradient(135deg, #D4AF37 0%, #B5891A 100%);
+            color: #FFFFFF;
             width: 40px;
             height: 40px;
             min-width: 40px;
@@ -82,13 +86,13 @@
             justify-content: center;
             font-weight: 800;
             font-size: 1.15rem;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+            box-shadow: 0 4px 12px rgba(181, 137, 26, 0.25);
         }
 
         .brand-info h1 {
             font-size: 0.98rem;
             font-weight: 800;
-            color: #FFF;
+            color: #0F172A;
             letter-spacing: 0.4px;
             line-height: 1.2;
         }
@@ -97,7 +101,7 @@
             font-size: 0.72rem;
             color: var(--primary-gold);
             margin-top: 2px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .sidebar-close-btn {
@@ -123,7 +127,7 @@
         .nav-section-title {
             font-size: 0.68rem;
             text-transform: uppercase;
-            color: var(--slate-gray);
+            color: #94A3B8;
             font-weight: 700;
             letter-spacing: 0.8px;
             padding: 10px 10px 4px 10px;
@@ -135,7 +139,7 @@
             gap: 12px;
             padding: 11px 14px;
             border-radius: 8px;
-            color: var(--text-muted);
+            color: #475569;
             text-decoration: none;
             font-size: 0.88rem;
             font-weight: 600;
@@ -145,14 +149,15 @@
         }
 
         .nav-link:hover {
-            color: #FFF;
-            background: rgba(255, 255, 255, 0.04);
+            color: #0F172A;
+            background: #F1F5F9;
         }
 
         .nav-link.active {
             color: var(--primary-gold);
-            background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.03));
-            border-left: 3px solid var(--primary-gold);
+            background: linear-gradient(90deg, rgba(181, 137, 26, 0.12), rgba(181, 137, 26, 0.02));
+            border-left: 3.5px solid var(--primary-gold);
+            font-weight: 700;
         }
 
         .nav-link-icon {
@@ -166,21 +171,23 @@
             font-size: 0.68rem;
             padding: 2px 7px;
             border-radius: 10px;
-            background: #334155;
-            color: #CBD5E1;
+            background: #F1F5F9;
+            color: #475569;
             font-weight: 700;
+            border: 1px solid #E2E8F0;
         }
 
         .nav-link.active .nav-link-badge {
-            background: rgba(212, 175, 55, 0.25);
-            color: var(--primary-gold);
+            background: var(--gold-light);
+            color: #855C08;
+            border-color: var(--gold-border);
         }
 
         /* SIDEBAR FOOTER */
         .sidebar-footer {
             padding: 14px 16px;
             border-top: 1px solid var(--sidebar-border);
-            background: rgba(15, 23, 42, 0.6);
+            background: #F8FAFC;
         }
 
         .user-card {
@@ -193,14 +200,14 @@
             width: 34px;
             height: 34px;
             border-radius: 50%;
-            background: #1E293B;
+            background: var(--gold-light);
             border: 1px solid var(--primary-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--primary-gold);
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .user-details {
@@ -211,7 +218,7 @@
         .user-name {
             font-size: 0.82rem;
             font-weight: 700;
-            color: #FFF;
+            color: #0F172A;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -224,6 +231,7 @@
             align-items: center;
             gap: 4px;
             margin-top: 2px;
+            font-weight: 600;
         }
 
         .live-dot {
@@ -232,7 +240,7 @@
             background: var(--success);
             border-radius: 50%;
             display: inline-block;
-            box-shadow: 0 0 8px var(--success);
+            box-shadow: 0 0 6px var(--success);
             animation: pulse 2s infinite;
         }
 
@@ -250,12 +258,12 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding-bottom: 90px; /* Mobile safe area padding */
+            padding-bottom: 90px;
         }
 
-        /* TOPBAR */
+        /* TOPBAR (LIGHT) */
         .app-topbar {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            background: #FFFFFF;
             border-bottom: 1px solid var(--card-border);
             padding: 12px 20px;
             position: sticky;
@@ -265,7 +273,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .topbar-left {
@@ -276,9 +284,9 @@
 
         .mobile-menu-btn {
             display: none;
-            background: #1E293B;
+            background: #F8FAFC;
             border: 1px solid var(--card-border);
-            color: #FFF;
+            color: #0F172A;
             padding: 8px 10px;
             border-radius: 6px;
             font-size: 1.1rem;
@@ -288,7 +296,7 @@
         .breadcrumb-title {
             font-size: 1.05rem;
             font-weight: 700;
-            color: #FFF;
+            color: #0F172A;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -296,12 +304,12 @@
 
         .breadcrumb-tag {
             font-size: 0.72rem;
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--primary-gold);
+            background: var(--gold-light);
+            color: #855C08;
             padding: 3px 8px;
             border-radius: 4px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            font-weight: 600;
+            border: 1px solid var(--gold-border);
+            font-weight: 700;
         }
 
         .topbar-actions {
@@ -335,8 +343,8 @@
         }
 
         .module-header-banner {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-            border: 1px solid var(--primary-gold);
+            background: linear-gradient(135deg, #FFFDF7 0%, #FDF8ED 100%);
+            border: 1px solid #E6D5A7;
             border-radius: 12px;
             padding: 16px 20px;
             margin-bottom: 20px;
@@ -344,7 +352,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+            box-shadow: 0 4px 20px rgba(181, 137, 26, 0.08);
         }
 
         .module-header-title {
@@ -355,23 +363,24 @@
 
         .module-header-icon {
             font-size: 2.2rem;
-            background: rgba(212, 175, 55, 0.15);
+            background: #FEF3C7;
             padding: 10px;
             border-radius: 12px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            border: 1px solid #FDE68A;
+            color: var(--primary-gold);
         }
 
         .module-header-title h2 {
             font-size: 1.18rem;
-            color: var(--primary-gold);
+            color: #78350F;
             margin: 0 0 4px 0;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
         }
 
         .module-header-desc {
             font-size: 0.78rem;
-            color: var(--text-muted);
+            color: #64748B;
             margin: 0;
             line-height: 1.4;
         }
@@ -380,30 +389,30 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(52, 211, 153, 0.15);
-            color: #34D399;
-            border: 1px solid rgba(52, 211, 153, 0.3);
+            background: #ECFDF5;
+            color: #059669;
+            border: 1px solid #A7F3D0;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             white-space: nowrap;
         }
 
-        /* CARDS & GRIDS */
+        /* CARDS & GRIDS (LIGHT) */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 18px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
 
         .card-header {
             font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--primary-gold);
+            font-weight: 800;
+            color: #78350F;
             margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
@@ -422,7 +431,7 @@
         }
 
         .kpi-box {
-            background: #0F172A;
+            background: #FFFFFF;
             border: 1px solid var(--card-border);
             border-radius: 10px;
             padding: 14px 16px;
@@ -431,7 +440,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
         .kpi-box::before {
@@ -451,20 +460,20 @@
         .kpi-label {
             font-size: 0.72rem;
             text-transform: uppercase;
-            color: var(--text-muted);
-            font-weight: 600;
+            color: #64748B;
+            font-weight: 700;
             letter-spacing: 0.3px;
         }
 
         .kpi-num {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #FFF;
+            color: #0F172A;
             margin-top: 4px;
             line-height: 1;
         }
 
-        /* URGENT HIGHLIGHT CARDS */
+        /* URGENT HIGHLIGHT CARDS (LIGHT) */
         .urgent-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -473,18 +482,19 @@
         }
 
         .urgent-card {
-            background: #0F172A;
-            border: 1px solid #334155;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
             border-radius: 8px;
             padding: 12px 14px;
             display: flex;
             flex-direction: column;
             gap: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
-        .urgent-card.red { border-left: 4px solid var(--danger); }
-        .urgent-card.amber { border-left: 4px solid var(--warning); }
-        .urgent-card.green { border-left: 4px solid var(--success); }
+        .urgent-card.red { border-left: 4px solid var(--danger); background: #FEF2F2; }
+        .urgent-card.amber { border-left: 4px solid var(--warning); background: #FFFBEB; }
+        .urgent-card.green { border-left: 4px solid var(--success); background: #ECFDF5; }
 
         .urgent-card-title {
             font-size: 0.82rem;
@@ -494,21 +504,21 @@
             gap: 6px;
         }
 
-        .urgent-card.red .urgent-card-title { color: #F87171; }
-        .urgent-card.amber .urgent-card-title { color: #FBBF24; }
-        .urgent-card.green .urgent-card-title { color: #34D399; }
+        .urgent-card.red .urgent-card-title { color: #DC2626; }
+        .urgent-card.amber .urgent-card-title { color: #D97706; }
+        .urgent-card.green .urgent-card-title { color: #059669; }
 
         .urgent-card-desc {
             font-size: 0.76rem;
-            color: #CBD5E1;
+            color: #334155;
             line-height: 1.4;
         }
 
-        /* BUTTONS */
+        /* BUTTONS (LIGHT) */
         .btn {
-            background: #334155;
-            color: #FFF;
-            border: none;
+            background: #F1F5F9;
+            color: #1E293B;
+            border: 1px solid #CBD5E1;
             padding: 8px 14px;
             border-radius: 6px;
             font-size: 0.8rem;
@@ -523,15 +533,17 @@
             min-height: 38px;
         }
 
-        .btn:hover { background: #475569; }
+        .btn:hover { background: #E2E8F0; color: #0F172A; }
         .btn-gold {
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
-            color: #0F172A;
+            background: linear-gradient(135deg, #D4AF37 0%, #B5891A 100%);
+            color: #FFFFFF;
+            border: none;
             font-weight: 700;
+            box-shadow: 0 2px 6px rgba(181, 137, 26, 0.2);
         }
-        .btn-gold:hover { filter: brightness(1.08); }
+        .btn-gold:hover { filter: brightness(1.05); color: #FFFFFF; }
 
-        /* FORM CONTROLS */
+        /* FORM CONTROLS (LIGHT) */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -549,8 +561,8 @@
 
         .form-label {
             font-size: 0.78rem;
-            font-weight: 600;
-            color: #CBD5E1;
+            font-weight: 700;
+            color: #334155;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -559,9 +571,9 @@
         .form-label .req { color: var(--danger); }
 
         .form-input, .form-select, .form-textarea {
-            background: #0F172A;
-            border: 1px solid #334155;
-            color: #FFF;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
             padding: 10px 12px;
             border-radius: 8px;
             font-size: 0.85rem;
@@ -573,44 +585,45 @@
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--primary-gold);
-            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 0 3px rgba(181, 137, 26, 0.15);
         }
 
         .form-textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
-        .form-input[readonly] { background: #1E293B; color: #94A3B8; cursor: not-allowed; border-style: dashed; }
+        .form-input[readonly] { background: #F8FAFC; color: #64748B; cursor: not-allowed; border-style: dashed; }
 
         .pill-selector { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
         .pill-opt {
             padding: 6px 12px;
             border-radius: 6px;
-            background: #0F172A;
-            border: 1px solid #334155;
-            color: #94A3B8;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            color: #475569;
             font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
             user-select: none;
+            font-weight: 500;
         }
-        .pill-opt:hover { color: #FFF; border-color: #64748B; }
+        .pill-opt:hover { color: #0F172A; border-color: #CBD5E1; background: #E2E8F0; }
         .pill-opt.active {
-            background: rgba(212, 175, 55, 0.2);
-            color: var(--primary-gold);
+            background: var(--gold-light);
+            color: #855C08;
             border-color: var(--primary-gold);
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        /* AUTOCOMPLETE SEARCH */
+        /* AUTOCOMPLETE SEARCH (LIGHT) */
         .search-project-wrap { position: relative; margin-bottom: 16px; }
         .search-project-input {
             width: 100%;
-            background: #0F172A;
+            background: #FFFFFF;
             border: 1px solid var(--primary-gold);
-            color: #FFF;
+            color: #0F172A;
             padding: 12px 16px 12px 42px;
             border-radius: 8px;
             font-size: 0.9rem;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(181, 137, 26, 0.08);
         }
         .search-icon {
             position: absolute;
@@ -625,19 +638,19 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: #1E293B;
-            border: 1px solid var(--card-border);
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
             border-radius: 8px;
             max-height: 280px;
             overflow-y: auto;
             z-index: 99;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: none;
             margin-top: 4px;
         }
         .project-search-item {
             padding: 10px 14px;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #F1F5F9;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -645,15 +658,15 @@
             gap: 10px;
             transition: background 0.15s;
         }
-        .project-search-item:hover { background: #334155; }
+        .project-search-item:hover { background: #F8FAFC; }
         .project-search-item:last-child { border-bottom: none; }
 
-        /* FILTER BAR */
+        /* FILTER BAR (LIGHT) */
         .filter-bar {
             display: flex;
             gap: 6px;
             margin-bottom: 16px;
-            background: #0F172A;
+            background: #F1F5F9;
             padding: 8px 10px;
             border-radius: 8px;
             border: 1px solid var(--card-border);
@@ -664,9 +677,9 @@
         .filter-bar::-webkit-scrollbar { display: none; }
 
         .filter-btn {
-            background: #1E293B;
-            border: 1px solid var(--card-border);
-            color: #CBD5E1;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #475569;
             padding: 7px 12px;
             border-radius: 6px;
             font-size: 0.78rem;
@@ -679,19 +692,21 @@
             flex-shrink: 0;
             user-select: none;
         }
-        .filter-btn:hover, .filter-btn:active { background: #334155; color: #FFF; }
+        .filter-btn:hover, .filter-btn:active { background: #E2E8F0; color: #0F172A; }
         .filter-btn.active {
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
-            color: #0F172A;
+            background: linear-gradient(135deg, #D4AF37 0%, #B5891A 100%);
+            color: #FFFFFF;
             border-color: var(--primary-gold);
             font-weight: 700;
+            box-shadow: 0 2px 6px rgba(181, 137, 26, 0.2);
         }
 
-        /* TABLES */
+        /* TABLES (LIGHT) */
         .desktop-table-wrap {
             overflow-x: auto;
             border: 1px solid var(--card-border);
             border-radius: 8px;
+            background: #FFFFFF;
         }
 
         table {
@@ -702,8 +717,8 @@
         }
 
         th {
-            background: #0F172A;
-            color: var(--primary-gold);
+            background: #F8FAFC;
+            color: #78350F;
             font-weight: 700;
             padding: 10px 12px;
             border-bottom: 1px solid var(--card-border);
@@ -713,21 +728,22 @@
 
         td {
             padding: 10px 12px;
-            border-bottom: 1px solid #1E293B;
-            color: #CBD5E1;
+            border-bottom: 1px solid #F1F5F9;
+            color: #334155;
         }
 
-        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+        tr:hover td { background: #F8FAFC; }
 
-        /* MOBILE CARDS */
+        /* MOBILE CARDS (LIGHT) */
         .mobile-card-list { display: none; flex-direction: column; gap: 10px; }
 
         .project-card {
-            background: #0F172A;
+            background: #FFFFFF;
             border: 1px solid var(--card-border);
             border-radius: 8px;
             padding: 12px 14px;
             border-left: 3.5px solid var(--primary-gold);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
         .project-card.green { border-left-color: var(--success); }
@@ -745,7 +761,7 @@
 
         .project-card-title {
             font-weight: 700;
-            color: #FFF;
+            color: #0F172A;
             font-size: 0.88rem;
             line-height: 1.35;
         }
@@ -755,57 +771,59 @@
             flex-wrap: wrap;
             gap: 8px;
             font-size: 0.74rem;
-            color: var(--text-muted);
+            color: #64748B;
             margin-bottom: 6px;
         }
 
         .project-card-note {
             font-size: 0.78rem;
-            color: #CBD5E1;
+            color: #334155;
             line-height: 1.45;
             white-space: pre-line;
-            background: rgba(15, 23, 42, 0.6);
+            background: #F8FAFC;
             padding: 8px 10px;
             border-radius: 6px;
-            border-left: 2px solid #475569;
+            border-left: 2px solid #CBD5E1;
             margin-top: 6px;
             word-break: break-word;
         }
 
-        .badge { display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 10px; font-weight: 600; font-size: 0.68rem; }
-        .badge-green { background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
-        .badge-gold { background: rgba(212,175,55,0.15); color: var(--primary-gold); border: 1px solid rgba(212,175,55,0.3); }
-        .badge-blue { background: rgba(56,189,248,0.15); color: #38BDF8; border: 1px solid rgba(56,189,248,0.3); }
-        .badge-purple { background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.3); }
-        .badge-gray { background: #334155; color: #94A3B8; }
+        /* BADGES (LIGHT) */
+        .badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 10px; font-weight: 700; font-size: 0.68rem; }
+        .badge-green { background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+        .badge-gold { background: #FEF3C7; color: #855C08; border: 1px solid #FDE68A; }
+        .badge-blue { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+        .badge-purple { background: #FAF5FF; color: #7E22CE; border: 1px solid #E9D5FF; }
+        .badge-gray { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
 
-        /* TOAST */
+        /* TOAST (LIGHT) */
         .toast-msg {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #1E293B;
+            background: #FFFFFF;
             border: 1px solid var(--primary-gold);
-            color: #FFF;
+            color: #0F172A;
             padding: 14px 20px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
             display: flex;
             align-items: center;
             gap: 10px;
             z-index: 9999;
             font-size: 0.85rem;
+            font-weight: 600;
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .toast-msg.show { transform: translateY(0); opacity: 1; }
 
-        /* RESPONSIVE SPECIFIC TUNING */
+        /* RESPONSIVE TUNING */
         @media (max-width: 1023px) {
             .app-sidebar {
                 transform: translateX(-100%);
-                box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+                box-shadow: 10px 0 30px rgba(0,0,0,0.25);
             }
             .app-sidebar.open { transform: translateX(0); }
             .sidebar-close-btn { display: block; }
@@ -815,8 +833,8 @@
                 display: none;
                 position: fixed;
                 inset: 0;
-                background: rgba(0,0,0,0.7);
-                backdrop-filter: blur(3px);
+                background: rgba(15, 23, 42, 0.4);
+                backdrop-filter: blur(2px);
                 z-index: 999;
             }
             .sidebar-overlay.active { display: block; }
@@ -975,15 +993,15 @@
                     </div>
                     <div class="kpi-box green">
                         <div class="kpi-label">Hợp đồng chốt / Đang làm</div>
-                        <div class="kpi-num" id="homeContractCount" style="color: #34D399;">01</div>
+                        <div class="kpi-num" id="homeContractCount" style="color: #059669;">01</div>
                     </div>
                     <div class="kpi-box blue">
                         <div class="kpi-label">Đang theo sát báo giá</div>
-                        <div class="kpi-num" id="homeQuoteCount" style="color: #38BDF8;">25</div>
+                        <div class="kpi-num" id="homeQuoteCount" style="color: #0284C7;">25</div>
                     </div>
                     <div class="kpi-box slate">
                         <div class="kpi-label">Xưởng đang thi công</div>
-                        <div class="kpi-num" id="homeProductionCount" style="color: #94A3B8;">11</div>
+                        <div class="kpi-num" id="homeProductionCount" style="color: #475569;">11</div>
                     </div>
                 </div>
 
@@ -994,21 +1012,21 @@
                         <span style="font-size: 0.78rem; color: var(--text-muted);">Dữ liệu Notion DB</span>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #0F172A;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">Zalo / Hotline Tiến</div>
-                            <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary-gold);">58 Khách</div>
+                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Zalo / Hotline Tiến</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary-gold);">58 Khách</div>
                         </div>
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #0F172A;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">Hotline Sếp / Ban Giám Đốc</div>
-                            <div style="font-size: 1.1rem; font-weight: 700; color: #38BDF8;">42 Khách</div>
+                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Hotline Sếp / BGĐ</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #0284C7;">42 Khách</div>
                         </div>
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #0F172A;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">Zalo Sang</div>
-                            <div style="font-size: 1.1rem; font-weight: 700; color: #34D399;">24 Khách</div>
+                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Zalo Sang</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #059669;">24 Khách</div>
                         </div>
-                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #0F172A;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">Khách Cũ &amp; Giới Thiệu</div>
-                            <div style="font-size: 1.1rem; font-weight: 700; color: #A855F7;">19 Khách</div>
+                        <div class="urgent-card" style="flex: 1; min-width: 180px; padding: 10px 12px; background: #F8FAFC;">
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Khách Cũ &amp; Giới Thiệu</div>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #7C3AED;">19 Khách</div>
                         </div>
                     </div>
 
@@ -1025,9 +1043,9 @@
                         <span>⚡ 5 DEAL BÁO GIÁ TRỌNG TÂM &amp; TIẾN ĐỘ XƯỞNG</span>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;">
-                        <div style="background: #0F172A; padding: 14px; border-radius: 8px; border-left: 3px solid var(--info);">
-                            <div style="font-weight: 700; color: #38BDF8; font-size: 0.85rem; margin-bottom: 6px;">🧾 Deal Báo Giá Cần Chốt Cọc:</div>
-                            <ul style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.6; padding-left: 16px;">
+                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border-left: 3px solid var(--info); border: 1px solid #E2E8F0; border-left-width: 3px;">
+                            <div style="font-weight: 800; color: #0284C7; font-size: 0.85rem; margin-bottom: 6px;">🧾 Deal Báo Giá Cần Chốt Cọc:</div>
+                            <ul style="font-size: 0.78rem; color: #334155; line-height: 1.6; padding-left: 16px;">
                                 <li><strong>Ga Thủ Thiêm (Sơn Kim Land):</strong> Phương án sa bàn trung tâm, đợi duyệt ngân sách.</li>
                                 <li><strong>Schneider Electric:</strong> Mô hình tủ điện công nghiệp - Bình Dương.</li>
                                 <li><strong>Ciri - Sơn Đồng Hà Nội:</strong> Ms Hường (0919 703 689), đang bám sát gửi biểu giá.</li>
@@ -1035,9 +1053,9 @@
                                 <li><strong>KCN Lê Minh Xuân:</strong> Dự án quy hoạch sa bàn lớn khu công nghiệp.</li>
                             </ul>
                         </div>
-                        <div style="background: #0F172A; padding: 14px; border-radius: 8px; border-left: 3px solid var(--slate-gray);">
-                            <div style="font-weight: 700; color: #CBD5E1; font-size: 0.85rem; margin-bottom: 6px;">🏗️ Tiến Độ Thi Công Xưởng (11 Dự Án):</div>
-                            <ul style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.6; padding-left: 16px;">
+                        <div style="background: #F8FAFC; padding: 14px; border-radius: 8px; border-left: 3px solid var(--slate-gray); border: 1px solid #E2E8F0; border-left-width: 3px;">
+                            <div style="font-weight: 800; color: #475569; font-size: 0.85rem; margin-bottom: 6px;">🏗️ Tiến Độ Thi Công Xưởng (11 Dự Án):</div>
+                            <ul style="font-size: 0.78rem; color: #334155; line-height: 1.6; padding-left: 16px;">
                                 <li><strong>KCN Trần Anh Tân Phú (Huynh):</strong> Kính đã giao 22/8, bục gỗ xưởng A. Vũ, tiến độ 50%.</li>
                                 <li><strong>Tôn Hoa Sen (Sếp Tiến):</strong> Đã gửi duyệt thiết kế làm bằng vật liệu tôn thật.</li>
                                 <li><strong>BV 175 lần 2 (Huynh):</strong> Đã khảo sát thực tế bo góc, đang chờ số liệu kính/gỗ.</li>
@@ -1160,10 +1178,10 @@
                             </div>
                         </div>
 
-                        <!-- THẺ XÁC NHẬN TRƯỚC KHI LÊN NOTION -->
-                        <div id="newLeadPreviewCard" style="background: #0F172A; border: 1px dashed var(--primary-gold); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none;">
-                            <div style="font-size: 0.76rem; color: var(--primary-gold); font-weight: 700; margin-bottom: 6px;">📋 THẺ XÁC NHẬN DỮ LIỆU ĐƠN HÀNG TRƯỚC KHI LÊN NOTION:</div>
-                            <div id="newLeadPreviewContent" style="font-size: 0.8rem; color: #E2E8F0; line-height: 1.6;"></div>
+                        <!-- THẺ XÁC NHẬN TRƯỚC KHI LÊN NOTION (LIGHT) -->
+                        <div id="newLeadPreviewCard" style="background: #FFFBEB; border: 1px dashed var(--primary-gold); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none;">
+                            <div style="font-size: 0.76rem; color: #92400E; font-weight: 800; margin-bottom: 6px;">📋 THẺ XÁC NHẬN DỮ LIỆU ĐƠN HÀNG TRƯỚC KHI LÊN NOTION:</div>
+                            <div id="newLeadPreviewContent" style="font-size: 0.8rem; color: #334155; line-height: 1.6;"></div>
                         </div>
 
                         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -1196,26 +1214,26 @@
                     <div id="projectSearchResults" class="project-search-results"></div>
                 </div>
 
-                <!-- PROJECT CONTEXT & COMMENT LOGGER CARD -->
-                <div id="selectedProjectCard" class="card" style="display: none; border: 1px solid var(--primary-gold); background: #0F172A;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #334155; padding-bottom: 8px;">
-                        <span style="font-weight: 700; color: var(--primary-gold); font-size: 0.9rem;">💬 GHI NHẬN TIẾN ĐỘ CHO DỰ ÁN ĐÃ CHỌN</span>
+                <!-- PROJECT CONTEXT & COMMENT LOGGER CARD (LIGHT) -->
+                <div id="selectedProjectCard" class="card" style="display: none; border: 1.5px solid var(--primary-gold); background: #FFFFFF;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px;">
+                        <span style="font-weight: 800; color: #78350F; font-size: 0.9rem;">💬 GHI NHẬN TIẾN ĐỘ CHO DỰ ÁN ĐÃ CHỌN</span>
                         <span class="badge badge-gold" id="selProjBadge">Trạng thái</span>
                     </div>
 
                     <div style="margin-bottom: 12px;">
-                        <div id="selProjName" style="font-weight: 700; font-size: 1rem; color: #FFF; margin-bottom: 4px;">Tên dự án</div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.74rem; color: var(--text-muted);">
+                        <div id="selProjName" style="font-weight: 800; font-size: 1rem; color: #0F172A; margin-bottom: 4px;">Tên dự án</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.74rem; color: #64748B;">
                             <span id="selProjDate">📅 Ngày: -</span>
                             <span>👤 Tư vấn: <strong id="selProjAdvisor" style="color: var(--primary-gold);">-</strong></span>
-                            <span>🔧 Kỹ thuật: <strong id="selProjTech" style="color: #38BDF8;">-</strong></span>
+                            <span>🔧 Kỹ thuật: <strong id="selProjTech" style="color: #0284C7;">-</strong></span>
                             <span>📱 Nguồn: <strong id="selProjSource">-</strong></span>
                         </div>
                     </div>
 
-                    <div style="background: #1E293B; border-radius: 6px; padding: 10px; margin-bottom: 14px; border-left: 3px solid var(--primary-gold);">
-                        <div style="font-size: 0.72rem; color: var(--primary-gold); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">Lịch Sử Tiến Độ Gần Nhất:</div>
-                        <div id="selProjNote" style="font-size: 0.8rem; color: #CBD5E1; line-height: 1.5; white-space: pre-line;">Chưa có ghi chú</div>
+                    <div style="background: #F8FAFC; border-radius: 6px; padding: 10px; margin-bottom: 14px; border-left: 3.5px solid var(--primary-gold); border: 1px solid #E2E8F0; border-left-width: 3.5px;">
+                        <div style="font-size: 0.72rem; color: #78350F; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Lịch Sử Tiến Độ Gần Nhất:</div>
+                        <div id="selProjNote" style="font-size: 0.8rem; color: #334155; line-height: 1.5; white-space: pre-line;">Chưa có ghi chú</div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 12px;">
@@ -1360,7 +1378,7 @@
                         <span>📊 BÁO CÁO TỔNG HỢP HIỆN TRẠNG DỰ ÁN (BAN GIÁM ĐỐC)</span>
                         <button class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;" onclick="copyExecutiveSummary()">📋 Copy Báo Cáo</button>
                     </div>
-                    <div id="executiveReportContent" style="font-size: 0.82rem; color: #CBD5E1; line-height: 1.6; white-space: pre-line; background: #0F172A; padding: 16px; border-radius: 8px; border-left: 3px solid var(--primary-gold);">
+                    <div id="executiveReportContent" style="font-size: 0.82rem; color: #334155; line-height: 1.6; white-space: pre-line; background: #F8FAFC; padding: 16px; border-radius: 8px; border-left: 3.5px solid var(--primary-gold); border: 1px solid #E2E8F0; border-left-width: 3.5px;">
                         Đang trích xuất báo cáo hiện trạng...
                     </div>
                 </div>
@@ -1386,7 +1404,7 @@
                             <tbody>
                                 <tr>
                                     <td align="center">01</td>
-                                    <td style="font-weight: 600;">Mô hình nhà máy - Trung Quốc - Tại Hà Nội - Mr Vương</td>
+                                    <td style="font-weight: 700; color: #0F172A;">Mô hình nhà máy - Trung Quốc - Tại Hà Nội - Mr Vương</td>
                                     <td>03/09</td>
                                     <td>Phạm Hoàng Tiến</td>
                                     <td>Hotline Tiến</td>
@@ -1394,7 +1412,7 @@
                                 </tr>
                                 <tr>
                                     <td align="center">02</td>
-                                    <td style="font-weight: 600;">MÔ HÌNH CHUNG CƯ - PHÚ ANH THẠNH + Ms TRANG</td>
+                                    <td style="font-weight: 700; color: #0F172A;">MÔ HÌNH CHUNG CƯ - PHÚ ANH THẠNH + Ms TRANG</td>
                                     <td>30/08</td>
                                     <td>Võ Minh Sang</td>
                                     <td>Khách gọi Tiến</td>
@@ -1402,7 +1420,7 @@
                                 </tr>
                                 <tr>
                                     <td align="center">03</td>
-                                    <td style="font-weight: 600;">MÔ HÌNH NHÀ MÁY THỰC PHẨM - TÂY NINH + Mr KHOA</td>
+                                    <td style="font-weight: 700; color: #0F172A;">MÔ HÌNH NHÀ MÁY THỰC PHẨM - TÂY NINH + Mr KHOA</td>
                                     <td>28/08</td>
                                     <td>Phạm Hoàng Tiến</td>
                                     <td>Zalo Tiến</td>
@@ -1410,7 +1428,7 @@
                                 </tr>
                                 <tr>
                                     <td align="center">04</td>
-                                    <td style="font-weight: 600;">Mô hình Khu nhà ở cao cấp Ciri - Sơn Đồng, Hà Nội + PHẠM THỊ BÍCH HƯỜNG</td>
+                                    <td style="font-weight: 700; color: #0F172A;">Mô hình Khu nhà ở cao cấp Ciri - Sơn Đồng, Hà Nội + PHẠM THỊ BÍCH HƯỜNG</td>
                                     <td>05/09</td>
                                     <td>Võ Minh Sang</td>
                                     <td>Hotline Sếp</td>
@@ -1418,7 +1436,7 @@
                                 </tr>
                                 <tr>
                                     <td align="center">05</td>
-                                    <td style="font-weight: 600;">Sửa chữa mô hình kiến trúc + Chị Lan</td>
+                                    <td style="font-weight: 700; color: #0F172A;">Sửa chữa mô hình kiến trúc + Chị Lan</td>
                                     <td>03/09</td>
                                     <td>Võ Minh Sang</td>
                                     <td>Hotline Sếp</td>
@@ -1452,11 +1470,11 @@
                             <span>🗄️ KẾT NỐI NOTION DATABASE</span>
                             <span class="badge badge-green">Đã kết nối</span>
                         </div>
-                        <div style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.8;">
-                            <div>• <strong>BẢNG DS DỰ ÁN:</strong> <code style="color: var(--primary-gold);">1a54b5e7-3d90-8099-85a8-f7557c51f80c</code></div>
-                            <div>• <strong>BẢNG THÀNH VIÊN:</strong> <code style="color: var(--primary-gold);">19b4b5e7-3d90-803a-bda4-dff1da951ef6</code></div>
-                            <div>• <strong>BẢNG LĨNH VỰC CÔNG VIỆC:</strong> <code style="color: var(--primary-gold);">19a4b5e7-3d90-8063-b01f-def67e4ea2cd</code> (Mục <code>Mô Hình</code>)</div>
-                            <div>• <strong>BẢNG TRẠNG THÁI:</strong> <code style="color: var(--primary-gold);">3a74b5e7-3d90-806c-a74f-db12027b35ef</code></div>
+                        <div style="font-size: 0.78rem; color: #334155; line-height: 1.8;">
+                            <div>• <strong>BẢNG DS DỰ ÁN:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">1a54b5e7-3d90-8099-85a8-f7557c51f80c</code></div>
+                            <div>• <strong>BẢNG THÀNH VIÊN:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">19b4b5e7-3d90-803a-bda4-dff1da951ef6</code></div>
+                            <div>• <strong>BẢNG LĨNH VỰC CÔNG VIỆC:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">19a4b5e7-3d90-8063-b01f-def67e4ea2cd</code> (Mục <code>Mô Hình</code>)</div>
+                            <div>• <strong>BẢNG TRẠNG THÁI:</strong> <code style="color: #B5891A; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">3a74b5e7-3d90-806c-a74f-db12027b35ef</code></div>
                             <div style="margin-top: 8px; color: var(--text-muted);">Tự động đồng bộ 2 chiều qua script Cloud Cron và Webhook.</div>
                         </div>
                     </div>
@@ -1467,9 +1485,9 @@
                             <span>🤖 THÔNG BÁO TỰ ĐỘNG (ALERT BOT)</span>
                             <span class="badge badge-green">Active</span>
                         </div>
-                        <div style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.8;">
-                            <div>• <strong>Telegram Bot:</strong> <code>@songanh_alert_bot</code></div>
-                            <div>• <strong>Chat ID Tiếp Nhận:</strong> <code>1730306144</code> (Sếp Phạm Hoàng Tiến)</div>
+                        <div style="font-size: 0.78rem; color: #334155; line-height: 1.8;">
+                            <div>• <strong>Telegram Bot:</strong> <code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px;">@songanh_alert_bot</code></div>
+                            <div>• <strong>Chat ID Tiếp Nhận:</strong> <code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px;">1730306144</code> (Sếp Phạm Hoàng Tiến)</div>
                             <div>• <strong>Lịch Tự Động:</strong> Thứ 7 gửi Báo cáo tuần; Ngày thường gửi khi phát hiện đơn/comment mới (Zero-Spam).</div>
                             <div>• <strong>Cloud Runner:</strong> GitHub Actions <code>.github/workflows/notion-sync-cron.yml</code>.</div>
                         </div>
@@ -1480,7 +1498,7 @@
                         <div class="card-header">
                             <span>👥 ĐỘI NGŨ PHỤ TRÁCH SALE</span>
                         </div>
-                        <div style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.8;">
+                        <div style="font-size: 0.78rem; color: #334155; line-height: 1.8;">
                             <div>• <strong>Phạm Hoàng Tiến:</strong> Phó Giám Đốc / Trưởng Ban Quản Lý Sale (Notion User ID: <code>dd7e5617-...</code>)</div>
                             <div>• <strong>Võ Minh Sang:</strong> Chuyên Viên Tư Vấn &amp; Chăm Sóc Khách Hàng (Notion User ID: <code>38ed872b-...</code>)</div>
                             <div style="margin-top: 8px; color: var(--text-muted);">Mọi đơn hàng mới hoặc bình luận được phân quyền rõ ràng theo mã nhân sự.</div>
@@ -1492,7 +1510,7 @@
                         <div class="card-header">
                             <span>📜 QUY CHUẨN HOẠT ĐỘNG BẮT BUỘC</span>
                         </div>
-                        <div style="font-size: 0.76rem; color: #CBD5E1; line-height: 1.6;">
+                        <div style="font-size: 0.76rem; color: #334155; line-height: 1.6;">
                             <div>• <strong>Tên thương hiệu chuẩn:</strong> Mô Hình Kiến Trúc Song Anh (hoặc Mô Hình Song Anh).</div>
                             <div>• <strong>Xưởng sản xuất:</strong> 230/70/28 Nguyễn Xiển, TP. Thủ Đức, TP.HCM.</div>
                             <div>• <strong>Hotline liên hệ:</strong> 0929 22 4444 (Không kèm tên riêng cá nhân).</div>
@@ -1505,10 +1523,10 @@
         </div>
 
         <!-- ==================== GLOBAL FOOTER (INVARIANT 2) ==================== -->
-        <footer style="margin-top: auto; padding: 24px 20px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.75rem; color: var(--text-muted); background: #0F172A;">
+        <footer style="margin-top: auto; padding: 24px 20px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.75rem; color: var(--text-muted); background: #FFFFFF;">
             <div style="font-weight: 700; color: var(--primary-gold); margin-bottom: 4px;">🏢 MÔ HÌNH KIẾN TRÚC SONG ANH</div>
             <div style="margin-bottom: 4px;">📍 Xưởng sản xuất: 230/70/28 Nguyễn Xiển, TP. Thủ Đức, TP.HCM • 📞 Hotline: 0929 22 4444</div>
-            <div style="color: #64748B;">Hệ Thống Quản Lý &amp; Tác Nghiệp Sale • Phụ trách: Phạm Hoàng Tiến &amp; Võ Minh Sang • Đồng bộ Notion Live</div>
+            <div style="color: #94A3B8;">Hệ Thống Quản Lý &amp; Tác Nghiệp Sale • Phụ trách: Phạm Hoàng Tiến &amp; Võ Minh Sang • Đồng bộ Notion Live</div>
         </footer>
     </main>
 </div>
@@ -3362,10 +3380,11 @@
                 const previewCard = document.getElementById('newLeadPreviewCard');
                 if (previewCard) {
                     previewCard.style.display = 'block';
+                    previewCard.style.background = '#ECFDF5';
                     previewCard.style.borderColor = 'var(--success)';
                     previewCard.innerHTML = `
-                        <div style="color: var(--success); font-weight: 700; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>
-                        <div style="font-size: 0.8rem; color: #E2E8F0;">• Tên dự án: <strong>${name}</strong></div>
+                        <div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>
+                        <div style="font-size: 0.82rem; color: #0F172A;">• Tên dự án: <strong>${name}</strong></div>
                         <div style="margin-top: 8px;"><a href="${res.url}" target="_blank" class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a></div>
                     `;
                 }
@@ -3430,7 +3449,6 @@
         const danglamCount = pipelineData.filter(d => d.stage === 'danglam').length;
         const thanhtoanCount = pipelineData.filter(d => d.stage === 'thanhtoan').length;
 
-        // Update counts
         const btnAll = document.getElementById('btn-filter-all');
         if (btnAll) btnAll.innerText = `Tất Cả (${pipelineData.length})`;
         const btnTuvan = document.getElementById('btn-filter-tuvan');
@@ -3470,11 +3488,11 @@
                 tbodyHtml += `
                     <tr style="cursor: pointer;" onclick="selectProject('${d.id}')" title="Bấm để ghi nhận tiến độ dự án này">
                         <td align="center">${idx + 1 < 10 ? '0' + (idx + 1) : idx + 1}</td>
-                        <td style="font-weight: 600; color: #FFF;">${d.name}</td>
+                        <td style="font-weight: 700; color: #0F172A;">${d.name}</td>
                         <td>${d.date}</td>
-                        <td>${d.assignee}</td>
-                        ${showTech ? `<td style="color: #38BDF8; font-weight: 600;">${d.tech}</td>` : ''}
-                        <td style="font-size: 0.8rem; color: #E2E8F0; white-space: pre-line; word-break: break-word; line-height: 1.45;">${d.note}</td>
+                        <td><strong>${d.assignee}</strong></td>
+                        ${showTech ? `<td style="color: #0284C7; font-weight: 700;">${d.tech}</td>` : ''}
+                        <td style="font-size: 0.8rem; color: #334155; white-space: pre-line; word-break: break-word; line-height: 1.45;">${d.note}</td>
                     </tr>
                 `;
             });
@@ -3501,7 +3519,7 @@
                         <div class="project-card-meta">
                             <div>📅 ${d.date}</div>
                             <div>👤 Tư vấn: <strong>${d.assignee}</strong></div>
-                            ${d.tech !== '-' ? `<div>🔧 Kỹ thuật: <strong style="color: #38BDF8;">${d.tech}</strong></div>` : ''}
+                            ${d.tech !== '-' ? `<div>🔧 Kỹ thuật: <strong style="color: #0284C7;">${d.tech}</strong></div>` : ''}
                         </div>
                         <div class="project-card-note">${d.note}</div>
                     </div>
@@ -3538,7 +3556,7 @@
             html += `
                 <div class="project-search-item" onclick="selectProject('${p.id}')">
                     <div>
-                        <div style="font-weight: 600; font-size: 0.84rem; color: #FFF;">${p.name}</div>
+                        <div style="font-weight: 700; font-size: 0.84rem; color: #0F172A;">${p.name}</div>
                         <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">
                             ${p.date} • ${p.assignee} • Nguồn: ${p.source}
                         </div>
@@ -3667,9 +3685,7 @@
     }
 
     function renderCustomerViews() {
-        // Extract customers from pipeline
         let customers = pipelineData.map(p => {
-            // Extract client name from project name if contains '+' or '-'
             let client = '-';
             let phone = '';
             if (p.name.includes('+')) {
@@ -3679,7 +3695,6 @@
                 if (parts.length > 2) client = parts.pop().trim();
             }
 
-            // Extract phone if any
             const phoneMatch = (p.note || '' + p.name).match(/(0\d{9,10}|\d{4}\s\d{3}\s\d{3})/);
             if (phoneMatch) phone = phoneMatch[0];
 
@@ -3695,14 +3710,12 @@
             };
         });
 
-        // Filter by advisor
         if (customerFilterAdvisor === 'Tiến') {
             customers = customers.filter(c => c.advisor.includes('Tiến'));
         } else if (customerFilterAdvisor === 'Sang') {
             customers = customers.filter(c => c.advisor.includes('Sang'));
         }
 
-        // Filter by search query
         if (customerSearchQuery) {
             customers = customers.filter(c => 
                 c.client.toLowerCase().includes(customerSearchQuery) ||
@@ -3712,7 +3725,6 @@
             );
         }
 
-        // Render Table
         const tbody = document.getElementById('customerTableBody');
         if (tbody) {
             let html = '';
@@ -3720,9 +3732,9 @@
                 html += `
                     <tr>
                         <td align="center">${idx + 1}</td>
-                        <td style="font-weight: 700; color: #FFF;">${c.client}</td>
-                        <td>${c.phone ? `<a href="tel:${c.phone.replace(/\s+/g, '')}" style="color: var(--primary-gold); text-decoration: none;">📞 ${c.phone}</a>` : '<span style="color: var(--slate-gray);">-</span>'}</td>
-                        <td style="font-size: 0.8rem; color: #CBD5E1;">${c.projectName}</td>
+                        <td style="font-weight: 700; color: #0F172A;">${c.client}</td>
+                        <td>${c.phone ? `<a href="tel:${c.phone.replace(/\s+/g, '')}" style="color: var(--primary-gold); text-decoration: none; font-weight: 700;">📞 ${c.phone}</a>` : '<span style="color: #94A3B8;">-</span>'}</td>
+                        <td style="font-size: 0.8rem; color: #334155;">${c.projectName}</td>
                         <td>${c.source}</td>
                         <td><strong>${c.advisor}</strong></td>
                         <td><span class="badge ${c.stage === 'hopdong' ? 'badge-green' : (c.stage === 'baogia' ? 'badge-blue' : (c.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}">${c.stageLabel}</span></td>
@@ -3735,7 +3747,6 @@
             tbody.innerHTML = html;
         }
 
-        // Render Mobile Cards
         const mobileBox = document.getElementById('customerMobileCards');
         if (mobileBox) {
             let html = '';
