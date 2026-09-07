@@ -1706,6 +1706,21 @@
 <script>
     // 1. PIPELINE DATA
     const pipelineData = [
+        {
+            "id": "3d44b5e7-3d90-81c9-b164-d263af67fd37",
+            "name": "Test đơn hàng mới 1",
+            "date": "07/09",
+            "rawDate": "2026-09-07",
+            "nhacHen": "2026-09-07",
+            "ngayLienHe": "2026-09-07",
+            "stage": "tuvan",
+            "stageLabel": "💬 Tư vấn",
+            "assignee": "Võ Minh Sang",
+            "tech": "-",
+            "source": "Số Tiến",
+            "note": "Đơn hàng mới tạo qua WebApp",
+            "isPotential": false
+        },
     {
         "id": "3d24b5e7-3d90-81b5-995b-d96758220414",
         "name": "Sửa chữa mô hình kiến trúc + Chị Lan",
@@ -3904,6 +3919,20 @@
         p.isPotential = potentialIdList.has(p.id);
     });
 
+    // Tự động khôi phục các đơn hàng vừa tạo lưu trong localStorage vào pipelineData
+    try {
+        const localLeads = JSON.parse(localStorage.getItem('songanh_local_leads') || '[]');
+        if (Array.isArray(localLeads) && localLeads.length > 0) {
+            localLeads.forEach(lead => {
+                if (!pipelineData.some(p => p.id === lead.id)) {
+                    pipelineData.unshift(lead);
+                }
+            });
+        }
+    } catch (e) {
+        console.warn('Could not parse local leads:', e);
+    }
+
     // 2. TABS & SIDEBAR LOGIC
     function switchAppTab(tabId, navElement) {
         document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
@@ -4297,6 +4326,44 @@
             const res = await resp.json();
             if (res && res.success) {
                 showToast('🎉 Đã tạo đơn mới thành công trên Notion & Bắn Telegram!');
+
+                const createdId = res.pageId || ('local-' + Date.now());
+                const createdItem = {
+                    id: createdId,
+                    name: name,
+                    date: new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
+                    rawDate: new Date().toISOString().split('T')[0],
+                    nhacHen: new Date().toISOString().split('T')[0],
+                    ngayLienHe: new Date().toISOString().split('T')[0],
+                    stage: 'tuvan',
+                    stageLabel: '💬 Tư vấn',
+                    assignee: adv === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang',
+                    tech: '-',
+                    source: src,
+                    note: note || 'Đơn hàng mới tạo qua WebApp',
+                    isPotential: false
+                };
+
+                // 1. Đưa ngay vào đầu danh sách pipelineData
+                if (!pipelineData.some(p => p.id === createdItem.id)) {
+                    pipelineData.unshift(createdItem);
+                }
+
+                // 2. Lưu vào localStorage để không bị mất khi F5 trang
+                try {
+                    let localLeads = JSON.parse(localStorage.getItem('songanh_local_leads') || '[]');
+                    localLeads = localLeads.filter(l => l.id !== createdItem.id);
+                    localLeads.unshift(createdItem);
+                    localStorage.setItem('songanh_local_leads', JSON.stringify(localLeads));
+                } catch (e) {
+                    console.warn('Could not save to localStorage:', e);
+                }
+
+                // 3. Render lại toàn bộ giao diện bảng và bộ lọc
+                renderPipelineViews();
+                renderCustomerViews();
+                applyGlobalFilterToViews();
+
                 const previewCard = document.getElementById('newLeadPreviewCard');
                 if (previewCard) {
                     previewCard.style.display = 'block';
@@ -4304,7 +4371,10 @@
                     previewCard.style.borderColor = 'var(--success)';
                     previewCard.innerHTML = '<div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>' +
                         '<div style="font-size: 0.82rem; color: #0F172A;">• Tên dự án: <strong>' + name + '</strong></div>' +
-                        '<div style="margin-top: 8px;"><a href="' + res.url + '" target="_blank" class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a></div>';
+                        '<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">' +
+                            (res.url ? '<a href="' + res.url + '" target="_blank" class="btn btn-sm btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a>' : '') +
+                            '<button class="btn btn-sm" style="background: #0284C7; color: #FFFFFF; border: none; font-weight: 700; padding: 4px 10px; font-size: 0.72rem; cursor: pointer;" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + createdItem.id + '\');">💬 Cập Nhật Tiến Độ Ngay Cho Đơn Này</button>' +
+                        '</div>';
                 }
                 document.getElementById('newLeadForm').reset();
             } else {
