@@ -657,36 +657,56 @@
             line-height: 1.2;
         }
 
-        /* STAGE SUMMARY PILLS FOR HOME TABLE */
-        .home-stage-summary-wrap {
+        /* STAGE FILTER BUTTONS FOR HOME TABLE */
+        .home-stage-filter-wrap {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            white-space: nowrap;
             margin-bottom: 16px;
+            padding-bottom: 4px;
+            scrollbar-width: thin;
         }
 
-        .stage-pill-box {
+        .home-stage-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
+            padding: 7px 13px;
             border-radius: 8px;
             font-size: 0.78rem;
             font-weight: 700;
+            cursor: pointer;
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #334155;
             user-select: none;
-            transition: transform 0.15s, box-shadow 0.15s;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+            min-height: 36px;
         }
 
-        .stage-pill-box:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        .home-stage-btn:hover {
+            border-color: #94A3B8;
+            background: #F8FAFC;
         }
 
-        .stage-pill-box.gold { background: #FEF3C7; border: 1px solid #FDE68A; color: #855C08; }
-        .stage-pill-box.blue { background: #EFF6FF; border: 1px solid #BAE6FD; color: #0284C7; }
-        .stage-pill-box.green { background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; }
-        .stage-pill-box.purple { background: #F5F3FF; border: 1px solid #DDD6FE; color: #7C3AED; }
-        .stage-pill-box.gray { background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569; }
+        .home-stage-btn.active {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-width: 1.5px;
+        }
+
+        .home-stage-btn.all.active {
+            background: #0F172A;
+            color: #FFFFFF;
+            border-color: #0F172A;
+        }
+
+        .home-stage-btn.gold.active { background: #FEF3C7; border-color: #B5891A; color: #855C08; }
+        .home-stage-btn.blue.active { background: #EFF6FF; border-color: #0284C7; color: #0284C7; }
+        .home-stage-btn.green.active { background: #ECFDF5; border-color: #059669; color: #059669; }
+        .home-stage-btn.purple.active { background: #F5F3FF; border-color: #7C3AED; color: #7C3AED; }
+        .home-stage-btn.gray.active { background: #F1F5F9; border-color: #475569; color: #334155; }
 
         .kpi-box {
             background: #FFFFFF;
@@ -1055,6 +1075,174 @@
             transform: translateY(0);
         }
 
+        /* PAGINATION UI */
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border-top: 1px solid var(--card-border);
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            flex-wrap: wrap;
+        }
+        .pagination-info {
+            font-size: 0.78rem;
+            color: #64748B;
+            font-weight: 500;
+        }
+        .pagination-info strong {
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .page-btn {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #334155;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .page-btn:hover:not(:disabled) {
+            background: #E2E8F0;
+            color: #0F172A;
+            border-color: #94A3B8;
+        }
+        .page-btn.active {
+            background: var(--primary-gold);
+            color: #FFFFFF;
+            border-color: var(--primary-gold);
+            font-weight: 800;
+            box-shadow: 0 1px 4px rgba(181, 137, 26, 0.3);
+        }
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #F1F5F9;
+        }
+        .page-dots {
+            padding: 0 4px;
+            color: #94A3B8;
+            font-size: 0.8rem;
+        }
+
+        /* MODAL DIALOG STYLES (RULE 3: ISOLATED MODAL) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        .modal-container {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            border: 1px solid var(--card-border);
+            z-index: 2001;
+            animation: modalFadeIn 0.2s ease-out;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-close-btn {
+            background: #F1F5F9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1rem;
+            color: #64748B;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .modal-close-btn:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--card-border);
+            background: #F8FAFC;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .pagination-bar {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            .pagination-info {
+                text-align: center;
+                font-size: 0.74rem;
+            }
+            .page-btn {
+                min-width: 30px;
+                height: 30px;
+                font-size: 0.72rem;
+            }
+            .modal-container {
+                max-height: 94vh;
+            }
+            .modal-header, .modal-body, .modal-footer {
+                padding: 14px 16px;
+            }
+        }
+
         /* OVERLAY FOR MOBILE SIDEBAR */
         .sidebar-overlay {
             display: none;
@@ -1342,23 +1530,26 @@
                         <span style="font-size: 0.78rem; color: var(--text-muted);" id="homeTableScopeSubtitle">Hiển thị động theo bộ lọc: Tuần này (01/09 - 07/09/2026)</span>
                     </div>
 
-                    <!-- HÀNG TÓM TẮT NHANH 5 TRẠNG THÁI CHUẨN NOTION TRONG KỲ LỌC -->
-                    <div class="home-stage-summary-wrap">
-                        <div class="stage-pill-box gold">
-                            <span>💬 Tư vấn:</span> <strong id="homeStageTuvanCount" style="font-size: 0.9rem;">0</strong>
-                        </div>
-                        <div class="stage-pill-box blue">
-                            <span>🧾 Báo giá:</span> <strong id="homeStageBaogiaCount" style="font-size: 0.9rem;">0</strong>
-                        </div>
-                        <div class="stage-pill-box green">
-                            <span>🤝 Hợp đồng:</span> <strong id="homeStageHopdongCount" style="font-size: 0.9rem;">0</strong>
-                        </div>
-                        <div class="stage-pill-box purple">
-                            <span>🏗️ Đang làm:</span> <strong id="homeStageDanglamCount" style="font-size: 0.9rem;">0</strong>
-                        </div>
-                        <div class="stage-pill-box gray">
-                            <span>💸 Giao/Thu:</span> <strong id="homeStageThanhtoanCount" style="font-size: 0.9rem;">0</strong>
-                        </div>
+                    <!-- HÀNG NÚT LỌC TRẠNG THÁI DỰ ÁN TRÊN BẢNG TỔNG QUAN -->
+                    <div class="home-stage-filter-wrap">
+                        <button type="button" class="home-stage-btn all active" id="btn-home-stage-all" onclick="setHomeTableStageFilter('all', this)">
+                            <span>🌐 Tất cả:</span> <strong id="homeStageAllCount">0</strong>
+                        </button>
+                        <button type="button" class="home-stage-btn gold" id="btn-home-stage-tuvan" onclick="setHomeTableStageFilter('tuvan', this)">
+                            <span>💬 Tư vấn:</span> <strong id="homeStageTuvanCount">0</strong>
+                        </button>
+                        <button type="button" class="home-stage-btn blue" id="btn-home-stage-baogia" onclick="setHomeTableStageFilter('baogia', this)">
+                            <span>🧾 Báo giá:</span> <strong id="homeStageBaogiaCount">0</strong>
+                        </button>
+                        <button type="button" class="home-stage-btn green" id="btn-home-stage-hopdong" onclick="setHomeTableStageFilter('hopdong', this)">
+                            <span>🤝 Hợp đồng:</span> <strong id="homeStageHopdongCount">0</strong>
+                        </button>
+                        <button type="button" class="home-stage-btn purple" id="btn-home-stage-danglam" onclick="setHomeTableStageFilter('danglam', this)">
+                            <span>🏗️ Đang làm:</span> <strong id="homeStageDanglamCount">0</strong>
+                        </button>
+                        <button type="button" class="home-stage-btn gray" id="btn-home-stage-thanhtoan" onclick="setHomeTableStageFilter('thanhtoan', this)">
+                            <span>💸 Giao/Thu:</span> <strong id="homeStageThanhtoanCount">0</strong>
+                        </button>
                     </div>
 
                     <!-- BẢNG DỮ LIỆU DESKTOP (>= 768px) -->
@@ -1385,6 +1576,9 @@
                     <div class="mobile-card-list" id="homeProjectMobileCards" style="margin-top: 10px;">
                         <!-- Dynamic mobile cards rendered by JS -->
                     </div>
+
+                    <!-- THANH PHÂN TRANG BẢNG TỔNG QUAN -->
+                    <div class="pagination-bar" id="homeTablePaginationBar"></div>
                 </div>
             </div>
 
@@ -1500,71 +1694,16 @@
                     </div>
                 </div>
 
-                <!-- KHỐI GHI NHẬN CẬP NHẬT TIẾN ĐỘ / COMMENT CHO DỰ ÁN ĐANG CHỌN -->
-                <div class="card" id="quickLogCard" style="border-left: 4px solid var(--primary-gold);">
-                    <div class="card-header">
-                        <span>💬 CẬP NHẬT TIẾN ĐỘ &amp; GHI COMMENT VÀO DỰ ÁN</span>
-                        <span style="font-size: 0.78rem; color: var(--primary-gold); font-weight: 700;" id="selectedProjectBadge">Chọn dự án bên dưới hoặc tìm kiếm</span>
-                    </div>
-
-                    <!-- Ô TÌM KIẾM AUTOCOMPLETE NHANH DỰ ÁN -->
-                    <div class="search-project-wrap">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="projectSearchInput" class="search-project-input" placeholder="Gõ tên dự án, số điện thoại hoặc khách hàng để cập nhật..." oninput="handleProjectSearch(this.value)">
-                        <div id="projectSearchResults" class="project-search-results"></div>
-                    </div>
-
-                    <div id="selectedProjectDetails" style="display: none; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px; border-radius: 8px; margin-bottom: 14px;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap;">
-                            <div>
-                                <h3 id="selProjName" style="font-size: 1rem; color: #0F172A; font-weight: 800;">-</h3>
-                                <div style="font-size: 0.76rem; color: #64748B; margin-top: 4px;">
-                                    Tư vấn: <strong id="selProjAssignee" style="color: #0F172A;">-</strong> | 
-                                    Giai đoạn: <span id="selProjStage" class="badge badge-gold">-</span> | 
-                                    Kỹ thuật: <strong id="selProjTech" style="color: #0284C7;">-</strong>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm" onclick="clearSelectedProject()" style="padding: 4px 8px; font-size: 0.72rem;">Đổi dự án khác</button>
-                        </div>
-                        <div style="margin-top: 10px; font-size: 0.8rem; color: #334155; background: #FFFFFF; padding: 10px; border-radius: 6px; border: 1px solid #E2E8F0;" id="selProjNote">
-                            Chưa có ghi chú
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label class="form-label">NỘI DUNG CẬP NHẬT MỚI (LƯU VÀO NOTION COMMENT) <span class="req">*</span></label>
-                            <textarea id="logCommentText" class="form-textarea" placeholder="Ví dụ: Đã gửi bảng báo giá 25tr qua Zalo, khách hẹn thứ 5 chốt duyệt mẫu gỗ..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">NGƯỜI CẬP NHẬT</label>
-                            <select id="logAuthor" class="form-select">
-                                <option value="Võ Minh Sang">Võ Minh Sang</option>
-                                <option value="Phạm Hoàng Tiến">Phạm Hoàng Tiến</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">CHUYỂN GIAI ĐOẠN (TÙY CHỌN)</label>
-                            <select id="logNewStage" class="form-select">
-                                <option value="">-- Giữ nguyên giai đoạn hiện tại --</option>
-                                <option value="tuvan">💬 1. Tư Vấn</option>
-                                <option value="baogia">🧾 2. Báo Giá</option>
-                                <option value="hopdong">🤝 3. Hợp Đồng</option>
-                                <option value="danglam">🏗️ 4. Đang Làm (Xưởng)</option>
-                                <option value="thanhtoan">💸 5. Thanh Toán / Giao</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <button type="button" class="btn btn-gold" onclick="submitProjectLog()">
-                            🚀 Lưu Cập Nhật Vào Notion
+                <!-- THANH TÁC VỤ & NÚT MỞ FORM CẬP NHẬT DỰ ÁN -->
+                <div class="tracking-action-bar" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; background: #FFFFFF; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--card-border); box-shadow: 0 1px 4px rgba(0,0,0,0.03);">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-gold" id="btnOpenUpdateProjectModal" onclick="openUpdateProjectModal()" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 10px 18px; border-radius: 8px; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(181, 137, 26, 0.25);">
+                            <span style="font-size: 1.15rem;">✍️</span> <span>Cập nhật dự án</span>
                         </button>
-                        <button type="button" class="btn" onclick="copyProjectLogText()">
-                            📋 Sao Chép Nội Dung
-                        </button>
+                        <span id="selectedProjectBadge" style="font-size: 0.82rem; color: #64748B; font-weight: 600;">Chọn dự án bên dưới hoặc bấm nút</span>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #475569; display: flex; align-items: center; gap: 6px;">
+                        <span>💡</span> <span>Bấm <strong>"Cập nhật dự án"</strong> hoặc <strong>click trực tiếp vào dòng dự án</strong> trong bảng bên dưới</span>
                     </div>
                 </div>
 
@@ -1598,6 +1737,9 @@
 
                 <!-- MOBILE CARDS -->
                 <div class="mobile-card-list" id="pipelineMobileCards"></div>
+
+                <!-- THANH ĐIỀU HƯỚNG PHÂN TRANG PIPELINE -->
+                <div class="pagination-bar" id="pipelinePaginationBar"></div>
             </div>
 
             <!-- ==================== 4. MENU: KHÁCH HÀNG ==================== -->
@@ -1726,6 +1868,86 @@
             <div style="color: #94A3B8;">Hệ Thống Quản Lý &amp; Tác Nghiệp Sale • Phụ trách: Phạm Hoàng Tiến &amp; Võ Minh Sang • Đồng bộ Notion Live</div>
         </footer>
     </main>
+</div>
+
+<!-- ==================== MODAL: CẬP NHẬT TIẾN ĐỘ & GHI COMMENT DỰ ÁN (RULE 3) ==================== -->
+<div class="modal-overlay" id="modalUpdateProject" style="display: none;">
+    <div class="modal-backdrop" onclick="closeUpdateProjectModal()"></div>
+    <div class="modal-container">
+        <div class="modal-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.3rem;">💬</span>
+                <div>
+                    <h3 style="font-size: 1.05rem; font-weight: 800; color: #0F172A; margin: 0;">Cập Nhật Tiến Độ &amp; Ghi Comment</h3>
+                    <div style="font-size: 0.74rem; color: #64748B;">Lưu trực tiếp vào trang Notion &amp; Bắn Telegram</div>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" onclick="closeUpdateProjectModal()" aria-label="Đóng modal">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Ô TÌM KIẾM AUTOCOMPLETE NHANH DỰ ÁN -->
+            <label class="form-label" style="margin-bottom: 6px;">TÌM KIẾM DỰ ÁN CẦN CẬP NHẬT</label>
+            <div class="search-project-wrap" style="margin-bottom: 12px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="projectSearchInput" class="search-project-input" placeholder="Gõ tên dự án, số điện thoại hoặc khách hàng để cập nhật..." oninput="handleProjectSearch(this.value)">
+                <div id="projectSearchResults" class="project-search-results"></div>
+            </div>
+
+            <!-- THÔNG TIN DỰ ÁN ĐANG CHỌN -->
+            <div id="selectedProjectDetails" style="display: none; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap;">
+                    <div>
+                        <h4 id="selProjName" style="font-size: 0.95rem; color: #0F172A; font-weight: 800; margin-bottom: 4px;">-</h4>
+                        <div style="font-size: 0.76rem; color: #64748B;">
+                            Tư vấn: <strong id="selProjAssignee" style="color: #0F172A;">-</strong> | 
+                            Giai đoạn: <span id="selProjStage" class="badge badge-gold">-</span> | 
+                            Kỹ thuật: <strong id="selProjTech" style="color: #0284C7;">-</strong>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm" onclick="clearSelectedProject()" style="padding: 4px 8px; font-size: 0.72rem;">Đổi dự án khác</button>
+                </div>
+                <div style="margin-top: 8px; font-size: 0.78rem; color: #334155; background: #FFFFFF; padding: 8px 10px; border-radius: 6px; border: 1px solid #E2E8F0; max-height: 110px; overflow-y: auto; white-space: pre-line;" id="selProjNote">
+                    Chưa có ghi chú
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label">NỘI DUNG CẬP NHẬT MỚI (LƯU VÀO NOTION COMMENT) <span class="req">*</span></label>
+                    <textarea id="logCommentText" class="form-textarea" placeholder="Ví dụ: Đã gửi bảng báo giá 25tr qua Zalo, khách hẹn thứ 5 chốt duyệt mẫu gỗ..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">NGƯỜI CẬP NHẬT</label>
+                    <select id="logAuthor" class="form-select">
+                        <option value="Võ Minh Sang">Võ Minh Sang</option>
+                        <option value="Phạm Hoàng Tiến">Phạm Hoàng Tiến</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">CHUYỂN GIAI ĐOẠN (TÙY CHỌN)</label>
+                    <select id="logNewStage" class="form-select">
+                        <option value="">-- Giữ nguyên giai đoạn hiện tại --</option>
+                        <option value="tuvan">💬 1. Tư Vấn</option>
+                        <option value="baogia">🧾 2. Báo Giá</option>
+                        <option value="hopdong">🤝 3. Hợp Đồng</option>
+                        <option value="danglam">🏗️ 4. Đang Làm (Xưởng)</option>
+                        <option value="thanhtoan">💸 5. Thanh Toán / Giao</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+            <button type="button" class="btn" onclick="closeUpdateProjectModal()" style="padding: 9px 16px;">Hủy / Đóng</button>
+            <button type="button" class="btn" onclick="copyProjectLogText()" style="padding: 9px 16px;">📋 Sao Chép</button>
+            <button type="button" class="btn btn-gold" id="btnSubmitProjectLogModal" onclick="submitProjectLog()" style="padding: 9px 20px; font-weight: 700;">
+                🚀 Lưu Cập Nhật Vào Notion
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- MOBILE BOTTOM NAVIGATION (SAFE AREA DƯỚI ĐÁY ĐIỆN THOẠI) -->
@@ -4183,7 +4405,73 @@
         renderHomeProjectTable(filteredLeads);
     }
 
+    // HOME TABLE STATE & FILTER LOGIC
+    let currentHomeRawLeads = [];
+    let homeTableStageFilter = 'all';
+    let homeTableCurrentPage = 1;
+    const HOME_TABLE_PAGE_SIZE = 10;
+
+    function setHomeTableStageFilter(stage, btnEl) {
+        homeTableStageFilter = stage;
+        homeTableCurrentPage = 1;
+        document.querySelectorAll('.home-stage-btn').forEach(b => b.classList.remove('active'));
+        if (btnEl) btnEl.classList.add('active');
+        renderHomeProjectTable(currentHomeRawLeads);
+    }
+
+    function changeHomeTablePage(newPage) {
+        homeTableCurrentPage = newPage;
+        renderHomeProjectTable(currentHomeRawLeads);
+        const cardEl = document.querySelector('#tab-trang-chu .desktop-table-wrap');
+        if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // REUSABLE PAGINATION GENERATOR
+    function renderPaginationHtml(totalItems, totalPages, currentPage, changeFnName) {
+        if (totalItems === 0) return '';
+        const startItem = (currentPage - 1) * 10 + 1;
+        const endItem = Math.min(currentPage * 10, totalItems);
+
+        let html = '<div class="pagination-info">Hiển thị <strong>' + startItem + ' - ' + endItem + '</strong> trong <strong>' + totalItems + '</strong> dự án (Trang ' + currentPage + '/' + totalPages + ')</div>';
+        html += '<div class="pagination-controls">';
+
+        // Prev button
+        const prevDisabled = currentPage <= 1 ? 'disabled' : '';
+        html += '<button type="button" class="page-btn" ' + prevDisabled + ' onclick="' + changeFnName + '(' + (currentPage - 1) + ')" title="Trang trước">◀ Trước</button>';
+
+        // Calculate page window (at most 5 page numbers)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+        if (endPage - startPage < 4) {
+            startPage = Math.max(1, endPage - 4);
+        }
+
+        if (startPage > 1) {
+            html += '<button type="button" class="page-btn" onclick="' + changeFnName + '(1)">1</button>';
+            if (startPage > 2) html += '<span class="page-dots">...</span>';
+        }
+
+        for (let p = startPage; p <= endPage; p++) {
+            const activeClass = p === currentPage ? 'active' : '';
+            html += '<button type="button" class="page-btn ' + activeClass + '" onclick="' + changeFnName + '(' + p + ')">' + p + '</button>';
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += '<span class="page-dots">...</span>';
+            html += '<button type="button" class="page-btn" onclick="' + changeFnName + '(' + totalPages + ')">' + totalPages + '</button>';
+        }
+
+        // Next button
+        const nextDisabled = currentPage >= totalPages ? 'disabled' : '';
+        html += '<button type="button" class="page-btn" ' + nextDisabled + ' onclick="' + changeFnName + '(' + (currentPage + 1) + ')" title="Trang sau">Sau ▶</button>';
+        html += '</div>';
+
+        return html;
+    }
+
     function renderHomeProjectTable(leads) {
+        currentHomeRawLeads = leads || [];
+
         // Cập nhật Subtitle theo kỳ lọc
         const subtitleEl = document.getElementById('homeTableScopeSubtitle');
         if (subtitleEl) {
@@ -4199,14 +4487,9 @@
             subtitleEl.innerText = 'Hiển thị động theo bộ lọc: ' + filterName;
         }
 
-        const totalBadge = document.getElementById('homeTableTotalBadge');
-        if (totalBadge) {
-            totalBadge.innerText = (leads.length < 10 ? '0' + leads.length : leads.length) + ' Dự án';
-        }
-
-        // Đếm số lượng theo 5 trạng thái chuẩn Notion
+        // 1. Đếm số lượng theo 5 trạng thái chuẩn Notion từ TỔNG SỐ LEADS trong kỳ
         let cTuvan = 0, cBaogia = 0, cHopdong = 0, cDanglam = 0, cThanhtoan = 0;
-        leads.forEach(d => {
+        currentHomeRawLeads.forEach(d => {
             if (d.stage === 'tuvan') cTuvan++;
             else if (d.stage === 'baogia') cBaogia++;
             else if (d.stage === 'hopdong') cHopdong++;
@@ -4214,6 +4497,8 @@
             else if (d.stage === 'thanhtoan') cThanhtoan++;
         });
 
+        const elAll = document.getElementById('homeStageAllCount');
+        if (elAll) elAll.innerText = currentHomeRawLeads.length;
         const elTuvan = document.getElementById('homeStageTuvanCount');
         if (elTuvan) elTuvan.innerText = cTuvan;
         const elBaogia = document.getElementById('homeStageBaogiaCount');
@@ -4225,14 +4510,35 @@
         const elThanhtoan = document.getElementById('homeStageThanhtoanCount');
         if (elThanhtoan) elThanhtoan.innerText = cThanhtoan;
 
-        // Render Desktop Table Body
+        // 2. Lọc theo trạng thái đang chọn trên bảng tổng quan
+        let stageFiltered = currentHomeRawLeads;
+        if (homeTableStageFilter !== 'all') {
+            stageFiltered = currentHomeRawLeads.filter(d => d.stage === homeTableStageFilter);
+        }
+
+        const totalBadge = document.getElementById('homeTableTotalBadge');
+        if (totalBadge) {
+            totalBadge.innerText = (stageFiltered.length < 10 ? '0' + stageFiltered.length : stageFiltered.length) + ' Dự án';
+        }
+
+        // 3. Phân trang: 10 dự án / trang
+        const totalHomeItems = stageFiltered.length;
+        const totalHomePages = Math.ceil(totalHomeItems / HOME_TABLE_PAGE_SIZE) || 1;
+        if (homeTableCurrentPage > totalHomePages) homeTableCurrentPage = totalHomePages;
+        if (homeTableCurrentPage < 1) homeTableCurrentPage = 1;
+
+        const homeStart = (homeTableCurrentPage - 1) * HOME_TABLE_PAGE_SIZE;
+        const homeEnd = Math.min(homeStart + HOME_TABLE_PAGE_SIZE, totalHomeItems);
+        const pagedLeads = stageFiltered.slice(homeStart, homeEnd);
+
+        // 4. Render Desktop Table Body
         const tbody = document.getElementById('homeProjectTableBody');
         if (tbody) {
-            if (leads.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" align="center" style="padding: 24px; color: var(--text-muted); font-size: 0.85rem;">Không có dự án nào phát sinh trong khoảng thời gian đã chọn</td></tr>';
+            if (stageFiltered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" align="center" style="padding: 24px; color: var(--text-muted); font-size: 0.85rem;">Không có dự án nào phù hợp với bộ lọc trạng thái đã chọn</td></tr>';
             } else {
                 let html = '';
-                leads.forEach((d, idx) => {
+                pagedLeads.forEach((d, idx) => {
                     let client = '-';
                     let phone = '';
                     if (d.name.includes('+')) {
@@ -4255,8 +4561,9 @@
                     else if (d.stage === 'thanhtoan') { badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
                     else if (d.stageLabel) { stageText = d.stageLabel; }
 
-                    html += '<tr style="cursor: pointer;" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + d.id + '\');" title="Bấm để xem chi tiết và cập nhật dự án">' +
-                        '<td align="center" style="color: var(--text-muted); font-weight: 700;">' + (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '</td>' +
+                    const rowIndex = homeStart + idx + 1;
+                    html += '<tr style="cursor: pointer;" onclick="openUpdateProjectModal(\'' + d.id + '\');" title="Bấm để cập nhật tiến độ dự án">' +
+                        '<td align="center" style="color: var(--text-muted); font-weight: 700;">' + (rowIndex < 10 ? '0' + rowIndex : rowIndex) + '</td>' +
                         '<td style="font-weight: 700; color: #0F172A;">' +
                             (d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '') +
                             d.name +
@@ -4272,14 +4579,14 @@
             }
         }
 
-        // Render Mobile Card List (< 768px)
+        // 5. Render Mobile Card List (< 768px)
         const mobileContainer = document.getElementById('homeProjectMobileCards');
         if (mobileContainer) {
-            if (leads.length === 0) {
-                mobileContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.85rem; background: #FFFFFF; border-radius: 8px; border: 1px dashed #CBD5E1;">Không có dự án nào phát sinh trong khoảng thời gian đã chọn</div>';
+            if (stageFiltered.length === 0) {
+                mobileContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.85rem; background: #FFFFFF; border-radius: 8px; border: 1px dashed #CBD5E1;">Không có dự án nào phù hợp với bộ lọc trạng thái đã chọn</div>';
             } else {
                 let mHtml = '';
-                leads.forEach((d, idx) => {
+                pagedLeads.forEach((d, idx) => {
                     let client = '-';
                     let phone = '';
                     if (d.name.includes('+')) {
@@ -4302,10 +4609,11 @@
                     else if (d.stage === 'thanhtoan') { colorClass = 'slate'; badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
                     else if (d.stageLabel) { stageText = d.stageLabel; }
 
-                    mHtml += '<div class="project-card ' + colorClass + '" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + d.id + '\');" style="cursor: pointer;">' +
+                    const rowIndex = homeStart + idx + 1;
+                    mHtml += '<div class="project-card ' + colorClass + '" onclick="openUpdateProjectModal(\'' + d.id + '\');" style="cursor: pointer;">' +
                         '<div class="project-card-header">' +
                             '<div class="project-card-title">' +
-                                (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '. ' +
+                                (rowIndex < 10 ? '0' + rowIndex : rowIndex) + '. ' +
                                 (d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') +
                                 d.name +
                             '</div>' +
@@ -4321,6 +4629,13 @@
                 });
                 mobileContainer.innerHTML = mHtml;
             }
+        }
+
+        // 6. Render Thanh Phân Trang
+        const paginationEl = document.getElementById('homeTablePaginationBar');
+        if (paginationEl) {
+            paginationEl.innerHTML = renderPaginationHtml(totalHomeItems, totalHomePages, homeTableCurrentPage, 'changeHomeTablePage');
+            paginationEl.style.display = totalHomeItems > 0 ? 'flex' : 'none';
         }
     }
 
@@ -4475,14 +4790,26 @@
     // 5. PIPELINE TRACKING & COMMENTS LOGIC
     let currentStage = 'all';
     let currentSelectedProject = null;
+    let pipelineCurrentPage = 1;
+    const PIPELINE_PAGE_SIZE = 10;
 
     function filterPipeline(stage, btnElement) {
         currentStage = stage;
+        pipelineCurrentPage = 1; // Reset về trang 1 khi lọc
         document.querySelectorAll('.filter-btn').forEach(b => {
             if (b.id && b.id.startsWith('btn-filter-')) b.classList.remove('active');
         });
         if (btnElement) btnElement.classList.add('active');
         renderPipelineViews();
+    }
+
+    function changePipelinePage(newPage) {
+        pipelineCurrentPage = newPage;
+        renderPipelineViews();
+        const el = document.getElementById('pipelineThead') || document.getElementById('pipelineMobileCards');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
     function renderPipelineViews() {
@@ -4515,9 +4842,18 @@
             filtered = pipelineData.filter(d => d.stage === currentStage);
         }
 
+        const totalPipelineItems = filtered.length;
+        const totalPipelinePages = Math.ceil(totalPipelineItems / PIPELINE_PAGE_SIZE) || 1;
+        if (pipelineCurrentPage > totalPipelinePages) pipelineCurrentPage = totalPipelinePages;
+        if (pipelineCurrentPage < 1) pipelineCurrentPage = 1;
+
+        const pipelineStart = (pipelineCurrentPage - 1) * PIPELINE_PAGE_SIZE;
+        const pipelineEnd = Math.min(pipelineStart + PIPELINE_PAGE_SIZE, totalPipelineItems);
+        const pagedFiltered = filtered.slice(pipelineStart, pipelineEnd);
+
         const showTech = currentStage === 'danglam' || currentStage === 'thanhtoan' || currentStage === 'all';
 
-        // 1. Table
+        // 1. Table Desktop
         const theadEl = document.getElementById('pipelineThead');
         const tbodyEl = document.getElementById('pipelineTbody');
         if (theadEl && tbodyEl) {
@@ -4530,58 +4866,98 @@
                 '<th style="min-width: 200px;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>' +
                 '</tr>';
 
-            let tbodyHtml = '';
-            filtered.forEach((d, idx) => {
-                tbodyHtml += '<tr style="cursor: pointer;" onclick="selectProject(\'' + d.id + '\')" title="Bấm để ghi nhận tiến độ dự án này">' +
-                    '<td align="center">' + (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '</td>' +
-                    '<td style="font-weight: 700; color: #0F172A;">' +
-                        (d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '') +
-                        d.name +
-                    '</td>' +
-                    '<td>' + d.date + '</td>' +
-                    '<td><strong>' + d.assignee + '</strong></td>' +
-                    (showTech ? '<td style="color: #0284C7; font-weight: 700;">' + d.tech + '</td>' : '') +
-                    '<td style="font-size: 0.8rem; color: #334155; white-space: pre-line; word-break: break-word; line-height: 1.45;">' + d.note + '</td>' +
-                    '</tr>';
-            });
             if (filtered.length === 0) {
-                tbodyHtml = '<tr><td colspan="' + (showTech ? 6 : 5) + '" align="center" style="padding: 16px; color: var(--text-muted);">Không có dự án nào trong mục này</td></tr>';
+                tbodyEl.innerHTML = '<tr><td colspan="' + (showTech ? 6 : 5) + '" align="center" style="padding: 20px; color: var(--text-muted);">Không có dự án nào trong mục này</td></tr>';
+            } else {
+                let tbodyHtml = '';
+                pagedFiltered.forEach((d, idx) => {
+                    const rowIndex = pipelineStart + idx + 1;
+                    tbodyHtml += '<tr style="cursor: pointer;" onclick="openUpdateProjectModal(\'' + d.id + '\')" title="Bấm để ghi nhận cập nhật dự án">' +
+                        '<td align="center" style="color: var(--text-muted); font-weight: 700;">' + (rowIndex < 10 ? '0' + rowIndex : rowIndex) + '</td>' +
+                        '<td style="font-weight: 700; color: #0F172A;">' +
+                            (d.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '') +
+                            d.name +
+                        '</td>' +
+                        '<td style="white-space: nowrap; color: #475569;">' + (d.date || '-') + '</td>' +
+                        '<td><strong style="color: #0F172A;">' + (d.assignee || '-') + '</strong></td>' +
+                        (showTech ? '<td style="color: #0284C7; font-weight: 700;">' + (d.tech || '-') + '</td>' : '') +
+                        '<td style="font-size: 0.8rem; color: #334155; white-space: pre-line; word-break: break-word; line-height: 1.45;">' + (d.note || '-') + '</td>' +
+                        '</tr>';
+                });
+                tbodyEl.innerHTML = tbodyHtml;
             }
-            tbodyEl.innerHTML = tbodyHtml;
         }
 
-        // 2. Cards
+        // 2. Cards Mobile (< 768px)
         const mobileContainer = document.getElementById('pipelineMobileCards');
         if (mobileContainer) {
-            let mobileCardsHtml = '';
-            filtered.forEach((d, idx) => {
-                const colorClass = d.stage === 'hopdong' ? 'green' : (d.stage === 'baogia' ? 'blue' : (d.stage === 'danglam' ? 'slate' : (d.stage === 'thanhtoan' ? 'purple' : '')));
-                const badgeClass = d.stage === 'hopdong' ? 'badge-green' : (d.stage === 'baogia' ? 'badge-gold' : (d.stage === 'danglam' ? 'badge-gray' : (d.stage === 'thanhtoan' ? 'badge-purple' : 'badge-blue')));
+            if (filtered.length === 0) {
+                mobileContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem; background: #FFFFFF; border-radius: 8px; border: 1px dashed #CBD5E1;">Không có dự án nào trong mục này</div>';
+            } else {
+                let mobileCardsHtml = '';
+                pagedFiltered.forEach((d, idx) => {
+                    const colorClass = d.stage === 'hopdong' ? 'green' : (d.stage === 'baogia' ? 'blue' : (d.stage === 'danglam' ? 'purple' : (d.stage === 'thanhtoan' ? 'slate' : 'gold')));
+                    const badgeClass = d.stage === 'hopdong' ? 'badge-green' : (d.stage === 'baogia' ? 'badge-blue' : (d.stage === 'danglam' ? 'badge-purple' : (d.stage === 'thanhtoan' ? 'badge-gray' : 'badge-gold')));
+                    const rowIndex = pipelineStart + idx + 1;
 
-                mobileCardsHtml += '<div class="project-card ' + colorClass + '" onclick="selectProject(\'' + d.id + '\')" style="cursor: pointer;">' +
-                    '<div class="project-card-header">' +
-                        '<div class="project-card-title">' +
-                            (idx + 1 < 10 ? '0' + (idx + 1) : idx + 1) + '. ' +
-                            (d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') +
-                            d.name +
+                    mobileCardsHtml += '<div class="project-card ' + colorClass + '" onclick="openUpdateProjectModal(\'' + d.id + '\')" style="cursor: pointer;">' +
+                        '<div class="project-card-header">' +
+                            '<div class="project-card-title">' +
+                                (rowIndex < 10 ? '0' + rowIndex : rowIndex) + '. ' +
+                                (d.isPotential ? '<span style="color: var(--primary-gold);">⭐ </span>' : '') +
+                                d.name +
+                            '</div>' +
+                            '<span class="badge ' + badgeClass + '">' + (d.stageLabel || d.stage) + '</span>' +
                         '</div>' +
-                        '<span class="badge ' + badgeClass + '">' + d.stageLabel + '</span>' +
-                    '</div>' +
-                    '<div class="project-card-meta">' +
-                        '<div>📅 ' + d.date + '</div>' +
-                        '<div>👤 Tư vấn: <strong>' + d.assignee + '</strong></div>' +
-                        (d.tech !== '-' ? '<div>🔧 Kỹ thuật: <strong style="color: #0284C7;">' + d.tech + '</strong></div>' : '') +
-                    '</div>' +
-                    '<div class="project-card-note">' + d.note + '</div>' +
-                    '</div>';
-            });
-            mobileContainer.innerHTML = mobileCardsHtml;
+                        '<div class="project-card-meta">' +
+                            '<div>📅 ' + (d.date || '-') + '</div>' +
+                            '<div>👤 Tư vấn: <strong>' + (d.assignee || '-') + '</strong></div>' +
+                            (d.tech && d.tech !== '-' ? '<div>🔧 Kỹ thuật: <strong style="color: #0284C7;">' + d.tech + '</strong></div>' : '') +
+                        '</div>' +
+                        (d.note ? '<div class="project-card-note">' + d.note + '</div>' : '') +
+                        '</div>';
+                });
+                mobileContainer.innerHTML = mobileCardsHtml;
+            }
+        }
+
+        // 3. Thanh Phân Trang Pipeline
+        const pipelinePagEl = document.getElementById('pipelinePaginationBar');
+        if (pipelinePagEl) {
+            pipelinePagEl.innerHTML = renderPaginationHtml(totalPipelineItems, totalPipelinePages, pipelineCurrentPage, 'changePipelinePage');
+            pipelinePagEl.style.display = totalPipelineItems > 0 ? 'flex' : 'none';
+        }
+    }
+
+    // MODAL CẬP NHẬT DỰ ÁN & TIẾN ĐỘ NOTION
+    function openUpdateProjectModal(projectId) {
+        const modal = document.getElementById('modalUpdateProject');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        if (projectId) {
+            selectProject(projectId, false);
+        } else if (!currentSelectedProject) {
+            const searchInput = document.getElementById('projectSearchInput');
+            if (searchInput) {
+                setTimeout(() => searchInput.focus(), 150);
+            }
+        }
+    }
+
+    function closeUpdateProjectModal() {
+        const modal = document.getElementById('modalUpdateProject');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
         }
     }
 
     function handleProjectSearch(query) {
         const q = (query || '').toLowerCase().trim();
         const resultsBox = document.getElementById('projectSearchResults');
+        if (!resultsBox) return;
         
         if (!q || q.length < 2) {
             resultsBox.style.display = 'none';
@@ -4589,9 +4965,9 @@
         }
 
         const matches = pipelineData.filter(p => 
-            p.name.toLowerCase().includes(q) ||
-            p.assignee.toLowerCase().includes(q) ||
-            p.tech.toLowerCase().includes(q) ||
+            (p.name && p.name.toLowerCase().includes(q)) ||
+            (p.assignee && p.assignee.toLowerCase().includes(q)) ||
+            (p.tech && p.tech.toLowerCase().includes(q)) ||
             (p.note && p.note.toLowerCase().includes(q))
         ).slice(0, 10);
 
@@ -4603,47 +4979,92 @@
 
         let html = '';
         matches.forEach(p => {
-            html += '<div class="project-search-item" onclick="selectProject(\'' + p.id + '\')">' +
+            html += '<div class="project-search-item" onclick="selectProject(\'' + p.id + '\', false)">' +
                 '<div>' +
                     '<div style="font-weight: 700; font-size: 0.82rem; color: #0F172A;">' +
                         (p.isPotential ? '⭐ ' : '') + p.name +
                     '</div>' +
                     '<div style="font-size: 0.72rem; color: #64748B; margin-top: 2px;">' +
-                        'Tư vấn: <strong>' + p.assignee + '</strong> | Ngày: ' + p.date +
+                        'Tư vấn: <strong>' + (p.assignee || '-') + '</strong> | Ngày: ' + (p.date || '-') +
                     '</div>' +
                 '</div>' +
-                '<span class="badge badge-gold">' + p.stageLabel + '</span>' +
+                '<span class="badge badge-gold">' + (p.stageLabel || p.stage) + '</span>' +
             '</div>';
         });
         resultsBox.innerHTML = html;
         resultsBox.style.display = 'block';
     }
 
-    function selectProject(projectId) {
-        const proj = pipelineData.find(p => p.id === projectId);
+    function selectProject(projectId, shouldOpenModal = true) {
+        let proj = pipelineData.find(p => p.id === projectId);
+        if (!proj && typeof allLeadsCache !== 'undefined' && Array.isArray(allLeadsCache)) {
+            const raw = allLeadsCache.find(l => l.id === projectId);
+            if (raw) {
+                proj = {
+                    id: raw.id,
+                    name: raw.name || 'Dự án không tên',
+                    stage: raw.stage || 'tuvan',
+                    stageLabel: raw.stageLabel || '💬 1. Tư Vấn',
+                    assignee: raw.assignee || 'Chưa gán',
+                    tech: raw.tech || '-',
+                    date: raw.date || '-',
+                    note: raw.note || '',
+                    isPotential: !!raw.isPotential
+                };
+            }
+        }
         if (!proj) return;
         currentSelectedProject = proj;
 
-        document.getElementById('selectedProjectDetails').style.display = 'block';
-        document.getElementById('selProjName').innerText = proj.name;
-        document.getElementById('selProjAssignee').innerText = proj.assignee;
-        document.getElementById('selProjStage').innerText = proj.stageLabel;
-        document.getElementById('selProjTech').innerText = proj.tech;
-        document.getElementById('selProjNote').innerText = proj.note || 'Chưa có ghi chú tiến độ';
-        document.getElementById('selectedProjectBadge').innerText = 'Đang chọn: ' + proj.name.substring(0, 30) + '...';
+        const selBox = document.getElementById('selectedProjectDetails');
+        if (selBox) selBox.style.display = 'block';
 
-        document.getElementById('projectSearchResults').style.display = 'none';
-        document.getElementById('projectSearchInput').value = proj.name;
+        const nameEl = document.getElementById('selProjName');
+        if (nameEl) nameEl.innerText = proj.name;
 
-        document.getElementById('quickLogCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        document.getElementById('logCommentText').focus();
+        const assEl = document.getElementById('selProjAssignee');
+        if (assEl) assEl.innerText = proj.assignee;
+
+        const stageEl = document.getElementById('selProjStage');
+        if (stageEl) stageEl.innerText = proj.stageLabel || proj.stage;
+
+        const techEl = document.getElementById('selProjTech');
+        if (techEl) techEl.innerText = proj.tech || '-';
+
+        const noteEl = document.getElementById('selProjNote');
+        if (noteEl) noteEl.innerText = proj.note || 'Chưa có ghi chú tiến độ';
+
+        const searchResults = document.getElementById('projectSearchResults');
+        if (searchResults) searchResults.style.display = 'none';
+
+        const searchInput = document.getElementById('projectSearchInput');
+        if (searchInput) searchInput.value = proj.name;
+
+        // Điền trạng thái hiện tại vào dropdown logNewStage
+        const logNewStageEl = document.getElementById('logNewStage');
+        if (logNewStageEl && proj.stage) {
+            logNewStageEl.value = proj.stage;
+        }
+
+        if (shouldOpenModal) {
+            openUpdateProjectModal();
+        }
+
+        const commentText = document.getElementById('logCommentText');
+        if (commentText) {
+            setTimeout(() => commentText.focus(), 150);
+        }
     }
 
     function clearSelectedProject() {
         currentSelectedProject = null;
-        document.getElementById('selectedProjectDetails').style.display = 'none';
-        document.getElementById('selectedProjectBadge').innerText = 'Chọn dự án bên dưới hoặc tìm kiếm';
-        document.getElementById('projectSearchInput').value = '';
+        const selBox = document.getElementById('selectedProjectDetails');
+        if (selBox) selBox.style.display = 'none';
+        const searchInput = document.getElementById('projectSearchInput');
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.focus();
+        }
     }
 
     function copyProjectLogText() {
@@ -4651,25 +5072,24 @@
             alert('Vui lòng chọn một dự án trước.');
             return;
         }
-        const comment = document.getElementById('logCommentText').value;
-        const author = document.getElementById('logAuthor').value;
-        const newStage = document.getElementById('logNewStage').options[document.getElementById('logNewStage').selectedIndex].text;
+        const commentInput = document.getElementById('logCommentText');
+        const comment = commentInput ? commentInput.value.trim() : '';
+        const authorEl = document.getElementById('logAuthor');
+        const author = authorEl ? authorEl.value : 'Võ Minh Sang';
+        const stageEl = document.getElementById('logNewStage');
+        const newStage = stageEl && stageEl.selectedIndex >= 0 ? stageEl.options[stageEl.selectedIndex].text : '';
 
         if (!comment) {
             alert('Vui lòng nhập nội dung cập nhật tiến độ.');
+            if (commentInput) commentInput.focus();
             return;
         }
 
-        const text = `💬 [CẬP NHẬT TIẾN ĐỘ NOTION]
-` +
-            `• Dự án: ${currentSelectedProject.name}
-` +
-            `• Người ghi nhận: ${author}
-` +
-            `• Nội dung: ${comment}
-` +
-            (document.getElementById('logNewStage').value ? `• Chuyển trạng thái: ${newStage}
-` : ``);
+        const text = `💬 [CẬP NHẬT TIẾN ĐỘ NOTION]\n` +
+            `• Dự án: ${currentSelectedProject.name}\n` +
+            `• Người ghi nhận: ${author}\n` +
+            `• Nội dung: ${comment}\n` +
+            (stageEl && stageEl.value ? `• Chuyển trạng thái: ${newStage}\n` : ``);
 
         navigator.clipboard.writeText(text).then(() => {
             showToast('📋 Đã sao chép nội dung cập nhật!');
@@ -4679,15 +5099,28 @@
     async function submitProjectLog() {
         if (!currentSelectedProject) {
             alert('Vui lòng tìm và chọn một dự án trước.');
+            const searchInput = document.getElementById('projectSearchInput');
+            if (searchInput) searchInput.focus();
             return;
         }
-        const comment = document.getElementById('logCommentText').value;
+        const commentInput = document.getElementById('logCommentText');
+        const comment = commentInput ? commentInput.value.trim() : '';
         if (!comment) {
             alert('Vui lòng nhập nội dung cập nhật tiến độ.');
+            if (commentInput) commentInput.focus();
             return;
         }
-        const author = document.getElementById('logAuthor').value;
-        const newStage = document.getElementById('logNewStage').value;
+        const authorEl = document.getElementById('logAuthor');
+        const author = authorEl ? authorEl.value : 'Võ Minh Sang';
+        const stageEl = document.getElementById('logNewStage');
+        const newStage = stageEl ? stageEl.value : '';
+
+        const submitBtn = document.getElementById('btnSubmitProjectLogModal');
+        const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Đang lưu vào Notion...';
+        }
 
         copyProjectLogText();
         showToast('⏳ Đang lưu comment vào Notion...');
@@ -4707,16 +5140,57 @@
             const res = await resp.json();
             if (res && res.success) {
                 showToast('🎉 Đã ghi nhận comment vào Notion & Bắn Telegram!');
-                document.getElementById('logCommentText').value = '';
-                currentSelectedProject.note = '[' + new Date().toLocaleDateString('vi-VN') + ' - ' + author + ']: ' + comment + '\n' + (currentSelectedProject.note || '');
-                document.getElementById('selProjNote').innerText = currentSelectedProject.note;
+                if (commentInput) commentInput.value = '';
+                const newNote = '[' + new Date().toLocaleDateString('vi-VN') + ' - ' + author + ']: ' + comment + '\n' + (currentSelectedProject.note || '');
+                currentSelectedProject.note = newNote;
+                if (newStage) {
+                    currentSelectedProject.stage = newStage;
+                    if (newStage === 'tuvan') currentSelectedProject.stageLabel = '💬 1. Tư Vấn';
+                    else if (newStage === 'baogia') currentSelectedProject.stageLabel = '🧾 2. Báo Giá';
+                    else if (newStage === 'hopdong') currentSelectedProject.stageLabel = '🤝 3. Hợp Đồng';
+                    else if (newStage === 'danglam') currentSelectedProject.stageLabel = '🏗️ 4. Đang Làm';
+                    else if (newStage === 'thanhtoan') currentSelectedProject.stageLabel = '💸 5. Giao / Thu';
+                }
+                const selNoteEl = document.getElementById('selProjNote');
+                if (selNoteEl) selNoteEl.innerText = newNote;
+
+                // Đồng bộ cập nhật vào allLeadsCache và render lại
+                if (typeof allLeadsCache !== 'undefined' && Array.isArray(allLeadsCache)) {
+                    const idx = allLeadsCache.findIndex(l => l.id === currentSelectedProject.id);
+                    if (idx !== -1) {
+                        allLeadsCache[idx].note = newNote;
+                        if (newStage) allLeadsCache[idx].stage = newStage;
+                    }
+                    if (typeof renderHomeProjectTable === 'function') renderHomeProjectTable(allLeadsCache);
+                }
+                renderPipelineViews();
+
+                setTimeout(() => {
+                    closeUpdateProjectModal();
+                }, 900);
             } else {
-                showToast('📋 Đã sao chép nội dung! Sếp gửi tin nhắn để lưu Notion.');
+                showToast('📋 Đã sao chép nội dung! Vui lòng kiểm tra lại kết nối Notion.');
             }
         } catch (err) {
+            console.error('Lỗi khi lưu comment:', err);
             showToast('📋 Đã sao chép nội dung! Sếp gửi tin nhắn để lưu Notion.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = origBtnText;
+            }
         }
     }
+
+    // Đóng modal khi nhấn phím Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('modalUpdateProject');
+            if (modal && modal.style.display === 'flex') {
+                closeUpdateProjectModal();
+            }
+        }
+    });
 
     // 6. CUSTOMER CRM LOGIC
     let customerFilterAdvisor = 'all';
