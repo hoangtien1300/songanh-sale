@@ -3324,26 +3324,25 @@
         }
     }
 
-        async function handleNewLeadSubmit(e) {
+    async function handleNewLeadSubmit(e) {
         e.preventDefault();
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '⏳ Đang tạo đơn...'; }
+
         const name = document.getElementById('leadProjectName').value;
         const cat = document.getElementById('leadCategory').value;
         const client = document.getElementById('leadClientName').value;
         const phone = document.getElementById('leadPhone').value;
+        const prov = document.getElementById('leadProvince').value;
         const src = document.getElementById('leadSource').value;
         const adv = document.getElementById('leadAdvisor').value;
         const note = document.getElementById('leadNote').value;
-        const prov = document.getElementById('leadProvince') ? document.getElementById('leadProvince').value : 'Hồ Chí Minh';
 
-        const btn = document.getElementById('btnSubmitNewLead');
-        const originalBtnText = btn ? btn.innerHTML : '';
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = '⏳ Đang lên đơn trên Notion & gửi Telegram...';
-        }
+        copyNewLeadZaloText();
 
         try {
-            const res = await fetch('/api/create-lead', {
+            const resp = await fetch('/api/create-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -3351,46 +3350,33 @@
                     category: cat,
                     clientName: client,
                     phone: phone,
+                    province: prov,
                     source: src,
                     advisor: adv,
-                    note: note,
-                    province: prov
+                    note: note
                 })
             });
-            const data = await res.json();
-            if (res.ok && data.success) {
-                showToast('🎉 Đã tạo đơn mới thành công trên Notion & báo Telegram Sếp Tiến!');
-                document.getElementById('newLeadForm').reset();
-                if (document.getElementById('newLeadPreviewCard')) {
-                    document.getElementById('newLeadPreviewCard').style.display = 'none';
+            const res = await resp.json();
+            if (res && res.success) {
+                showToast('🎉 Đã tạo đơn mới thành công trên Notion & Bắn Telegram!');
+                const previewCard = document.getElementById('newLeadPreviewCard');
+                if (previewCard) {
+                    previewCard.style.display = 'block';
+                    previewCard.style.borderColor = 'var(--success)';
+                    previewCard.innerHTML = `
+                        <div style="color: var(--success); font-weight: 700; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>
+                        <div style="font-size: 0.8rem; color: #E2E8F0;">• Tên dự án: <strong>${name}</strong></div>
+                        <div style="margin-top: 8px;"><a href="${res.url}" target="_blank" class="btn btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a></div>
+                    `;
                 }
-                // Thêm vào danh sách tra cứu tức thì
-                pipelineData.unshift({
-                    id: data.pageId,
-                    name: name,
-                    assignee: adv === 'TIEN' ? 'Tiến' : 'Sang',
-                    stage: 'tuvan',
-                    stageLabel: '💬 Tư vấn',
-                    date: new Date().toLocaleDateString('vi-VN'),
-                    source: src,
-                    phone: phone,
-                    client: client,
-                    note: note,
-                    category: cat,
-                    province: prov
-                });
+                document.getElementById('newLeadForm').reset();
             } else {
-                throw new Error(data.error || 'Không thể tạo đơn trên Notion');
+                showToast('📋 Đã sao chép cú pháp lên đơn! Sếp nhắn cho Agent để tạo ngay.');
             }
         } catch (err) {
-            console.error('Lỗi khi gọi /api/create-lead:', err);
-            copyNewLeadZaloText();
-            showToast(`⚠️ Đã sao chép vào clipboard! (${err.message})`);
+            showToast('📋 Đã sao chép cú pháp lên đơn! Sếp nhắn cho Agent để tạo ngay.');
         } finally {
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnText;
-            }
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
         }
     }
 
@@ -3566,7 +3552,7 @@
         resultsBox.style.display = 'block';
     }
 
-        function selectProject(projectId) {
+    function selectProject(projectId) {
         const p = pipelineData.find(item => item.id === projectId);
         if (!p) return;
 
@@ -3574,9 +3560,8 @@
         document.getElementById('projectSearchResults').style.display = 'none';
         document.getElementById('projectSearchInput').value = p.name;
 
-        // Populate Card
         document.getElementById('selProjName').innerText = p.name;
-        document.getElementById('selProjDate').innerText = `Ngày liên hệ: ${p.date}`;
+        document.getElementById('selProjDate').innerText = `📅 Ngày: ${p.date}`;
         document.getElementById('selProjAdvisor').innerText = p.assignee || 'Chưa phân công';
         document.getElementById('selProjSource').innerText = p.source || 'Chưa rõ';
         document.getElementById('selProjTech').innerText = p.tech || '-';
@@ -3586,11 +3571,10 @@
         badge.innerText = p.stageLabel;
         badge.className = `badge ${p.stage === 'hopdong' ? 'badge-green' : (p.stage === 'baogia' ? 'badge-blue' : (p.stage === 'danglam' ? 'badge-purple' : 'badge-gold'))}`;
 
-        document.getElementById('selectedProjectCard').classList.add('show');
-        showToast(`🔍 Đã chọn: ${p.name.substring(0, 30)}...`);
-
-        // Tải live comments từ Notion
-        fetchProjectComments(projectId);
+        const card = document.getElementById('selectedProjectCard');
+        card.style.display = 'block';
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast(`🔍 Đã chọn: ${p.name.substring(0, 28)}...`);
     }
 
     function copyProjectLogText() {
@@ -3623,108 +3607,47 @@
         });
     }
 
-        async function submitProjectLog() {
+    async function submitProjectLog() {
         if (!currentSelectedProject) {
             alert('Vui lòng tìm và chọn một dự án trước.');
             return;
         }
         const comment = document.getElementById('logCommentText').value;
-        if (!comment || !comment.trim()) {
+        if (!comment) {
             alert('Vui lòng nhập nội dung cập nhật tiến độ.');
             return;
         }
         const author = document.getElementById('logAuthor').value;
         const newStage = document.getElementById('logNewStage').value;
-        const newStageLabel = document.getElementById('logNewStage').options[document.getElementById('logNewStage').selectedIndex].text;
 
-        const btn = document.querySelector('#subtab-quick-log .btn-gold');
-        const originalBtnText = btn ? btn.innerHTML : '';
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = '⏳ Đang lưu comment Notion & gửi Telegram...';
-        }
+        copyProjectLogText();
+        showToast('⏳ Đang lưu comment vào Notion...');
 
         try {
-            const res = await fetch('/api/add-comment', {
+            const resp = await fetch('/api/add-comment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     projectId: currentSelectedProject.id,
                     projectName: currentSelectedProject.name,
-                    commentText: comment.trim(),
-                    newStatus: newStage || undefined,
+                    commentText: comment,
+                    newStatus: newStage,
                     author: author
                 })
             });
-            const data = await res.json();
-            if (res.ok && data.success) {
-                showToast('🚀 Đã lưu bình luận vào dự án Notion & ping Telegram Sếp Tiến!');
+            const res = await resp.json();
+            if (res && res.success) {
+                showToast('🎉 Đã ghi nhận comment vào Notion & Bắn Telegram!');
                 document.getElementById('logCommentText').value = '';
-
-                // Cập nhật trạng thái
-                if (newStage && data.statusUpdated) {
-                    currentSelectedProject.stage = newStage;
-                    currentSelectedProject.stageLabel = data.statusLabel || newStageLabel;
-                    const badge = document.getElementById('selProjBadge');
-                    if (badge) {
-                        badge.innerText = currentSelectedProject.stageLabel;
-                        badge.className = `badge ${newStage === 'hopdong' ? 'badge-green' : (newStage === 'baogia' ? 'badge-blue' : (newStage === 'danglam' ? 'badge-purple' : 'badge-gold'))}`;
-                    }
-                    document.getElementById('logNewStage').value = '';
-                }
-
-                // Cập nhật timeline tức thì
-                const noteBox = document.getElementById('selProjNote');
-                const today = new Date().toLocaleDateString('vi-VN');
-                noteBox.innerHTML = `<strong>[${today} - ${author}]:</strong> ${escapeHtml(comment)}<br><hr style="border:none;border-top:1px dashed #334155;margin:6px 0;">` + noteBox.innerHTML;
-
-                // Tải lại comment Notion
-                fetchProjectComments(currentSelectedProject.id);
+                currentSelectedProject.note = `[${new Date().toLocaleDateString('vi-VN')} - ${author}]: ${comment}
+` + (currentSelectedProject.note || '');
+                document.getElementById('selProjNote').innerText = currentSelectedProject.note;
             } else {
-                throw new Error(data.error || 'Lỗi khi lưu bình luận');
+                showToast('📋 Đã sao chép nội dung! Sếp gửi tin nhắn để lưu Notion.');
             }
         } catch (err) {
-            console.error('Lỗi khi gọi /api/add-comment:', err);
-            copyProjectLogText();
-            showToast(`⚠️ Đã sao chép vào clipboard! (${err.message})`);
-        } finally {
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnText;
-            }
+            showToast('📋 Đã sao chép nội dung! Sếp gửi tin nhắn để lưu Notion.');
         }
-    }
-
-    async function fetchProjectComments(projectId) {
-        const liveBox = document.getElementById('projectLiveComments');
-        if (!liveBox) return;
-        try {
-            liveBox.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:6px 0;">⏳ Đang tải bình luận từ Notion...</div>';
-            liveBox.style.display = 'block';
-            const res = await fetch(`/api/project-comments?page_id=${projectId}`);
-            const data = await res.json();
-            if (data.success && data.comments && data.comments.length > 0) {
-                liveBox.innerHTML = `
-                    <div style="font-size: 0.74rem; font-weight: 700; color: var(--primary-gold); margin: 10px 0 6px 0;">💬 LỊCH SỬ BÌNH LUẬN NOTION (${data.comments.length}):</div>
-                    ` + data.comments.slice(-3).reverse().map(c => `
-                        <div style="background: rgba(15, 23, 42, 0.6); border-left: 2px solid var(--primary-gold); padding: 6px 10px; margin-bottom: 6px; border-radius: 4px;">
-                            <div style="font-size: 0.7rem; color: var(--text-muted);">${new Date(c.created_time).toLocaleString('vi-VN')}</div>
-                            <div style="font-size: 0.78rem; color: #E2E8F0; margin-top: 2px;">${escapeHtml(c.text)}</div>
-                        </div>
-                    `).join('');
-            } else {
-                liveBox.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:4px 0;">Chưa có bình luận riêng trên Notion.</div>';
-            }
-        } catch (e) {
-            console.warn('Lỗi tải comment Notion:', e);
-            liveBox.style.display = 'none';
-        }
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-        return text.replace(/[&<>"']/g, m => map[m]);
     }
 
     // 5. CUSTOMER CRM LOGIC
