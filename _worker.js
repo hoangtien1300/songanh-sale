@@ -45,6 +45,188 @@ export default {
     const TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = env.TELEGRAM_CHAT_ID || '1730306144';
 
+    // 2.5. Endpoint: GET /api/projects (Lấy danh sách dự án active từ Notion)
+    if (url.pathname === '/api/projects' && request.method === 'GET') {
+      try {
+        const isForce = url.searchParams.get('force') === '1';
+
+        const statusMap = {
+          '3a74b5e7-3d90-80c0-a794-d529ab12e191': '💸 Thanh toán',
+          '3a74b5e7-3d90-8087-a904-c25e61ae36da': '💬 Tư vấn',
+          '3a74b5e7-3d90-803a-8d0b-d3d545ebb893': '💬 Tư vấn',
+          '3a74b5e7-3d90-80bf-8b88-fc64bb4aafa0': '🤝 Hợp đồng',
+          '3a74b5e7-3d90-8064-858b-d7b17067010b': '🏗️ Đang làm',
+          '3a74b5e7-3d90-80bd-b3bb-dc527928c868': '🧾 Báo giá'
+        };
+
+        const activeRelationIds = Object.keys(statusMap);
+        const filterObj = {
+          or: activeRelationIds.map(rid => ({
+            property: 'Trạng thái dự án',
+            relation: { contains: rid }
+          }))
+        };
+
+        const allRecords = [];
+        let hasMore = true;
+        let nextCursor = null;
+
+        while (hasMore) {
+          const bodyPayload = {
+            page_size: 100,
+            filter: filterObj,
+            sorts: [{ timestamp: 'last_edited_time', direction: 'descending' }]
+          };
+          if (nextCursor) {
+            bodyPayload.start_cursor = nextCursor;
+          }
+
+          const nRes = await fetch(`https://api.notion.com/v1/databases/${DATABASE_ID}/query`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${NOTION_TOKEN}`,
+              'Notion-Version': '2022-06-28',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyPayload),
+          });
+
+          if (!nRes.ok) {
+            const errData = await nRes.json().catch(() => ({}));
+            return new Response(JSON.stringify({ success: false, error: 'Lỗi truy vấn Notion API', details: errData }), {
+              status: 500,
+              headers: corsHeaders,
+            });
+          }
+
+          const data = await nRes.json();
+          allRecords.push(...(data.results || []));
+          hasMore = data.has_more || false;
+          nextCursor = data.next_cursor;
+        }
+
+        const parsedProjects = [];
+        for (const r of allRecords) {
+          const pid = r.id;
+          const props = r.properties || {};
+
+          const titleList = (props['Tên dự án'] && props['Tên dự án'].title) || [];
+          const name = titleList.map(t => t.plain_text || '').join('').trim();
+          if (!name) continue;
+
+          const statusRel = (props['Trạng thái dự án'] && props['Trạng thái dự án'].relation) || [];
+          let rawStatus = '';
+          if (statusRel.length > 0) {
+            rawStatus = statusMap[statusRel[0].id] || '';
+          }
+          if (!rawStatus) continue;
+
+          let stage = '';
+          let stageLabel = '';
+          if (rawStatus.includes('Báo giá')) {
+            stage = 'baogia';
+            stageLabel = '🧾 Báo giá';
+          } else if (rawStatus.includes('Hợp đồng')) {
+            stage = 'hopdong';
+            stageLabel = '🤝 Hợp đồng';
+          } else if (rawStatus.includes('Đang làm')) {
+            stage = 'danglam';
+            stageLabel = '🏗️ Đang làm';
+          } else if (rawStatus.includes('Thanh toán')) {
+            stage = 'thanhtoan';
+            stageLabel = '💸 Thanh toán';
+          } else if (rawStatus.includes('Tư vấn')) {
+            stage = 'tuvan';
+            stageLabel = '💬 Tư vấn';
+          } else {
+            continue;
+          }
+
+          const srcList = (props['Nguồn khách'] && props['Nguồn khách'].rich_text) || [];
+          const srcExact = srcList.map(t => t.plain_text || '').join('').trim() || 'Khách liên hệ';
+
+          const advList = (props['Người tư vấn'] && props['Người tư vấn'].people) || [];
+          const advNames = advList.map(p => p.name || '').filter(Boolean);
+          let advClean = 'Chưa rõ';
+          if (advNames.length > 0) {
+            const advStr = advNames.join(', ');
+            if (advStr.includes('Tiến') && advStr.includes('Sang')) {
+              advClean = 'Tiến & Sang';
+            } else if (advStr.includes('Tiến')) {
+              advClean = 'Phạm Hoàng Tiến';
+            } else if (advStr.includes('Sang')) {
+              advClean = 'Võ Minh Sang';
+            } else {
+              advClean = advStr;
+            }
+          }
+
+          const nhacHenObj = (props['Nhắc hẹn'] && props['Nhắc hẹn'].date);
+          const nhacHenStr = nhacHenObj && nhacHenObj.start ? nhacHenObj.start.slice(0, 10) : '';
+
+          const nlhObj = (props['Ngày liên hệ'] && props['Ngày liên hệ'].date);
+          const nlhStr = nlhObj && nlhObj.start ? nlhObj.start.slice(0, 10) : '';
+          const createdTime = (r.created_time || '').slice(0, 10);
+
+          const effDate = nhacHenStr || nlhStr || createdTime;
+          let displayDate = effDate;
+          if (effDate.length >= 10) {
+            const parts = effDate.slice(0, 10).split('-');
+            displayDate = `${parts[2]}/${parts[1]}`;
+          }
+
+          const isPotential = Boolean(props['Tiềm năng'] && props['Tiềm năng'].checkbox);
+
+          const techPeople = (props['Nhóm thi công'] && props['Nhóm thi công'].people) || [];
+          const techMulti = (props['Nhóm thi công'] && props['Nhóm thi công'].multi_select) || [];
+          const techList = techPeople.length ? techPeople : techMulti;
+          const techNames = techList.map(p => p.name || '').filter(Boolean);
+          const techStr = techNames.length ? techNames.join(', ') : '-';
+
+          const noteList = (props['Ghi chú'] && props['Ghi chú'].rich_text) || [];
+          const noteVal = noteList.map(t => t.plain_text || '').join('').trim() || 'Đang cập nhật tiến độ chi tiết';
+
+          parsedProjects.push({
+            id: pid,
+            name: name,
+            date: displayDate,
+            rawDate: effDate,
+            nhacHen: nhacHenStr,
+            ngayLienHe: nlhStr,
+            stage: stage,
+            stageLabel: stageLabel,
+            assignee: advClean,
+            tech: techStr,
+            source: srcExact,
+            note: noteVal,
+            isPotential: isPotential
+          });
+        }
+
+        const cacheControl = isForce
+          ? 'no-cache, no-store, must-revalidate'
+          : 'public, max-age=30, s-maxage=60';
+
+        return new Response(JSON.stringify({
+          success: true,
+          total: parsedProjects.length,
+          timestamp: new Date().toISOString(),
+          projects: parsedProjects
+        }), {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Cache-Control': cacheControl,
+          }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, error: err.message }), {
+          status: 500,
+          headers: corsHeaders,
+        });
+      }
+    }
+
     // 3. Endpoint: POST /api/create-lead
     if (url.pathname === '/api/create-lead' && request.method === 'POST') {
       try {

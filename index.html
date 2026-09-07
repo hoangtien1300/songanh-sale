@@ -379,6 +379,52 @@
             box-shadow: 0 2px 6px rgba(181, 137, 26, 0.25);
         }
 
+        .sync-pill-btn {
+            background: #FFFFFF;
+            border: 1px solid var(--primary-gold);
+            color: #855C08;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+        .sync-pill-btn:hover {
+            background: var(--gold-light);
+            color: #78350F;
+        }
+        .sync-pill-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .sync-btn-short { display: none; }
+        .sync-btn-full { display: inline; }
+        @media (max-width: 640px) {
+            .sync-pill-btn {
+                padding: 5px 8px;
+                font-size: 0.72rem;
+                gap: 4px;
+            }
+            .sync-btn-full { display: none; }
+            .sync-btn-short { display: inline; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spin-icon {
+            display: inline-block;
+            animation: spin 0.8s linear infinite;
+        }
+
         /* CUSTOM DATE POPOVER */
         .custom-date-popover {
             position: absolute;
@@ -1200,6 +1246,10 @@
                     <button class="filter-pill-btn" id="btn-period-all" onclick="setGlobalPeriod('all', this)">Tất cả</button>
                     <button class="filter-pill-btn" id="btn-period-custom" onclick="toggleCustomDatePicker(this)">Tùy chọn ▾</button>
                 </div>
+                <button class="sync-pill-btn" id="btnSyncNotionLive" onclick="syncNotionLive(true)" title="Đồng bộ dữ liệu tức thì từ Notion">
+                    <span id="syncSpinIcon" style="display:inline-block;">🔄</span>
+                    <span id="syncBtnLabel"><span class="sync-btn-full">Đồng bộ Notion</span><span class="sync-btn-short">Đồng bộ</span></span>
+                </button>
                 <!-- POPOVER CHỌN NGÀY TÙY CHỈNH -->
                 <div class="custom-date-popover" id="customDatePopover" style="display: none;">
                     <div class="date-range-inputs">
@@ -1704,8 +1754,13 @@
 
 <!-- JAVASCRIPT LOGIC (100% SYNTAX VALIDATED) -->
 <script>
+    // 0. ENVIRONMENT & API CONFIGURATION
+    const API_BASE = (window.location.protocol === 'file:' || (window.location.hostname === 'localhost' && window.location.port !== '8787'))
+        ? 'https://songanh-sale.phamhoangtien1300.workers.dev'
+        : '';
+
     // 1. PIPELINE DATA
-    const pipelineData = [
+    let pipelineData = [
         {
             "id": "3d44b5e7-3d90-81c9-b164-d263af67fd37",
             "name": "Test đơn hàng mới 1",
@@ -4310,7 +4365,7 @@
         copyNewLeadZaloText();
 
         try {
-            const resp = await fetch('/api/create-lead', {
+            const resp = await fetch(API_BASE + '/api/create-lead', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -4638,7 +4693,7 @@
         showToast('⏳ Đang lưu comment vào Notion...');
 
         try {
-            const resp = await fetch('/api/add-comment', {
+            const resp = await fetch(API_BASE + '/api/add-comment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -4812,11 +4867,108 @@
         setTimeout(() => { toast.classList.remove('show'); }, 3500);
     }
 
+    // 8. NOTION REAL-TIME SYNCHRONIZATION (HYBRID ARCHITECTURE)
+    let isSyncingNotion = false;
+    async function syncNotionLive(isManual = false) {
+        if (isSyncingNotion) return;
+        const btn = document.getElementById('btnSyncNotionLive');
+        const icon = document.getElementById('syncSpinIcon');
+        const label = document.getElementById('syncBtnLabel');
+
+        isSyncingNotion = true;
+        if (isManual) {
+            if (icon) icon.classList.add('spin-icon');
+            if (btn) btn.disabled = true;
+            if (label) label.innerText = 'Đang tải...';
+        }
+
+        try {
+            const url = API_BASE + '/api/projects' + (isManual ? '?force=1' : '');
+            const resp = await fetch(url, { cache: isManual ? 'no-cache' : 'default' });
+            if (!resp.ok) {
+                throw new Error(`HTTP ${resp.status}`);
+            }
+            const data = await resp.json();
+            if (data && data.success && Array.isArray(data.projects) && data.projects.length > 0) {
+                // 1. Get any local leads from localStorage that might not yet be in Notion
+                let localLeads = [];
+                try {
+                    localLeads = JSON.parse(localStorage.getItem('songanh_local_leads') || '[]');
+                } catch (e) {}
+
+                // Merge Notion projects with local unsynced leads (if any id doesn't match)
+                const remoteIds = new Set(data.projects.map(p => p.id));
+                const pendingLeads = localLeads.filter(l => !remoteIds.has(l.id));
+
+                // Clean up localStorage if items are now in Notion
+                if (pendingLeads.length !== localLeads.length) {
+                    try {
+                        localStorage.setItem('songanh_local_leads', JSON.stringify(pendingLeads));
+                    } catch (e) {}
+                }
+
+                // Combined fresh list: pending local leads + Notion projects
+                const mergedProjects = [...pendingLeads, ...data.projects];
+
+                // Preserve potential tick for any custom list if needed
+                if (typeof potentialIdList !== 'undefined' && potentialIdList.size > 0) {
+                    mergedProjects.forEach(p => {
+                        if (potentialIdList.has(p.id)) p.isPotential = true;
+                    });
+                }
+
+                // Update pipelineData in place
+                pipelineData.splice(0, pipelineData.length, ...mergedProjects);
+
+                // Re-render all views
+                applyGlobalFilterToViews();
+                renderPipelineViews();
+                renderCustomerViews();
+                if (typeof generateExecutiveReport === 'function') generateExecutiveReport();
+
+                // Update user topbar status text
+                const syncStatusEl = document.querySelector('.sync-status');
+                if (syncStatusEl) {
+                    const nowTime = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                    syncStatusEl.innerHTML = `<span class="live-dot"></span> Notion Live (${nowTime})`;
+                }
+
+                if (isManual) {
+                    showToast(`✅ Đã đồng bộ ${data.projects.length} dự án mới nhất từ Notion!`);
+                }
+            } else {
+                if (isManual) showToast('⚠️ Không có dữ liệu mới từ Notion.');
+            }
+        } catch (err) {
+            console.warn('Sync Notion error:', err);
+            if (isManual) {
+                showToast('⚠️ Lỗi kết nối đồng bộ Notion: ' + err.message);
+            }
+        } finally {
+            isSyncingNotion = false;
+            if (isManual) {
+                if (icon) icon.classList.remove('spin-icon');
+                if (btn) btn.disabled = false;
+                if (label) label.innerHTML = '<span class="sync-btn-full">Đồng bộ Notion</span><span class="sync-btn-short">Đồng bộ</span>';
+            }
+        }
+    }
+
     // TỰ ĐỘNG CHẠY KHI LOAD
     applyGlobalFilterToViews();
     renderPipelineViews();
     renderCustomerViews();
     generateExecutiveReport();
+
+    // Tự động đồng bộ ngầm sau mỗi 2 phút (120,000ms)
+    setInterval(function() {
+        syncNotionLive(false);
+    }, 120000);
+
+    // Tự động kích hoạt đồng bộ ngầm 2.5 giây sau khi mở webapp
+    setTimeout(function() {
+        syncNotionLive(false);
+    }, 2500);
 </script>
 
 </body>
