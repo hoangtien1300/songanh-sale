@@ -4530,30 +4530,51 @@
         if (!p) return null;
         let dateStr = '';
         if (typeof p === 'object') {
-            dateStr = p.ngayLienHe || p.rawDate || p.date || '';
+            // BẮT BUỘC CHỈ CĂN CỨ VÀO p.ngayLienHe (TỪ NOTION CỘT 'NGÀY LIÊN HỆ'), TUYỆT ĐỐI KHÔNG DÙNG 'NHẮC HẸN'
+            dateStr = p.ngayLienHe || '';
         } else if (typeof p === 'string') {
             dateStr = p;
         }
+        dateStr = (dateStr || '').trim();
         if (!dateStr) return null;
+
         if (dateStr.includes('-')) {
             const parts = dateStr.substring(0, 10).split('-');
             if (parts.length === 3) {
                 return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
             }
         }
-        const parts = dateStr.trim().split('/');
-        if (parts.length >= 2) {
-            const day = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10) - 1;
-            const year = parts.length === 3 ? parseInt(parts[2], 10) : 2026;
-            return new Date(year, month, day);
+        if (dateStr.includes('/')) {
+            const parts = dateStr.split('/');
+            if (parts.length >= 2) {
+                const day = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10) - 1;
+                const year = parts.length === 3 ? parseInt(parts[2], 10) : 2026;
+                return new Date(year, month, day);
+            }
         }
         return null;
     }
 
-    // Alias để tương thích toàn bộ hệ thống
+    // Alias parseRecordDate giữ để tương thích toàn bộ hệ thống
     function parseRecordDate(p) {
         return parseLienHeDate(p);
+    }
+
+    function initFilterDates() {
+        const now = new Date();
+        const curYear = now.getFullYear();
+        const curMonth = now.getMonth();
+        const curDate = now.getDate();
+        const dayOfWeek = now.getDay();
+        const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const monday = new Date(curYear, curMonth, curDate + diffToMonday, 0, 0, 0);
+        filterDateStart = monday;
+        filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
+        const monStr = `${pad2(monday.getDate())}/${pad2(monday.getMonth() + 1)}`;
+        const nowStr = `${pad2(curDate)}/${pad2(curMonth + 1)}/${curYear}`;
+        const activeTextEl = document.getElementById('filterActiveText');
+        if (activeTextEl) activeTextEl.innerText = `Tuần này (${monStr} - ${nowStr})`;
     }
 
     function toggleCustomDatePicker(btnEl) {
@@ -4567,6 +4588,9 @@
     function setGlobalPeriod(period, btnElement) {
         currentPeriodFilter = period;
         document.querySelectorAll('.filter-preset-pills .filter-pill-btn').forEach(b => b.classList.remove('active'));
+        if (!btnElement) {
+            btnElement = document.getElementById('btn-period-' + period);
+        }
         if (btnElement) btnElement.classList.add('active');
 
         const pop = document.getElementById('customDatePopover');
@@ -4578,16 +4602,18 @@
         const curDate = now.getDate();
 
         if (period === 'today') {
-            // "Hôm nay": Từ 00:00:00 đến 23:59:59 của ngày hôm nay
+            // "Hôm nay" (today): Từ 00:00:00 đến 23:59:59 của ngày hôm nay. Label: Hôm nay (DD/MM/YYYY)
             filterDateStart = new Date(curYear, curMonth, curDate, 0, 0, 0);
             filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
             const todayStr = `${pad2(curDate)}/${pad2(curMonth + 1)}/${curYear}`;
             const activeTextEl = document.getElementById('filterActiveText');
             if (activeTextEl) activeTextEl.innerText = `Hôm nay (${todayStr})`;
         } else if (period === 'week') {
-            // "Tuần này": Tính từ NGÀY ĐẦU TUẦN (Thứ 2) đến HÔM NAY
-            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
-            const monday = new Date(curYear, curMonth, curDate - dayOfWeek, 0, 0, 0);
+            // "Tuần này" (week): Tính từ NGÀY ĐẦU TUẦN (Thứ 2) đến HÔM NAY.
+            // Ví dụ: Hôm nay là Thứ 3 (08/09/2026), Thứ 2 đầu tuần là 07/09/2026 -> Khoảng lọc 07/09/2026 00:00:00 đến 08/09/2026 23:59:59
+            const dayOfWeek = now.getDay();
+            const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            const monday = new Date(curYear, curMonth, curDate + diffToMonday, 0, 0, 0);
             filterDateStart = monday;
             filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
             const monStr = `${pad2(monday.getDate())}/${pad2(monday.getMonth() + 1)}`;
@@ -4595,7 +4621,8 @@
             const activeTextEl = document.getElementById('filterActiveText');
             if (activeTextEl) activeTextEl.innerText = `Tuần này (${monStr} - ${nowStr})`;
         } else if (period === 'month') {
-            // "Tháng này": Tính từ NGÀY ĐẦU THÁNG (ngày 01) đến HÔM NAY
+            // "Tháng này" (month): Tính từ NGÀY ĐẦU THÁNG (ngày 01) đến HÔM NAY.
+            // Ví dụ: Từ 01/09/2026 00:00:00 đến 08/09/2026 23:59:59. Label: Tháng 9/2026 (01/09 - 08/09/2026)
             filterDateStart = new Date(curYear, curMonth, 1, 0, 0, 0);
             filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
             const firstDayStr = `01/${pad2(curMonth + 1)}`;
@@ -4603,7 +4630,7 @@
             const activeTextEl = document.getElementById('filterActiveText');
             if (activeTextEl) activeTextEl.innerText = `Tháng ${curMonth + 1}/${curYear} (${firstDayStr} - ${nowStr})`;
         } else if (period === 'all') {
-            // "Tất cả": Toàn bộ thời gian (146 dự án)
+            // "Tất cả" (all): Toàn bộ thời gian (146 dự án)
             filterDateStart = null;
             filterDateEnd = null;
             const activeTextEl = document.getElementById('filterActiveText');
@@ -4649,7 +4676,7 @@
             });
         }
 
-        // 1. KPI Khách hàng mới (DỰA VÀO CỘT NGÀY LIÊN HỆ)
+        // 1. KPI Khách hàng mới (DỰA VÀO CỘT NGÀY LIÊN HỆ p.ngayLienHe)
         const leadsCount = filteredLeads.length;
         const newLeadsEl = document.getElementById('homeNewLeadsCount');
         if (newLeadsEl) {
@@ -4660,18 +4687,18 @@
             badgeEl.innerText = (leadsCount < 10 ? '0' + leadsCount : leadsCount) + ' Khách mới';
         }
 
-        // 2. KPI Dự án đang làm (Tính theo trạng thái: p.stage === 'danglam' - 12 dự án)
+        // 2. KPI Dự án đang làm (Tính theo trạng thái: p.stage === 'danglam' - 12 dự án xưởng thi công)
         const inProdCount = pipelineData.filter(p => p.stage === 'danglam').length;
         const inProdEl = document.getElementById('homeInProductionCount');
         if (inProdEl) inProdEl.innerText = inProdCount < 10 ? '0' + inProdCount : inProdCount;
 
-        // 3. KPI Dự án tiềm năng (p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan' - 8 dự án)
+        // 3. KPI Dự án tiềm năng: p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan' (8 dự án)
         const potentialList = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
         const potentialCount = potentialList.length;
         const potentialEl = document.getElementById('homePotentialCount');
         if (potentialEl) potentialEl.innerText = potentialCount < 10 ? '0' + potentialCount : potentialCount;
 
-        // 4. Phân bổ nguồn theo dữ liệu khách hàng lọc được
+        // 4. Phân bổ nguồn theo dữ liệu khách hàng mới trong kỳ lọc
         let countTien = 0, countSep = 0, countSang = 0, countCu = 0;
         filteredLeads.forEach(p => {
             const src = (p.source || '').toLowerCase();
@@ -4682,18 +4709,14 @@
             else countCu++;
         });
 
-        // Nếu lọc kỳ hẹp, fallback sang tổng nếu kỳ đó ít
-        if (currentPeriodFilter === 'all') {
-            document.getElementById('srcCountTien').innerText = '58 Khách';
-            document.getElementById('srcCountSep').innerText = '42 Khách';
-            document.getElementById('srcCountSang').innerText = '24 Khách';
-            document.getElementById('srcCountCu').innerText = '19 Khách';
-        } else {
-            document.getElementById('srcCountTien').innerText = countTien + ' Khách';
-            document.getElementById('srcCountSep').innerText = countSep + ' Khách';
-            document.getElementById('srcCountSang').innerText = countSang + ' Khách';
-            document.getElementById('srcCountCu').innerText = countCu + ' Khách';
-        }
+        const srcTienEl = document.getElementById('srcCountTien');
+        const srcSepEl = document.getElementById('srcCountSep');
+        const srcSangEl = document.getElementById('srcCountSang');
+        const srcCuEl = document.getElementById('srcCountCu');
+        if (srcTienEl) srcTienEl.innerText = countTien + ' Khách';
+        if (srcSepEl) srcSepEl.innerText = countSep + ' Khách';
+        if (srcSangEl) srcSangEl.innerText = countSang + ' Khách';
+        if (srcCuEl) srcCuEl.innerText = countCu + ' Khách';
 
         // 5. Render Bảng Theo Dõi Tổng Quan Dự Án Trên Trang Chủ
         renderHomeProjectTable(filteredLeads);
@@ -5259,7 +5282,7 @@
         let filteredLeads = pipelineData;
         if (filterDateStart && filterDateEnd) {
             filteredLeads = pipelineData.filter(p => {
-                const pDate = parseRecordDate(p);
+                const pDate = parseLienHeDate(p);
                 if (!pDate) return false;
                 return pDate >= filterDateStart && pDate <= filterDateEnd;
             });
@@ -5278,7 +5301,7 @@
         } else if (type === 'tiemnang' || type === 'potential') {
             icon = '⭐';
             title = 'Danh Sách Dự Án Tiềm Năng Bám Sát';
-            subtitle = 'Các deal ưu tiên cao nhất cần bám sát để chốt cọc';
+            subtitle = 'Các deal ưu tiên cao nhất cần bám sát để chốt cọc (loại trừ đã hủy / hoàn thành / thanh toán)';
             list = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
         } else if (type === 'src_tien') {
             icon = '📱';
@@ -5329,153 +5352,7 @@
 
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-
-        if (searchInput) {
-            setTimeout(() => searchInput.focus(), 150);
-        }
     }
-
-    function closeHomeKpiModal() {
-        const modal = document.getElementById('modalHomeKpiDetail');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-
-    function handleHomeKpiSearch(val) {
-        const q = (val || '').toLowerCase().trim();
-        if (!q) {
-            renderHomeKpiModalList(currentKpiModalData);
-            return;
-        }
-        const filtered = currentKpiModalData.filter(p =>
-            (p.name && p.name.toLowerCase().includes(q)) ||
-            (p.assignee && p.assignee.toLowerCase().includes(q)) ||
-            (p.source && p.source.toLowerCase().includes(q)) ||
-            (p.stageLabel && p.stageLabel.toLowerCase().includes(q)) ||
-            (p.note && p.note.toLowerCase().includes(q)) ||
-            (p.nhacHen && p.nhacHen.includes(q)) ||
-            (p.date && p.date.includes(q))
-        );
-        renderHomeKpiModalList(filtered);
-    }
-
-    function renderHomeKpiModalList(items) {
-        const tbody = document.getElementById('homeKpiModalTableBody');
-        const mCards = document.getElementById('homeKpiMobileCardList');
-        const emptyState = document.getElementById('homeKpiEmptyState');
-        const badgeEl = document.getElementById('homeKpiModalBadge');
-
-        if (badgeEl) badgeEl.innerText = items.length + ' Dự án';
-
-        if (!items || items.length === 0) {
-            if (tbody) tbody.innerHTML = '';
-            if (mCards) mCards.innerHTML = '';
-            if (emptyState) emptyState.style.display = 'block';
-            return;
-        }
-        if (emptyState) emptyState.style.display = 'none';
-
-        // 1. Render Desktop Table Rows
-        let tHtml = '';
-        items.forEach((p, idx) => {
-            let badgeClass = 'badge-gold';
-            if (p.stage === 'danglam') badgeClass = 'badge-purple';
-            else if (p.stage === 'hopdong') badgeClass = 'badge-green';
-            else if (p.stage === 'baogia') badgeClass = 'badge-blue';
-            else if (p.stage === 'thanhtoan') badgeClass = 'badge-gray';
-
-            const potStar = p.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '';
-            const dateLh = formatVNDate(p.ngayLienHe || p.rawDate || p.date);
-            const dateNh = formatVNDate(p.nhacHen);
-
-            tHtml += `
-                <tr style="border-bottom: 1px solid #F1F5F9; transition: background 0.15s ease;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
-                    <td style="padding: 10px 8px; text-align: center; color: #64748B; font-weight: 600;">${idx + 1}</td>
-                    <td style="padding: 10px 8px; font-weight: 700; color: #0F172A;">
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            ${potStar}
-                            <span style="line-height: 1.35;">${p.name}</span>
-                        </div>
-                        ${p.source ? `<div style="font-size: 0.72rem; color: #64748B; font-weight: 400; margin-top: 2px;">Nguồn: ${p.source}</div>` : ''}
-                    </td>
-                    <td style="padding: 10px 8px; text-align: center; color: #334155; font-size: 0.78rem;">${dateLh}</td>
-                    <td style="padding: 10px 8px; text-align: center; color: ${p.nhacHen ? 'var(--primary-gold)' : '#94A3B8'}; font-weight: ${p.nhacHen ? '700' : '400'}; font-size: 0.78rem;">
-                        ${dateNh !== '-' ? `⏰ ${dateNh}` : '-'}
-                    </td>
-                    <td style="padding: 10px 8px; color: #0F172A; font-weight: 600; font-size: 0.78rem;">
-                        👤 ${p.assignee || '-'}
-                    </td>
-                    <td style="padding: 10px 8px; text-align: center;">
-                        <span class="badge ${badgeClass}" style="white-space: nowrap;">${p.stageLabel || p.stage}</span>
-                    </td>
-                    <td style="padding: 10px 8px; color: #475569; font-size: 0.75rem; max-width: 280px;">
-                        <div style="max-height: 48px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;" title="${(p.note || '').replace(/"/g, '&quot;')}">
-                            ${p.note || '-'}
-                        </div>
-                    </td>
-                    <td style="padding: 10px 8px; text-align: center;">
-                        <button type="button" class="btn btn-sm btn-gold" onclick="openProjectFromKpiModal('${p.id}')" style="padding: 5px 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">
-                            ✍️ Cập nhật
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-        if (tbody) tbody.innerHTML = tHtml;
-
-        // 2. Render Mobile Cards
-        let mHtml = '';
-        items.forEach((p, idx) => {
-            let badgeClass = 'badge-gold';
-            if (p.stage === 'danglam') badgeClass = 'badge-purple';
-            else if (p.stage === 'hopdong') badgeClass = 'badge-green';
-            else if (p.stage === 'baogia') badgeClass = 'badge-blue';
-            else if (p.stage === 'thanhtoan') badgeClass = 'badge-gray';
-
-            const potStar = p.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;">⭐</span>' : '';
-            const dateLh = formatVNDate(p.ngayLienHe || p.rawDate || p.date);
-            const dateNh = formatVNDate(p.nhacHen);
-
-            mHtml += `
-                <div class="card" style="padding: 12px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
-                        <div style="font-weight: 800; font-size: 0.88rem; color: #0F172A; line-height: 1.35;">
-                            <span style="color: #64748B; font-weight: 600; margin-right: 4px;">#${idx + 1}</span>
-                            ${potStar}${p.name}
-                        </div>
-                        <span class="badge ${badgeClass}" style="white-space: nowrap; flex-shrink: 0;">${p.stageLabel || p.stage}</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.74rem; color: #64748B; background: #F8FAFC; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
-                        <div>📅 Liên hệ: <strong style="color: #0F172A;">${dateLh}</strong></div>
-                        <div>⏰ Nhắc hẹn: <strong style="color: ${p.nhacHen ? 'var(--primary-gold)' : '#0F172A'};">${dateNh}</strong></div>
-                        <div style="grid-column: span 2;">👤 Phụ trách: <strong style="color: #0F172A;">${p.assignee || '-'}</strong> ${p.source ? `• <span style="color: #64748B;">(${p.source})</span>` : ''}</div>
-                    </div>
-                    <div style="font-size: 0.74rem; color: #475569; background: #FFFFFF; border: 1px solid #F1F5F9; padding: 6px 8px; border-radius: 6px; margin-bottom: 10px; max-height: 60px; overflow-y: auto; white-space: pre-line;">
-                        ${p.note || 'Chưa có ghi chú'}
-                    </div>
-                    <button type="button" class="btn btn-gold" onclick="openProjectFromKpiModal('${p.id}')" style="width: 100%; min-height: 40px; font-weight: 700; font-size: 0.82rem; justify-content: center;">
-                        ✍️ Cập nhật dự án này
-                    </button>
-                </div>
-            `;
-        });
-        if (mCards) mCards.innerHTML = mHtml;
-    }
-
-    function openProjectFromKpiModal(id) {
-        closeHomeKpiModal();
-        openUpdateProjectModal(id);
-    }
-
-    // Global escape key listener for all modals
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeHomeKpiModal();
-            closeUpdateProjectModal();
-        }
-    });
 
     function openUpdateProjectModal(projectId) {
         const modal = document.getElementById('modalUpdateProject');
@@ -5795,19 +5672,16 @@
 
         if (type === 'new_leads') {
             icon = '🌟';
-            title = 'Danh Sách Khách Hàng Mới';
+            title = 'Danh Sách Khách Hàng Mới Tiếp Nhận';
             badgeCls = 'badge-gold';
 
             let list = pipelineData;
             if (filterDateStart && filterDateEnd) {
                 list = pipelineData.filter(p => {
-                    const pDate = parseRecordDate(p);
+                    const pDate = parseLienHeDate(p);
                     if (!pDate) return false;
                     return pDate >= filterDateStart && pDate <= filterDateEnd;
                 });
-            }
-            if (!list || list.length === 0) {
-                list = pipelineData.slice(0, 15);
             }
 
             const countStr = list.length < 10 ? '0' + list.length : String(list.length);
@@ -5816,40 +5690,45 @@
             subtitle = `Kỳ lọc: ${periodText} • Bấm vào từng dòng để mở chi tiết & cập nhật tiến độ`;
 
             let rows = '';
-            list.forEach((p, idx) => {
-                const idxStr = (idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1);
-                const dateDisplay = formatDateVN(p.nhacHen || p.ngayLienHe || p.rawDate);
-                const stLabel = p.stageLabel || '💬 Tư vấn';
-                let stBadge = 'badge-gold';
-                if (stLabel.includes('Hợp đồng')) stBadge = 'badge-green';
-                else if (stLabel.includes('Báo giá')) stBadge = 'badge-blue';
-                else if (stLabel.includes('Đang làm')) stBadge = 'badge-purple';
-                else if (stLabel.includes('Thanh toán')) stBadge = 'badge-gray';
+            if (list.length === 0) {
+                rows = '<tr><td colspan="5" style="text-align: center; padding: 28px; color: #94A3B8; font-style: italic;">Không có khách hàng mới tiếp nhận trong kỳ lọc này.</td></tr>';
+                mobileCardsHtml = '<div style="text-align: center; padding: 24px; color: #94A3B8; font-style: italic;">Không có khách hàng mới tiếp nhận trong kỳ lọc này.</div>';
+            } else {
+                list.forEach((p, idx) => {
+                    const idxStr = (idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1);
+                    const dateDisplay = formatDateVN(p.ngayLienHe || p.rawDate || p.nhacHen);
+                    const stLabel = p.stageLabel || '💬 Tư vấn';
+                    let stBadge = 'badge-gold';
+                    if (stLabel.includes('Hợp đồng')) stBadge = 'badge-green';
+                    else if (stLabel.includes('Báo giá')) stBadge = 'badge-blue';
+                    else if (stLabel.includes('Đang làm')) stBadge = 'badge-purple';
+                    else if (stLabel.includes('Thanh toán')) stBadge = 'badge-gray';
 
-                rows += `
-                    <tr style="cursor: pointer;" onclick="closeKpiModal(); openUpdateProjectModal('${p.id}');" title="Bấm để cập nhật tiến độ dự án">
-                        <td style="text-align: center; width: 45px; font-weight: 700; color: #64748B;">${idxStr}</td>
-                        <td style="font-weight: 700; color: #0F172A;">${escapeHtml(p.name)}</td>
-                        <td style="white-space: nowrap; color: #0284C7; font-weight: 600;">📅 ${dateDisplay}</td>
-                        <td style="white-space: nowrap;"><span class="badge badge-gray">👤 ${escapeHtml(p.assignee || 'Tiến & Sang')}</span></td>
-                        <td style="white-space: nowrap;"><span class="badge ${stBadge}">${stLabel}</span></td>
-                    </tr>
-                `;
+                    rows += `
+                        <tr style="cursor: pointer;" onclick="closeKpiModal(); openUpdateProjectModal('${p.id}');" title="Bấm để cập nhật tiến độ dự án">
+                            <td style="text-align: center; width: 45px; font-weight: 700; color: #64748B;">${idxStr}</td>
+                            <td style="font-weight: 700; color: #0F172A;">${escapeHtml(p.name)}</td>
+                            <td style="white-space: nowrap; color: #0284C7; font-weight: 600;">📅 ${dateDisplay}</td>
+                            <td style="white-space: nowrap;"><span class="badge badge-gray">👤 ${escapeHtml(p.assignee || 'Tiến & Sang')}</span></td>
+                            <td style="white-space: nowrap;"><span class="badge ${stBadge}">${stLabel}</span></td>
+                        </tr>
+                    `;
 
-                mobileCardsHtml += `
-                    <div class="project-card" style="cursor: pointer;" onclick="closeKpiModal(); openUpdateProjectModal('${p.id}');">
-                        <div class="project-card-header">
-                            <div class="project-card-title">${idxStr}. ${escapeHtml(p.name)}</div>
-                            <span class="badge ${stBadge}">${stLabel}</span>
+                    mobileCardsHtml += `
+                        <div class="project-card" style="cursor: pointer;" onclick="closeKpiModal(); openUpdateProjectModal('${p.id}');">
+                            <div class="project-card-header">
+                                <div class="project-card-title">${idxStr}. ${escapeHtml(p.name)}</div>
+                                <span class="badge ${stBadge}">${stLabel}</span>
+                            </div>
+                            <div class="project-card-meta">
+                                <div>📅 Ngày liên hệ: <strong>${dateDisplay}</strong></div>
+                                <div>👤 Sale: <strong>${escapeHtml(p.assignee || 'Tiến & Sang')}</strong></div>
+                                <div>📱 Nguồn: <strong>${escapeHtml(p.source || 'Tiếp nhận')}</strong></div>
+                            </div>
                         </div>
-                        <div class="project-card-meta">
-                            <div>📅 Ngày: <strong>${dateDisplay}</strong></div>
-                            <div>👤 Sale: <strong>${escapeHtml(p.assignee || 'Tiến & Sang')}</strong></div>
-                            <div>📱 Nguồn: <strong>${escapeHtml(p.source || 'Tiếp nhận')}</strong></div>
-                        </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
 
             tableHtml = `
                 <div class="desktop-table-wrap">
@@ -5858,7 +5737,7 @@
                             <tr>
                                 <th style="text-align: center; width: 45px;">#</th>
                                 <th>Tiêu Đề Dự Án</th>
-                                <th style="width: 140px;">Ngày Liên Hệ / Nhắc Hẹn</th>
+                                <th style="width: 140px;">Ngày Liên Hệ</th>
                                 <th style="width: 150px;">Người Theo Dõi (Sale)</th>
                                 <th style="width: 120px;">Trạng Thái</th>
                             </tr>
@@ -5869,7 +5748,7 @@
                 <div class="mobile-card-list">${mobileCardsHtml}</div>
             `;
 
-        } else if (type === 'in_production') {
+        } else if (type === 'in_production' || type === 'danglam') {
             icon = '🏗️';
             title = 'Dự Án Đang Làm Tại Xưởng';
             badgeCls = 'badge-green';
@@ -5940,14 +5819,14 @@
                 <div class="mobile-card-list">${mobileCardsHtml}</div>
             `;
 
-        } else if (type === 'potential') {
+        } else if (type === 'potential' || type === 'tiemnang') {
             icon = '⭐';
             title = 'Danh Sách Dự Án Tiềm Năng';
             badgeCls = 'badge-blue';
             const list = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
             const countStr = list.length < 10 ? '0' + list.length : String(list.length);
             badgeText = `${countStr} Dự án trọng điểm`;
-            subtitle = 'Các dự án được tích chọn Tiềm năng = true trên cơ sở dữ liệu Notion';
+            subtitle = 'Các dự án tiềm năng đang bám sát chốt cọc (loại trừ đã hủy / hoàn thành / thanh toán)';
 
             let rows = '';
             list.forEach((p, idx) => {
@@ -5987,12 +5866,12 @@
                 mobileCardsHtml += `
                     <div class="project-card blue" style="cursor: pointer;" onclick="closeKpiModal(); openUpdateProjectModal('${p.id}');">
                         <div class="project-card-header">
-                            <div class="project-card-title"><span style="color: #D97706;">★</span> ${idxStr}. ${escapeHtml(p.name)}</div>
+                            <div class="project-card-title">${idxStr}. ${escapeHtml(p.name)}</div>
                             <span class="badge ${stBadge}">${stLabel}</span>
                         </div>
                         <div class="project-card-meta">
-                            <div>📂 Danh mục: <span class="badge ${catBadge}">${escapeHtml(cat)}</span></div>
-                            <div>👤 Người tư vấn: <strong>${escapeHtml(p.assignee || 'Tiến & Sang')}</strong></div>
+                            <div>📂 Danh mục: <strong>${escapeHtml(cat)}</strong></div>
+                            <div>👤 Phụ trách: <strong>${escapeHtml(p.assignee || 'Phạm Hoàng Tiến')}</strong></div>
                             <div style="width: 100%; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #E2E8F0; color: #334155;">
                                 📝 <i>${escapeHtml(notePreview)}</i>
                             </div>
@@ -6010,8 +5889,8 @@
                                 <th>Tiêu Đề Dự Án</th>
                                 <th style="width: 120px;">Trạng Thái</th>
                                 <th style="width: 140px;">Danh Mục</th>
-                                <th style="width: 140px;">Người Tư Vấn</th>
-                                <th>Ghi Chú</th>
+                                <th style="width: 160px;">Người Tư Vấn</th>
+                                <th>Ghi Chú Tiến Độ Thực Tế</th>
                             </tr>
                         </thead>
                         <tbody>${rows}</tbody>
@@ -6021,12 +5900,12 @@
             `;
         }
 
+        bodyEl.innerHTML = tableHtml;
         iconEl.innerText = icon;
         titleEl.innerText = title;
         badgeEl.className = 'badge ' + badgeCls;
         badgeEl.innerText = badgeText;
         subtitleEl.innerText = subtitle;
-        bodyEl.innerHTML = tableHtml;
 
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
