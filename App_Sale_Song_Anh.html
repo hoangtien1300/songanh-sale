@@ -1501,21 +1501,21 @@
                 <div class="dashboard-overview-grid">
                     <!-- CỘT TRÁI (LEFT COLUMN): 3 THẺ KPI CON SỐ XẾP DỌC (MODAL CHI TIẾT) -->
                                         <div class="kpi-column">
-                        <div class="kpi-box gold" onclick="openKpiModal('new_leads')" title="Bấm để mở danh sách chi tiết khách hàng mới" style="cursor: pointer;">
+                        <div class="kpi-box gold" onclick="openHomeKpiModal('new_leads')" title="Bấm để mở danh sách chi tiết khách hàng mới" style="cursor: pointer;">
                             <div class="kpi-label" style="display: flex; align-items: center; justify-content: space-between;">
                                 <span>Khách hàng mới</span>
                                 <span style="font-size: 0.72rem; opacity: 0.8; font-weight: 600;">🔍 Xem bảng</span>
                             </div>
                             <div class="kpi-num" id="homeNewLeadsCount" style="color: var(--primary-gold);">00</div>
                         </div>
-                        <div class="kpi-box green" onclick="openKpiModal('in_production')" title="Bấm để mở danh sách 12 dự án xưởng đang làm" style="cursor: pointer;">
+                        <div class="kpi-box green" onclick="openHomeKpiModal('danglam')" title="Bấm để mở danh sách 12 dự án xưởng đang làm" style="cursor: pointer;">
                             <div class="kpi-label" style="display: flex; align-items: center; justify-content: space-between;">
                                 <span>Dự án đang làm</span>
                                 <span style="font-size: 0.72rem; opacity: 0.8; font-weight: 600;">🔍 Xem bảng</span>
                             </div>
                             <div class="kpi-num" id="homeInProductionCount" style="color: #059669;">12</div>
                         </div>
-                        <div class="kpi-box blue" onclick="openKpiModal('potential')" title="Bấm để mở danh sách 8 dự án tiềm năng" style="cursor: pointer;">
+                        <div class="kpi-box blue" onclick="openHomeKpiModal('tiemnang')" title="Bấm để mở danh sách 8 dự án tiềm năng" style="cursor: pointer;">
                             <div class="kpi-label" style="display: flex; align-items: center; justify-content: space-between;">
                                 <span>Dự án tiềm năng</span>
                                 <span style="font-size: 0.72rem; opacity: 0.8; font-weight: 600;">🔍 Xem bảng</span>
@@ -4517,35 +4517,43 @@
         document.getElementById('sidebarOverlay').classList.remove('active');
     }
 
-    // 3. BỘ LỌC TỔNG THỜI GIAN (GLOBAL DATE/PERIOD FILTER - THEO CHUẨN NHẮC HẸN NOTION)
+    // 3. BỘ LỌC TỔNG THỜI GIAN (GLOBAL DATE/PERIOD FILTER - CHUẨN HÓA THEO CỘT NGÀY LIÊN HỆ)
     let currentPeriodFilter = 'week';
-    let filterDateStart = new Date(2026, 8, 1, 0, 0, 0); // 01/09/2026 (Chu kỳ tuần hiện hành 01/09 - 07/09/2026: 71 dự án)
-    let filterDateEnd = new Date(2026, 8, 7, 23, 59, 59); // 07/09/2026
+    let filterDateStart = null;
+    let filterDateEnd = null;
 
-    function parseRecordDate(p) {
+    function pad2(n) {
+        return n < 10 ? '0' + n : '' + n;
+    }
+
+    function parseLienHeDate(p) {
         if (!p) return null;
         let dateStr = '';
         if (typeof p === 'object') {
-            dateStr = p.nhacHen || p.rawDate || p.ngayLienHe || p.date || '';
+            dateStr = p.ngayLienHe || p.rawDate || p.date || '';
         } else if (typeof p === 'string') {
             dateStr = p;
         }
-        if (dateStr) {
-            if (dateStr.includes('-')) {
-                const parts = dateStr.substring(0, 10).split('-');
-                if (parts.length === 3) {
-                    return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-                }
-            }
-            const parts = dateStr.trim().split('/');
-            if (parts.length >= 2) {
-                const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1;
-                const year = parts.length === 3 ? parseInt(parts[2], 10) : 2026;
-                return new Date(year, month, day);
+        if (!dateStr) return null;
+        if (dateStr.includes('-')) {
+            const parts = dateStr.substring(0, 10).split('-');
+            if (parts.length === 3) {
+                return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
             }
         }
+        const parts = dateStr.trim().split('/');
+        if (parts.length >= 2) {
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parts.length === 3 ? parseInt(parts[2], 10) : 2026;
+            return new Date(year, month, day);
+        }
         return null;
+    }
+
+    // Alias để tương thích toàn bộ hệ thống
+    function parseRecordDate(p) {
+        return parseLienHeDate(p);
     }
 
     function toggleCustomDatePicker(btnEl) {
@@ -4564,22 +4572,42 @@
         const pop = document.getElementById('customDatePopover');
         if (pop) pop.style.display = 'none';
 
-        if (period === 'week') {
-            filterDateStart = new Date(2026, 8, 1, 0, 0, 0); // 01/09/2026
-            filterDateEnd = new Date(2026, 8, 7, 23, 59, 59); // 07/09/2026
-            document.getElementById('filterActiveText').innerText = 'Tuần này (01/09 - 07/09/2026)';
-        } else if (period === 'today') {
-            filterDateStart = new Date(2026, 8, 7, 0, 0, 0); // 07/09/2026
-            filterDateEnd = new Date(2026, 8, 7, 23, 59, 59); // 07/09/2026
-            document.getElementById('filterActiveText').innerText = 'Hôm nay (07/09/2026)';
+        const now = new Date();
+        const curYear = now.getFullYear();
+        const curMonth = now.getMonth();
+        const curDate = now.getDate();
+
+        if (period === 'today') {
+            // "Hôm nay": Từ 00:00:00 đến 23:59:59 của ngày hôm nay
+            filterDateStart = new Date(curYear, curMonth, curDate, 0, 0, 0);
+            filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
+            const todayStr = `${pad2(curDate)}/${pad2(curMonth + 1)}/${curYear}`;
+            const activeTextEl = document.getElementById('filterActiveText');
+            if (activeTextEl) activeTextEl.innerText = `Hôm nay (${todayStr})`;
+        } else if (period === 'week') {
+            // "Tuần này": Tính từ NGÀY ĐẦU TUẦN (Thứ 2) đến HÔM NAY
+            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
+            const monday = new Date(curYear, curMonth, curDate - dayOfWeek, 0, 0, 0);
+            filterDateStart = monday;
+            filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
+            const monStr = `${pad2(monday.getDate())}/${pad2(monday.getMonth() + 1)}`;
+            const nowStr = `${pad2(curDate)}/${pad2(curMonth + 1)}/${curYear}`;
+            const activeTextEl = document.getElementById('filterActiveText');
+            if (activeTextEl) activeTextEl.innerText = `Tuần này (${monStr} - ${nowStr})`;
         } else if (period === 'month') {
-            filterDateStart = new Date(2026, 8, 1, 0, 0, 0); // 01/09/2026
-            filterDateEnd = new Date(2026, 8, 30, 23, 59, 59);
-            document.getElementById('filterActiveText').innerText = 'Tháng 9/2026 (01/09 - 30/09)';
+            // "Tháng này": Tính từ NGÀY ĐẦU THÁNG (ngày 01) đến HÔM NAY
+            filterDateStart = new Date(curYear, curMonth, 1, 0, 0, 0);
+            filterDateEnd = new Date(curYear, curMonth, curDate, 23, 59, 59);
+            const firstDayStr = `01/${pad2(curMonth + 1)}`;
+            const nowStr = `${pad2(curDate)}/${pad2(curMonth + 1)}/${curYear}`;
+            const activeTextEl = document.getElementById('filterActiveText');
+            if (activeTextEl) activeTextEl.innerText = `Tháng ${curMonth + 1}/${curYear} (${firstDayStr} - ${nowStr})`;
         } else if (period === 'all') {
+            // "Tất cả": Toàn bộ thời gian (146 dự án)
             filterDateStart = null;
             filterDateEnd = null;
-            document.getElementById('filterActiveText').innerText = 'Tất cả thời gian (' + pipelineData.length + ' dự án)';
+            const activeTextEl = document.getElementById('filterActiveText');
+            if (activeTextEl) activeTextEl.innerText = `Tất cả thời gian (${pipelineData.length} dự án)`;
         }
 
         applyGlobalFilterToViews();
@@ -4596,7 +4624,7 @@
         const [y1, m1, day1] = dFrom.split('-').map(Number);
         const [y2, m2, day2] = dTo.split('-').map(Number);
 
-        filterDateStart = new Date(y1, m1 - 1, day1);
+        filterDateStart = new Date(y1, m1 - 1, day1, 0, 0, 0);
         filterDateEnd = new Date(y2, m2 - 1, day2, 23, 59, 59);
 
         currentPeriodFilter = 'custom';
@@ -4615,13 +4643,13 @@
         let filteredLeads = pipelineData;
         if (filterDateStart && filterDateEnd) {
             filteredLeads = pipelineData.filter(p => {
-                const pDate = parseRecordDate(p);
+                const pDate = parseLienHeDate(p);
                 if (!pDate) return false;
                 return pDate >= filterDateStart && pDate <= filterDateEnd;
             });
         }
 
-        // 1. KPI Khách hàng mới
+        // 1. KPI Khách hàng mới (DỰA VÀO CỘT NGÀY LIÊN HỆ)
         const leadsCount = filteredLeads.length;
         const newLeadsEl = document.getElementById('homeNewLeadsCount');
         if (newLeadsEl) {
@@ -4632,23 +4660,24 @@
             badgeEl.innerText = (leadsCount < 10 ? '0' + leadsCount : leadsCount) + ' Khách mới';
         }
 
-        // 2. KPI Dự án đang làm (trong kỳ lọc hoặc active)
+        // 2. KPI Dự án đang làm (Tính theo trạng thái: p.stage === 'danglam' - 12 dự án)
         const inProdCount = pipelineData.filter(p => p.stage === 'danglam').length;
         const inProdEl = document.getElementById('homeInProductionCount');
         if (inProdEl) inProdEl.innerText = inProdCount < 10 ? '0' + inProdCount : inProdCount;
 
-        // 3. KPI Dự án tiềm năng
-        const potentialCount = pipelineData.filter(p => p.isPotential).length;
+        // 3. KPI Dự án tiềm năng (p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan' - 8 dự án)
+        const potentialList = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
+        const potentialCount = potentialList.length;
         const potentialEl = document.getElementById('homePotentialCount');
         if (potentialEl) potentialEl.innerText = potentialCount < 10 ? '0' + potentialCount : potentialCount;
 
-        // 4. Phân bổ nguồn theo dữ liệu
+        // 4. Phân bổ nguồn theo dữ liệu khách hàng lọc được
         let countTien = 0, countSep = 0, countSang = 0, countCu = 0;
         filteredLeads.forEach(p => {
             const src = (p.source || '').toLowerCase();
             const adv = (p.assignee || '').toLowerCase();
             if (src.includes('tiến') || adv.includes('tiến')) countTien++;
-            else if (src.includes('sếp') || src.includes('bgđ')) countSep++;
+            else if (src.includes('sếp') || src.includes('bgđ') || src.includes('thiện')) countSep++;
             else if (src.includes('sang') || adv.includes('sang')) countSang++;
             else countCu++;
         });
@@ -4740,16 +4769,8 @@
         // Cập nhật Subtitle theo kỳ lọc
         const subtitleEl = document.getElementById('homeTableScopeSubtitle');
         if (subtitleEl) {
-            let filterName = 'Tuần này (01/09 - 07/09/2026)';
-            if (currentPeriodFilter === 'today') filterName = 'Hôm nay (07/09/2026)';
-            else if (currentPeriodFilter === 'month') filterName = 'Tháng 9/2026 (01/09 - 30/09)';
-            else if (currentPeriodFilter === 'all') filterName = 'Tất cả thời gian (' + pipelineData.length + ' dự án)';
-            else if (currentPeriodFilter === 'custom') {
-                const dFrom = document.getElementById('filterDateFrom') ? document.getElementById('filterDateFrom').value : '';
-                const dTo = document.getElementById('filterDateTo') ? document.getElementById('filterDateTo').value : '';
-                filterName = 'Tùy chọn (' + dFrom + ' đến ' + dTo + ')';
-            }
-            subtitleEl.innerText = 'Hiển thị động theo bộ lọc: ' + filterName;
+            const activeText = document.getElementById('filterActiveText') ? document.getElementById('filterActiveText').innerText : 'Tuần này';
+            subtitleEl.innerText = 'Hiển thị động theo bộ lọc: ' + activeText;
         }
 
         // 1. Đếm số lượng theo 5 trạng thái chuẩn Notion từ TỔNG SỐ LEADS trong kỳ
@@ -5249,16 +5270,16 @@
             title = 'Danh Sách Khách Hàng Mới Tiếp Nhận';
             subtitle = document.getElementById('filterActiveText') ? ('Phạm vi: ' + document.getElementById('filterActiveText').innerText) : 'Trong kỳ lọc hiện tại';
             list = [...filteredLeads];
-        } else if (type === 'danglam') {
+        } else if (type === 'danglam' || type === 'in_production') {
             icon = '🏗️';
             title = 'Danh Sách Dự Án Đang Làm (Xưởng Thi Công)';
             subtitle = 'Toàn bộ 12 dự án đang triển khai sản xuất thực tế tại xưởng';
             list = pipelineData.filter(p => p.stage === 'danglam');
-        } else if (type === 'tiemnang') {
+        } else if (type === 'tiemnang' || type === 'potential') {
             icon = '⭐';
             title = 'Danh Sách Dự Án Tiềm Năng Bám Sát';
             subtitle = 'Các deal ưu tiên cao nhất cần bám sát để chốt cọc';
-            list = pipelineData.filter(p => p.isPotential);
+            list = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
         } else if (type === 'src_tien') {
             icon = '📱';
             title = 'Khách Hàng Nguồn Zalo / Hotline Tiến';
@@ -5923,7 +5944,7 @@
             icon = '⭐';
             title = 'Danh Sách Dự Án Tiềm Năng';
             badgeCls = 'badge-blue';
-            const list = pipelineData.filter(p => p.isPotential);
+            const list = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
             const countStr = list.length < 10 ? '0' + list.length : String(list.length);
             badgeText = `${countStr} Dự án trọng điểm`;
             subtitle = 'Các dự án được tích chọn Tiềm năng = true trên cơ sở dữ liệu Notion';
@@ -6268,7 +6289,7 @@
     }
 
     // TỰ ĐỘNG CHẠY KHI LOAD
-    applyGlobalFilterToViews();
+    setGlobalPeriod('week', document.getElementById('btn-period-week'));
     renderPipelineViews();
     renderCustomerViews();
     generateExecutiveReport();
