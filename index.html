@@ -5591,7 +5591,7 @@
             </div>
         `;
 
-        matches.slice(0, 25).forEach((p, idx) => {
+        matches.slice(0, 25).forEach((p) => {
             let badgeClass = 'badge-gold';
             let stageText = '💬 Tư vấn';
             if (p.stage === 'danglam') { badgeClass = 'badge-purple'; stageText = '🏗️ Đang làm'; }
@@ -5604,28 +5604,15 @@
             else if (p.stageLabel) { stageText = p.stageLabel; }
 
             const star = p.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '';
-            const dateLh = formatDateVN(p.ngayLienHe || p.rawDate || p.date);
-            const dateNh = p.nhacHen ? formatDateVN(p.nhacHen) : '';
-            const rawNote = (p.note || 'Chưa có ghi chú').replace(/\n/g, ' ');
-            const noteSnippet = rawNote.length > 90 ? rawNote.substring(0, 87) + '...' : rawNote;
 
             html += `
                 <div class="global-search-item" onclick="selectGlobalSearchResult('${p.id}')">
                     <div class="global-search-item-top">
-                        <div class="global-search-item-title">
-                            ${star}${p.name}
-                        </div>
+                        <div class="global-search-item-title">${star}${p.name}</div>
                         <span class="badge ${badgeClass}" style="flex-shrink: 0;">${stageText}</span>
                     </div>
                     <div class="global-search-item-meta">
                         <span>👤 <strong>${p.assignee || '-'}</strong></span>
-                        ${p.source ? `<span>• 🏷️ ${p.source}</span>` : ''}
-                        <span>• 📅 ${dateLh}</span>
-                        ${dateNh ? `<span style="color: var(--primary-gold); font-weight: 700;">• ⏰ Hẹn: ${dateNh}</span>` : ''}
-                        ${p.category ? `<span>• 📁 ${p.category}</span>` : ''}
-                    </div>
-                    <div class="global-search-item-note" title="${rawNote.replace(/"/g, '&quot;')}">
-                        ${noteSnippet}
                     </div>
                 </div>
             `;
