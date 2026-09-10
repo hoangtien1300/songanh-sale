@@ -6957,17 +6957,17 @@
         const STORAGE_KEY = 'songanh_sale_auth_session';
         const SALT = 'SongAnh_Sale_Security_Salt_#2026!';
 
-        // Bảng tài khoản hợp lệ (Mã hóa SHA-256 kèm Salt)
+        // Bảng tài khoản nội bộ dự phòng (Fallback khi chạy file offline hoặc mất kết nối Notion)
         const ACCOUNTS = [
             {
-                username: 'admin',
-                aliases: ['hoangtien', 'admin'],
+                username: 'phamhoangtien',
+                aliases: ['hoangtien', 'admin', '0981169200'],
                 fullName: 'Phạm Hoàng Tiến',
                 roleName: 'Quản trị viên / Điều Hành',
                 roleCode: 'admin',
                 avatar: 'PT',
-                // Mật khẩu: SongAnh@2026
-                hash: '83c6f731f8b860207fb3e19c9d8968ab871c3e0a84f6c569c7ef0fafd046c6b2'
+                // Mật khẩu từ Notion: 0981169200
+                hash: 'c6cc521028745f3ee04201744c758ef4f1dc0000a58cb63ce80dc9a843b9c14c'
             },
             {
                 username: 'salesang',
@@ -6999,7 +6999,6 @@
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             }
-            // Fallback an toàn nếu môi trường không có subtle crypto
             let h = 0;
             const str = plainText + SALT;
             for (let i = 0; i < str.length; i++) {
@@ -7033,10 +7032,10 @@
                 username: user.username,
                 fullName: user.fullName,
                 roleName: user.roleName,
-                roleCode: user.roleCode,
-                avatar: user.avatar,
+                roleCode: user.roleCode || 'member',
+                avatar: user.avatar || 'SA',
                 expiresAt: Date.now() + duration,
-                token: 'sa_' + Math.random().toString(36).substring(2) + Date.now().toString(36)
+                token: user.token || ('sa_' + Math.random().toString(36).substring(2) + Date.now().toString(36))
             };
             const raw = JSON.stringify(sess);
             if (remember) {
@@ -7114,13 +7113,35 @@
                     return { success: false, message: 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!' };
                 }
 
+                // 1. ƯU TIÊN XÁC THỰC TRỰC TIẾP QUA BẢNG THÀNH VIÊN NOTION (REAL-TIME NOTION AUTH)
+                try {
+                    const apiBase = window.location.origin.includes('workers.dev') ? '' : 'https://songanh-sale.phamhoangtien1300.workers.dev';
+                    const response = await fetch(`${apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: u, password: p })
+                    });
+                    
+                    const resData = await response.json().catch(() => ({}));
+                    if (response.ok && resData.success && resData.user) {
+                        const sess = saveSession(resData.user, remember);
+                        updateUIForLoggedInUser(sess);
+                        return { success: true, user: resData.user };
+                    } else if (response.status === 401 || response.status === 403 || resData.message) {
+                        return { success: false, message: resData.message || 'Xác thực không thành công!' };
+                    }
+                } catch (netErr) {
+                    console.warn('Lỗi kết nối API Notion Auth, chuyển sang chế độ kiểm tra offline:', netErr);
+                }
+
+                // 2. CHẾ ĐỘ DỰ PHÒNG OFFLINE (KHI MẤT MẠNG HOẶC MỞ FILE LOCAL)
                 const targetUser = ACCOUNTS.find(acc => 
                     acc.username.toLowerCase() === u || 
                     (acc.aliases && acc.aliases.map(a => a.toLowerCase()).includes(u))
                 );
 
                 if (!targetUser) {
-                    return { success: false, message: 'Tên đăng nhập không tồn tại trong hệ thống!' };
+                    return { success: false, message: 'Tài khoản chưa được cấp quyền truy cập trong Bảng Thành Viên trên Notion!' };
                 }
 
                 const inputHash = await computeHash(p);

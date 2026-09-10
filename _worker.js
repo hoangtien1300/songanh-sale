@@ -42,8 +42,149 @@ export default {
 
     const NOTION_TOKEN = env.NOTION_TOKEN;
     const DATABASE_ID = env.DATABASE_ID || '1a54b5e73d90809985a8f7557c51f80c';
+    const MEMBERS_DB_ID = env.MEMBERS_DB_ID || '19b4b5e73d90803abda4dff1da951ef6';
     const TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = env.TELEGRAM_CHAT_ID || '1730306144';
+
+    // 2.2. Endpoint: POST /api/auth/login (Xác thực đăng nhập trực tiếp theo Bảng Thành Viên Notion)
+    if (url.pathname === '/api/auth/login' && request.method === 'POST') {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const inputUser = (body.username || '').trim().toLowerCase();
+        const inputPass = (body.password || '').trim();
+
+        if (!inputUser || !inputPass) {
+          return new Response(JSON.stringify({ 
+            success: false, 
+            message: 'Vui lòng nhập đầy đủ Tên đăng nhập và Mật khẩu!' 
+          }), { status: 400, headers: corsHeaders });
+        }
+
+        // Truy vấn Notion Bảng Thành Viên có cấp Webapp ID
+        const nRes = await fetch(`https://api.notion.com/v1/databases/${MEMBERS_DB_ID}/query`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${NOTION_TOKEN}`,
+            'Notion-Version': '2022-06-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filter: {
+              property: 'Webapp ID',
+              rich_text: {
+                is_not_empty: true
+              }
+            }
+          })
+        });
+
+        if (!nRes.ok) {
+          const errData = await nRes.json().catch(() => ({}));
+          return new Response(JSON.stringify({ 
+            success: false, 
+            message: 'Lỗi kết nối cơ sở dữ liệu Notion', 
+            details: errData 
+          }), { status: 500, headers: corsHeaders });
+        }
+
+        const data = await nRes.json();
+        const members = data.results || [];
+        let matchedMember = null;
+
+        for (const m of members) {
+          const props = m.properties || {};
+
+          // Lấy Webapp ID
+          const widList = (props['Webapp ID'] && props['Webapp ID'].rich_text) || [];
+          const rawWid = widList.map(t => t.plain_text || '').join('').trim().toLowerCase();
+
+          // Lấy Phone
+          const phone = (props['Phone'] && props['Phone'].phone_number) || '';
+          const phoneClean = phone.replace(/[^0-9]/g, '');
+          const inputClean = inputUser.replace(/[^0-9]/g, '');
+
+          // Lấy Webapp Password
+          const pwdList = (props['Webapp Password'] && props['Webapp Password'].rich_text) || [];
+          const rawPwd = pwdList.map(t => t.plain_text || '').join('').trim();
+
+          // Kiểm tra khớp tài khoản (theo Webapp ID hoặc SĐT)
+          const isUserMatch = (rawWid && rawWid === inputUser) || 
+                              (inputClean.length >= 8 && phoneClean.includes(inputClean));
+
+          if (isUserMatch) {
+            if (rawPwd === inputPass) {
+              const nameList = (props['Tên'] && props['Tên'].title) || [];
+              const name = nameList.map(t => t.plain_text || '').join('').trim() || 'Thành viên Song Anh';
+
+              // Kiểm tra trạng thái thành viên
+              const statusObj = props['Trạng thái thành viên'] && props['Trạng thái thành viên'].status;
+              const statusName = (statusObj && statusObj.name) || '';
+              if (statusName.toLowerCase().includes('nghỉ') || statusName.toLowerCase().includes('khóa')) {
+                return new Response(JSON.stringify({ 
+                  success: false, 
+                  message: 'Tài khoản này hiện đang tạm khóa hoặc đã ngưng hoạt động trên Notion!' 
+                }), { status: 403, headers: corsHeaders });
+              }
+
+              // Xác định vai trò & avatar hiển thị
+              let role = 'Thành viên Song Anh';
+              let avatar = 'SA';
+              const nameUpper = name.toUpperCase();
+              if (nameUpper.includes('TIẾN') || rawWid.includes('tien') || rawWid === 'admin') {
+                role = 'Quản trị viên / Điều Hành';
+                avatar = 'PT';
+              } else if (nameUpper.includes('SANG') || rawWid.includes('sang')) {
+                role = 'Chuyên viên Kinh Doanh';
+                avatar = 'VS';
+              } else if (nameUpper.includes('THIỆN')) {
+                role = 'Ban Giám Đốc';
+                avatar = 'MT';
+              } else {
+                const words = name.trim().split(/\s+/);
+                avatar = words.length >= 2 ? (words[0][0] + words[words.length - 1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+              }
+
+              matchedMember = {
+                id: m.id,
+                username: rawWid || inputUser,
+                fullName: name,
+                roleName: role,
+                avatar: avatar,
+                phone: phone
+              };
+              break;
+            } else {
+              return new Response(JSON.stringify({ 
+                success: false, 
+                message: 'Mật khẩu truy cập không chính xác. Vui lòng kiểm tra lại!' 
+              }), { status: 401, headers: corsHeaders });
+            }
+          }
+        }
+
+        if (!matchedMember) {
+          return new Response(JSON.stringify({ 
+            success: false, 
+            message: 'Tài khoản chưa được cấp quyền truy cập trong Bảng Thành Viên trên Notion!' 
+          }), { status: 401, headers: corsHeaders });
+        }
+
+        const token = 'sa_notion_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+
+        return new Response(JSON.stringify({
+          success: true,
+          user: matchedMember,
+          token: token,
+          message: 'Đăng nhập thành công!'
+        }), { headers: corsHeaders });
+
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Lỗi máy chủ: ' + err.message }), {
+          status: 500,
+          headers: corsHeaders,
+        });
+      }
+    }
 
     // 2.5. Endpoint: GET /api/projects (Lấy danh sách dự án active từ Notion)
     if (url.pathname === '/api/projects' && request.method === 'GET') {
