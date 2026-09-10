@@ -518,7 +518,7 @@ export default {
 
     // 6. Static Asset Proxy từ GitHub Repo (luôn đồng bộ theo commit mới nhất)
     let filePath = url.pathname;
-    if (filePath === '/' || filePath === '') {
+    if (filePath === '/' || filePath === '' || filePath === '/login') {
       filePath = '/index.html';
     }
 

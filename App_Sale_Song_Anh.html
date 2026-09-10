@@ -324,6 +324,149 @@
             font-weight: 700;
         }
 
+        /* GLOBAL HEADER SEARCH BOX (TOPBAR) */
+        .topbar-search-wrap {
+            position: relative;
+            flex: 1;
+            max-width: 420px;
+            min-width: 240px;
+            margin: 0 10px;
+        }
+        .topbar-search-box {
+            display: flex;
+            align-items: center;
+            background: #F8FAFC;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 6px 12px;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .topbar-search-box:focus-within {
+            border-color: #B5891A;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(181, 137, 26, 0.15);
+        }
+        .topbar-search-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            font-size: 0.86rem;
+            color: #0F172A;
+            font-family: inherit;
+        }
+        .topbar-search-input::placeholder {
+            color: #94A3B8;
+        }
+        .search-clear-btn {
+            background: #E2E8F0;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+        .search-clear-btn:hover {
+            background: #CBD5E1;
+            color: #0F172A;
+        }
+        .search-shortcut-hint {
+            font-size: 0.68rem;
+            background: #E2E8F0;
+            color: #64748B;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            white-space: nowrap;
+            border: 1px solid #CBD5E1;
+            letter-spacing: 0.5px;
+            user-select: none;
+        }
+        .global-search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            box-shadow: 0 12px 28px -4px rgba(0,0,0,0.12), 0 8px 12px -6px rgba(0,0,0,0.08);
+            max-height: 440px;
+            overflow-y: auto;
+            z-index: 1050;
+            padding: 6px 0;
+        }
+        .global-search-header {
+            padding: 8px 14px;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #64748B;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .global-search-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid #F8FAFC;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .global-search-item:hover, .global-search-item.selected {
+            background: #F8FAFC;
+            border-left: 3px solid var(--primary-gold);
+            padding-left: 11px;
+        }
+        .global-search-item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .global-search-item-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #0F172A;
+            line-height: 1.35;
+        }
+        .global-search-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.74rem;
+            color: #64748B;
+            flex-wrap: wrap;
+        }
+        .global-search-item-note {
+            font-size: 0.72rem;
+            color: #475569;
+            background: #F8FAFC;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        .global-search-empty {
+            padding: 24px 16px;
+            text-align: center;
+            color: #64748B;
+            font-size: 0.82rem;
+        }
+
         /* BỘ LỌC TỔNG TRÊN TOPBAR */
         .topbar-filter-wrap {
             display: flex;
@@ -1302,8 +1445,12 @@
             .main-container { padding: 14px 10px; }
             .module-header-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
             .module-header-icon { font-size: 1.8rem; padding: 8px; }
-            .app-topbar { padding: 10px 12px; }
-            .topbar-filter-wrap { width: 100%; justify-content: flex-start; margin-top: 4px; overflow-x: auto; }
+            .app-topbar { padding: 10px 12px; gap: 8px; }
+            .topbar-left { order: 1; width: 100%; justify-content: space-between; }
+            .topbar-search-wrap { width: 100%; max-width: 100%; min-width: 0; margin: 4px 0 2px 0; order: 2; }
+            .topbar-search-box { padding: 8px 12px; min-height: 42px; }
+            .search-shortcut-hint { display: none; }
+            .topbar-filter-wrap { width: 100%; justify-content: flex-start; margin-top: 2px; overflow-x: auto; order: 3; }
             .custom-date-popover { right: auto; left: 0; width: 100%; }
             .mobile-bottom-nav {
                 display: flex;
@@ -1356,11 +1503,423 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ========================================================
+           AUTH LOGIN PORTAL & SECURITY (MÔ HÌNH KIẾN TRÚC SONG ANH)
+           ======================================================== */
+        .app-layout.app-locked {
+            display: none !important;
+        }
+
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 60%, #020617 100%);
+            padding: 20px;
+            overflow-y: auto;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .auth-overlay.auth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .auth-card-backdrop {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(rgba(181, 137, 26, 0.12) 1px, transparent 1px),
+                radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            opacity: 0.65;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 440px;
+            margin: auto;
+        }
+
+        .auth-card {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(212, 175, 55, 0.38);
+            border-radius: 22px;
+            padding: 36px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 35px rgba(181, 137, 26, 0.2);
+            color: #F8FAFC;
+        }
+
+        .auth-brand {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .auth-logo-badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 66px;
+            height: 66px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 50%, #855C08 100%);
+            box-shadow: 0 8px 26px rgba(212, 175, 55, 0.45);
+            margin-bottom: 15px;
+        }
+
+        .auth-logo-text {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+        }
+
+        .auth-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .auth-badge-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #D4AF37;
+            background: rgba(181, 137, 26, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .auth-alert {
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: authShake 0.4s ease;
+        }
+
+        .auth-alert-error {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #FCA5A5;
+        }
+
+        .auth-alert-success {
+            background: rgba(5, 150, 105, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6EE7B7;
+        }
+
+        @keyframes authShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        .auth-field-group {
+            margin-bottom: 18px;
+        }
+
+        .auth-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #CBD5E1;
+            margin-bottom: 6px;
+        }
+
+        .auth-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-input-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 1rem;
+            color: #94A3B8;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 42px 12px 42px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #F8FAFC;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            background: rgba(30, 41, 59, 0.95);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.22);
+        }
+
+        .auth-input::placeholder {
+            color: #64748B;
+        }
+
+        .auth-toggle-pwd {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            font-size: 1.05rem;
+            padding: 4px;
+            border-radius: 6px;
+            transition: color 0.2s;
+            user-select: none;
+        }
+
+        .auth-toggle-pwd:hover {
+            color: #F1F5F9;
+        }
+
+        .auth-options-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            font-size: 0.82rem;
+        }
+
+        .auth-remember-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #CBD5E1;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .auth-remember-label input[type="checkbox"] {
+            accent-color: #D4AF37;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .auth-btn-submit {
+            width: 100%;
+            padding: 13px 20px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B5891A 100%);
+            border: none;
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 0.94rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 22px rgba(181, 137, 26, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .auth-btn-submit:hover {
+            background: linear-gradient(135deg, #E5C158 0%, #C99A22 100%);
+            box-shadow: 0 10px 26px rgba(181, 137, 26, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .auth-btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .auth-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFFFFF;
+            animation: authSpin 0.8s linear infinite;
+        }
+
+        @keyframes authSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .auth-footer-help {
+            font-size: 0.74rem;
+            color: #94A3B8;
+            line-height: 1.45;
+            margin-bottom: 6px;
+        }
+
+        .auth-footer-contact {
+            font-size: 0.76rem;
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        /* SIDEBAR USER & LOGOUT */
+        .sidebar-logout-btn {
+            background: rgba(220, 38, 38, 0.08);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            color: #DC2626;
+            padding: 6px 9px;
+            border-radius: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logout-btn:hover {
+            background: #DC2626;
+            color: #FFFFFF;
+            border-color: #DC2626;
+        }
+
+        /* TOPBAR LOGOUT */
+        .topbar-logout-btn {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+            padding: 6px 11px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        .topbar-logout-btn:hover {
+            background: #DC2626;
+            color: #FFFFFF;
+            border-color: #DC2626;
+        }
+
+        @media (max-width: 640px) {
+            .auth-card {
+                padding: 28px 20px;
+                border-radius: 18px;
+            }
+            .topbar-logout-text {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="app-layout">
+<!-- ========================================================
+     AUTH LOGIN PORTAL OVERLAY (MÔ HÌNH KIẾN TRÚC SONG ANH)
+     ======================================================== -->
+<div id="authLoginOverlay" class="auth-overlay">
+    <div class="auth-card-backdrop"></div>
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- BRAND HEADER -->
+            <div class="auth-brand">
+                <div class="auth-logo-badge">
+                    <span class="auth-logo-text">SA</span>
+                </div>
+                <h1 class="auth-title">MÔ HÌNH KIẾN TRÚC SONG ANH</h1>
+                <div class="auth-badge-tag">HỆ THỐNG QUẢN LÝ SALE & DỰ ÁN</div>
+            </div>
+
+            <!-- NOTICE ALERT BADGE -->
+            <div id="authAlertBox" class="auth-alert" style="display: none;"></div>
+
+            <!-- LOGIN FORM -->
+            <form id="authLoginForm" onsubmit="handleAuthSubmit(event)" autocomplete="on">
+                <div class="auth-field-group">
+                    <label for="authUsername" class="auth-label">Tên đăng nhập / Số điện thoại</label>
+                    <div class="auth-input-wrapper">
+                        <span class="auth-input-icon">👤</span>
+                        <input type="text" id="authUsername" class="auth-input" 
+                               placeholder="Nhập tên đăng nhập (VD: admin, salesang...)" 
+                               required autofocus autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="auth-field-group">
+                    <label for="authPassword" class="auth-label">Mật khẩu truy cập</label>
+                    <div class="auth-input-wrapper">
+                        <span class="auth-input-icon">🔒</span>
+                        <input type="password" id="authPassword" class="auth-input" 
+                               placeholder="Nhập mật khẩu" 
+                               required autocomplete="current-password">
+                        <button type="button" class="auth-toggle-pwd" onclick="toggleAuthPasswordVisibility()" aria-label="Hiện mật khẩu">
+                            <span id="authPwdEyeIcon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-options-row">
+                    <label class="auth-remember-label">
+                        <input type="checkbox" id="authRememberMe" checked>
+                        <span>Ghi nhớ đăng nhập (30 ngày)</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="authSubmitBtn" class="auth-btn-submit">
+                    <span id="authBtnText">ĐĂNG NHẬP VÀO HỆ THỐNG</span>
+                    <span id="authBtnSpinner" class="auth-spinner" style="display: none;"></span>
+                </button>
+            </form>
+
+            <!-- FOOTER INFO -->
+            <div class="auth-footer">
+                <p class="auth-footer-help">Hệ thống bảo mật nội bộ dành riêng cho Ban Điều Hành &amp; Sales Song Anh</p>
+                <p class="auth-footer-contact">Hotline kỹ thuật xưởng: <strong>0929 22 4444</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-layout app-locked">
     <!-- SIDEBAR OVERLAY FOR MOBILE -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
@@ -1423,13 +1982,17 @@
 
         <div class="sidebar-footer">
             <div class="user-card">
-                <div class="user-avatar">SA</div>
+                <div class="user-avatar" id="sidebarUserAvatar">SA</div>
                 <div class="user-details">
-                    <div class="user-name">Tiến &amp; Sang</div>
-                    <div class="sync-status">
+                    <div class="user-name" id="sidebarUserName">Tiến &amp; Sang</div>
+                    <div class="sync-status" id="sidebarUserRole">
                         <span class="live-dot"></span> Notion Live Sync
                     </div>
                 </div>
+                <button type="button" class="sidebar-logout-btn" onclick="AuthManager.logout()" title="Đăng xuất khỏi hệ thống">
+                    <span>🚪</span>
+                    <span>Thoát</span>
+                </button>
             </div>
         </div>
     </aside>
@@ -1446,6 +2009,25 @@
                 </div>
             </div>
 
+            <!-- SEARCH BOX TÌM KIẾM DỰ ÁN TRÊN HEADER (Ctrl + K) -->
+            <div class="topbar-search-wrap" id="topbarSearchWrap">
+                <div class="topbar-search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="globalProjectSearchInput" class="topbar-search-input" 
+                           placeholder="Tìm nhanh dự án, đối tác, SĐT... (Ctrl + K)" 
+                           autocomplete="off"
+                           oninput="handleGlobalProjectSearch(this.value)"
+                           onfocus="handleGlobalProjectSearch(this.value)"
+                           onkeydown="handleGlobalSearchKeyDown(event)">
+                    <button type="button" id="clearGlobalSearchBtn" class="search-clear-btn" style="display: none;" onclick="clearGlobalSearch()" aria-label="Xóa tìm kiếm">✕</button>
+                    <span class="search-shortcut-hint">Ctrl K</span>
+                </div>
+                <!-- DROPDOWN KẾT QUẢ TÌM KIẾM -->
+                <div id="globalProjectSearchResults" class="global-search-dropdown" style="display: none;">
+                    <!-- Render danh sách kết quả động -->
+                </div>
+            </div>
+
             <!-- BỘ LỌC TỔNG (THAY THẾ ĐƠN MỚI, IN A4, ZALO) -->
             <div class="topbar-filter-wrap" id="topbarGlobalFilter">
                 <div class="filter-preset-pills">
@@ -1459,6 +2041,10 @@
                 <button class="sync-pill-btn" id="btnSyncNotionLive" onclick="syncNotionLive(true)" title="Đồng bộ dữ liệu tức thì từ Notion">
                     <span id="syncSpinIcon" style="display:inline-block;">🔄</span>
                     <span id="syncBtnLabel"><span class="sync-btn-full">Đồng bộ Notion</span><span class="sync-btn-short">Đồng bộ</span></span>
+                </button>
+                <button class="topbar-logout-btn" onclick="AuthManager.logout()" title="Đăng xuất khỏi hệ thống">
+                    <span>🚪</span>
+                    <span class="topbar-logout-text">Đăng xuất</span>
                 </button>
                 <!-- POPOVER CHỌN NGÀY TÙY CHỈNH -->
                 <div class="custom-date-popover" id="customDatePopover" style="display: none;">
@@ -5354,6 +5940,203 @@
         document.body.style.overflow = 'hidden';
     }
 
+
+    // ==========================================
+    // 3.8 GLOBAL HEADER PROJECT SEARCH (Ctrl + K)
+    // ==========================================
+    function removeVietnameseTones(str) {
+        if (!str) return '';
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .toLowerCase()
+            .trim();
+    }
+
+    function handleGlobalProjectSearch(val) {
+        const query = (val || '').trim();
+        const resultsBox = document.getElementById('globalProjectSearchResults');
+        const clearBtn = document.getElementById('clearGlobalSearchBtn');
+        if (!resultsBox) return;
+
+        if (clearBtn) {
+            clearBtn.style.display = query ? 'inline-flex' : 'none';
+        }
+
+        if (!query) {
+            resultsBox.style.display = 'none';
+            resultsBox.innerHTML = '';
+            return;
+        }
+
+        const qNorm = removeVietnameseTones(query);
+        const qLower = query.toLowerCase();
+        const qCompact = query.toLowerCase().replace(/[\s\.\-_]/g, '');
+
+        const matches = pipelineData.filter(p => {
+            const rawName = p.name || '';
+            const rawAssignee = p.assignee || '';
+            const rawSource = p.source || '';
+            const rawCategory = p.category || '';
+            const rawTech = p.tech || '';
+            const rawNote = p.note || '';
+            const rawPhone = p.phone || p.sdt || p.tel || '';
+
+            const allText = `${rawName} ${rawAssignee} ${rawSource} ${rawCategory} ${rawTech} ${rawPhone} ${rawNote}`;
+            const normText = removeVietnameseTones(allText);
+            const compactText = allText.toLowerCase().replace(/[\s\.\-_]/g, '');
+
+            return normText.includes(qNorm) ||
+                   allText.toLowerCase().includes(qLower) ||
+                   (qCompact.length >= 3 && compactText.includes(qCompact));
+        });
+
+        if (matches.length === 0) {
+            resultsBox.innerHTML = `
+                <div class="global-search-empty">
+                    <span style="font-size: 1.6rem;">🔍</span>
+                    <div style="font-weight: 700; color: #0F172A; margin-top: 6px;">Không tìm thấy dự án phù hợp</div>
+                    <div style="font-size: 0.74rem; color: #94A3B8; margin-top: 2px;">Thử tìm theo tên khác, người tư vấn, số điện thoại hoặc từ khóa</div>
+                </div>
+            `;
+            resultsBox.style.display = 'block';
+            return;
+        }
+
+        let html = `
+            <div class="global-search-header">
+                <span>📋 KẾT QUẢ TÌM KIẾM</span>
+                <span>Tìm thấy <strong>${matches.length}</strong> dự án</span>
+            </div>
+        `;
+
+        matches.slice(0, 25).forEach((p) => {
+            let badgeClass = 'badge-gold';
+            let stageText = '💬 Tư vấn';
+            if (p.stage === 'danglam') { badgeClass = 'badge-purple'; stageText = '🏗️ Đang làm'; }
+            else if (p.stage === 'hopdong') { badgeClass = 'badge-green'; stageText = '🤝 Hợp đồng'; }
+            else if (p.stage === 'baogia') { badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
+            else if (p.stage === 'tuvan') { badgeClass = 'badge-gold'; stageText = '💬 Tư vấn'; }
+            else if (p.stage === 'thanhtoan') { badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
+            else if (p.stage === 'hoanthanh') { badgeClass = 'badge-green'; stageText = '🏆 Hoàn thành'; }
+            else if (p.stage === 'huy') { badgeClass = 'badge-gray'; stageText = '❌ Đã hủy'; }
+            else if (p.stageLabel) { stageText = p.stageLabel; }
+
+            const star = p.isPotential ? '<span style="color: var(--primary-gold); margin-right: 4px;" title="Dự án Tiềm năng">⭐</span>' : '';
+
+            html += `
+                <div class="global-search-item" onclick="selectGlobalSearchResult('${p.id}')">
+                    <div class="global-search-item-top">
+                        <div class="global-search-item-title">${star}${p.name}</div>
+                        <span class="badge ${badgeClass}" style="flex-shrink: 0;">${stageText}</span>
+                    </div>
+                    <div class="global-search-item-meta">
+                        <span>👤 <strong>${p.assignee || '-'}</strong></span>
+                    </div>
+                </div>
+            `;
+        });
+
+        if (matches.length > 25) {
+            html += `
+                <div style="padding: 8px 14px; text-align: center; font-size: 0.74rem; color: #64748B; background: #F8FAFC; border-top: 1px solid #F1F5F9;">
+                    Còn <strong>${matches.length - 25}</strong> dự án khác. Vui lòng nhập từ khóa chi tiết hơn.
+                </div>
+            `;
+        }
+
+        resultsBox.innerHTML = html;
+        resultsBox.style.display = 'block';
+    }
+
+    function selectGlobalSearchResult(projectId) {
+        const resultsBox = document.getElementById('globalProjectSearchResults');
+        if (resultsBox) resultsBox.style.display = 'none';
+        const inp = document.getElementById('globalProjectSearchInput');
+        if (inp) inp.blur();
+        openUpdateProjectModal(projectId);
+    }
+
+    function clearGlobalSearch() {
+        const inp = document.getElementById('globalProjectSearchInput');
+        const clearBtn = document.getElementById('clearGlobalSearchBtn');
+        const resultsBox = document.getElementById('globalProjectSearchResults');
+        if (inp) {
+            inp.value = '';
+            inp.focus();
+        }
+        if (clearBtn) clearBtn.style.display = 'none';
+        if (resultsBox) {
+            resultsBox.style.display = 'none';
+            resultsBox.innerHTML = '';
+        }
+    }
+
+    function handleGlobalSearchKeyDown(e) {
+        if (e.key === 'Escape') {
+            const resultsBox = document.getElementById('globalProjectSearchResults');
+            if (resultsBox) resultsBox.style.display = 'none';
+            const inp = document.getElementById('globalProjectSearchInput');
+            if (inp) inp.blur();
+        } else if (e.key === 'Enter') {
+            const firstItem = document.querySelector('#globalProjectSearchResults .global-search-item');
+            if (firstItem) {
+                firstItem.click();
+            }
+        }
+    }
+
+    // Event listener click outside dropdown
+    document.addEventListener('click', function(e) {
+        const wrap = document.getElementById('topbarSearchWrap');
+        const dropdown = document.getElementById('globalProjectSearchResults');
+        if (wrap && dropdown && !wrap.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    // Global keyboard shortcuts (Ctrl + K, Cmd + K, '/', Escape)
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K' || e.code === 'KeyK')) {
+            e.preventDefault();
+            const inp = document.getElementById('globalProjectSearchInput');
+            if (inp) {
+                inp.focus();
+                inp.select();
+                if (inp.value && inp.value.trim()) handleGlobalProjectSearch(inp.value);
+            }
+            return;
+        }
+
+        if (e.key === 'Escape') {
+            const dropdown = document.getElementById('globalProjectSearchResults');
+            if (dropdown && dropdown.style.display !== 'none') {
+                dropdown.style.display = 'none';
+            }
+            const inp = document.getElementById('globalProjectSearchInput');
+            if (inp && document.activeElement === inp) {
+                inp.blur();
+            }
+            if (typeof closeHomeKpiModal === 'function') closeHomeKpiModal();
+            if (typeof closeUpdateProjectModal === 'function') closeUpdateProjectModal();
+            return;
+        }
+
+        const activeTag = document.activeElement ? document.activeElement.tagName : '';
+        const isEditable = document.activeElement ? document.activeElement.isContentEditable : false;
+        if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag) && !isEditable) {
+            e.preventDefault();
+            const inp = document.getElementById('globalProjectSearchInput');
+            if (inp) {
+                inp.focus();
+                inp.select();
+                if (inp.value && inp.value.trim()) handleGlobalProjectSearch(inp.value);
+            }
+            return;
+        }
+    });
+
     function openUpdateProjectModal(projectId) {
         const modal = document.getElementById('modalUpdateProject');
         if (modal) {
@@ -6167,47 +6950,334 @@
         }
     }
 
-    // TỰ ĐỘNG CHẠY KHI LOAD
-    setGlobalPeriod('week', document.getElementById('btn-period-week'));
-    renderPipelineViews();
-    renderCustomerViews();
-    generateExecutiveReport();
+    // ========================================================
+    // AUTHENTICATION & ACCESS CONTROL (MÔ HÌNH KIẾN TRÚC SONG ANH)
+    // ========================================================
+    const AuthManager = (function() {
+        const STORAGE_KEY = 'songanh_sale_auth_session';
+        const SALT = 'SongAnh_Sale_Security_Salt_#2026!';
 
-    // 🚀 PERSISTENT RELOAD (F5) ROUTING: Khôi phục tab đang mở khi người dùng refresh
-    (function initActiveTab() {
-        try {
-            let targetTab = 'tab-trang-chu';
-            const hashTab = window.location.hash.replace(/^#/, '').trim();
-            const savedTab = localStorage.getItem('songanh_sale_active_tab');
-            if (hashTab && document.getElementById(hashTab)) {
-                targetTab = hashTab;
-            } else if (savedTab && document.getElementById(savedTab)) {
-                targetTab = savedTab;
+        // Bảng tài khoản hợp lệ (Mã hóa SHA-256 kèm Salt)
+        const ACCOUNTS = [
+            {
+                username: 'admin',
+                aliases: ['hoangtien', 'admin'],
+                fullName: 'Phạm Hoàng Tiến',
+                roleName: 'Quản trị viên / Điều Hành',
+                roleCode: 'admin',
+                avatar: 'PT',
+                // Mật khẩu: SongAnh@2026
+                hash: '83c6f731f8b860207fb3e19c9d8968ab871c3e0a84f6c569c7ef0fafd046c6b2'
+            },
+            {
+                username: 'salesang',
+                aliases: ['sang', '0376415131', 'salesang'],
+                fullName: 'Võ Minh Sang',
+                roleName: 'Chuyên viên Kinh Doanh',
+                roleCode: 'sale',
+                avatar: 'VS',
+                // Mật khẩu: SaleSang@2026
+                hash: 'dc66aa341441cdce715e3cf0a9a87e3702c57b09e3c29d40ed247369fdb1b1fb'
+            },
+            {
+                username: 'giamdoc',
+                aliases: ['xuanthien', 'giamdoc', 'director'],
+                fullName: 'Mai Xuân Thiện',
+                roleName: 'Ban Giám Đốc',
+                roleCode: 'director',
+                avatar: 'MT',
+                // Mật khẩu: SongAnhGD@2026
+                hash: 'd1f7a081a80454fbe58a1b291354d2a010bb1e1cbe945c8afa20589efe0dd174'
             }
-            if (targetTab !== 'tab-trang-chu') {
-                switchAppTab(targetTab, null, false);
+        ];
+
+        async function computeHash(plainText) {
+            if (window.crypto && window.crypto.subtle) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(plainText + SALT);
+                const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             }
-        } catch(e) {
-            console.warn('Tab init router error:', e);
+            // Fallback an toàn nếu môi trường không có subtle crypto
+            let h = 0;
+            const str = plainText + SALT;
+            for (let i = 0; i < str.length; i++) {
+                h = ((h << 5) - h) + str.charCodeAt(i);
+                h |= 0;
+            }
+            return String(h);
         }
+
+        function getStoredSession() {
+            try {
+                let raw = sessionStorage.getItem(STORAGE_KEY);
+                if (!raw) {
+                    raw = localStorage.getItem(STORAGE_KEY);
+                }
+                if (!raw) return null;
+                const sess = JSON.parse(raw);
+                if (!sess || !sess.expiresAt || Date.now() > sess.expiresAt) {
+                    clearStoredSession();
+                    return null;
+                }
+                return sess;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveSession(user, remember) {
+            const duration = remember ? (30 * 24 * 60 * 60 * 1000) : (12 * 60 * 60 * 1000); // 30 ngày hoặc 12 tiếng
+            const sess = {
+                username: user.username,
+                fullName: user.fullName,
+                roleName: user.roleName,
+                roleCode: user.roleCode,
+                avatar: user.avatar,
+                expiresAt: Date.now() + duration,
+                token: 'sa_' + Math.random().toString(36).substring(2) + Date.now().toString(36)
+            };
+            const raw = JSON.stringify(sess);
+            if (remember) {
+                localStorage.setItem(STORAGE_KEY, raw);
+            } else {
+                sessionStorage.setItem(STORAGE_KEY, raw);
+            }
+            return sess;
+        }
+
+        function clearStoredSession() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                sessionStorage.removeItem(STORAGE_KEY);
+            } catch (e) {}
+        }
+
+        function updateUIForLoggedInUser(sess) {
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            const nameEl = document.getElementById('sidebarUserName');
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (avatarEl) avatarEl.textContent = sess.avatar || 'SA';
+            if (nameEl) nameEl.textContent = sess.fullName || 'Thành viên Song Anh';
+            if (roleEl) roleEl.innerHTML = `<span class="live-dot"></span> ${sess.roleName || 'Đã đăng nhập'}`;
+
+            // Mở khóa giao diện app
+            const appLayout = document.querySelector('.app-layout');
+            if (appLayout) {
+                appLayout.classList.remove('app-locked');
+            }
+
+            // Ẩn overlay đăng nhập
+            const overlay = document.getElementById('authLoginOverlay');
+            if (overlay) {
+                overlay.classList.add('auth-hidden');
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 350);
+            }
+        }
+
+        function lockAppUI() {
+            const appLayout = document.querySelector('.app-layout');
+            if (appLayout) {
+                appLayout.classList.add('app-locked');
+            }
+            const overlay = document.getElementById('authLoginOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                setTimeout(() => {
+                    overlay.classList.remove('auth-hidden');
+                    const uInput = document.getElementById('authUsername');
+                    if (uInput) uInput.focus();
+                }, 10);
+            }
+        }
+
+        return {
+            init: function() {
+                const sess = getStoredSession();
+                if (sess) {
+                    updateUIForLoggedInUser(sess);
+                    return true;
+                } else {
+                    lockAppUI();
+                    return false;
+                }
+            },
+
+            login: async function(usernameInput, passwordInput, remember) {
+                const u = (usernameInput || '').trim().toLowerCase();
+                const p = (passwordInput || '').trim();
+
+                if (!u || !p) {
+                    return { success: false, message: 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!' };
+                }
+
+                const targetUser = ACCOUNTS.find(acc => 
+                    acc.username.toLowerCase() === u || 
+                    (acc.aliases && acc.aliases.map(a => a.toLowerCase()).includes(u))
+                );
+
+                if (!targetUser) {
+                    return { success: false, message: 'Tên đăng nhập không tồn tại trong hệ thống!' };
+                }
+
+                const inputHash = await computeHash(p);
+                if (inputHash !== targetUser.hash) {
+                    return { success: false, message: 'Mật khẩu truy cập không chính xác. Vui lòng thử lại!' };
+                }
+
+                const sess = saveSession(targetUser, remember);
+                updateUIForLoggedInUser(sess);
+                return { success: true, user: targetUser };
+            },
+
+            logout: function() {
+                if (confirm('Sếp có chắc chắn muốn đăng xuất khỏi Hệ thống Quản Lý Sale không?')) {
+                    clearStoredSession();
+                    location.reload();
+                }
+            },
+
+            getCurrentUser: function() {
+                return getStoredSession();
+            },
+
+            isAuthenticated: function() {
+                return !!getStoredSession();
+            }
+        };
     })();
 
+    async function handleAuthSubmit(e) {
+        e.preventDefault();
+        const alertBox = document.getElementById('authAlertBox');
+        const submitBtn = document.getElementById('authSubmitBtn');
+        const btnText = document.getElementById('authBtnText');
+        const btnSpinner = document.getElementById('authBtnSpinner');
+        const uInput = document.getElementById('authUsername');
+        const pInput = document.getElementById('authPassword');
+        const rememberChk = document.getElementById('authRememberMe');
+
+        if (alertBox) {
+            alertBox.style.display = 'none';
+            alertBox.className = 'auth-alert';
+        }
+
+        if (btnText) btnText.style.display = 'none';
+        if (btnSpinner) btnSpinner.style.display = 'inline-block';
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+            const res = await AuthManager.login(uInput.value, pInput.value, rememberChk ? rememberChk.checked : true);
+            if (res.success) {
+                if (alertBox) {
+                    alertBox.className = 'auth-alert auth-alert-success';
+                    alertBox.innerHTML = `✅ Đăng nhập thành công! Chào mừng <strong>${res.user.fullName}</strong>.`;
+                    alertBox.style.display = 'flex';
+                }
+
+                // Kích hoạt nạp dữ liệu và render sau khi login thành công
+                setTimeout(() => {
+                    startAppWorkflow();
+                }, 350);
+            } else {
+                if (alertBox) {
+                    alertBox.className = 'auth-alert auth-alert-error';
+                    alertBox.innerHTML = `⚠️ ${res.message}`;
+                    alertBox.style.display = 'flex';
+                }
+                if (pInput) {
+                    pInput.focus();
+                    pInput.select();
+                }
+            }
+        } catch (err) {
+            if (alertBox) {
+                alertBox.className = 'auth-alert auth-alert-error';
+                alertBox.innerHTML = `⚠️ Lỗi xác thực: ${err.message}`;
+                alertBox.style.display = 'flex';
+            }
+        } finally {
+            if (btnText) btnText.style.display = 'inline-block';
+            if (btnSpinner) btnSpinner.style.display = 'none';
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    }
+
+    function toggleAuthPasswordVisibility() {
+        const pInput = document.getElementById('authPassword');
+        const eyeIcon = document.getElementById('authPwdEyeIcon');
+        if (!pInput) return;
+        if (pInput.type === 'password') {
+            pInput.type = 'text';
+            if (eyeIcon) eyeIcon.textContent = '🙈';
+        } else {
+            pInput.type = 'password';
+            if (eyeIcon) eyeIcon.textContent = '👁️';
+        }
+    }
+
+    // KHỞI ĐỘNG VẬN HÀNH APP SAU KHI XÁC THỰC
+    let appWorkflowStarted = false;
+    function startAppWorkflow() {
+        if (appWorkflowStarted) return;
+        appWorkflowStarted = true;
+
+        // Render ban đầu
+        setGlobalPeriod('week', document.getElementById('btn-period-week'));
+        renderPipelineViews();
+        renderCustomerViews();
+        if (typeof generateExecutiveReport === 'function') generateExecutiveReport();
+
+        // Router khôi phục tab F5
+        (function initActiveTab() {
+            try {
+                let targetTab = 'tab-trang-chu';
+                const hashTab = window.location.hash.replace(/^#/, '').trim();
+                const savedTab = localStorage.getItem('songanh_sale_active_tab');
+                if (hashTab && document.getElementById(hashTab)) {
+                    targetTab = hashTab;
+                } else if (savedTab && document.getElementById(savedTab)) {
+                    targetTab = savedTab;
+                }
+                if (targetTab !== 'tab-trang-chu') {
+                    switchAppTab(targetTab, null, false);
+                }
+            } catch(e) {
+                console.warn('Tab init router error:', e);
+            }
+        })();
+
+        // Tự động đồng bộ ngầm sau mỗi 2 phút (120,000ms)
+        setInterval(function() {
+            if (AuthManager.isAuthenticated()) {
+                syncNotionLive(false);
+            }
+        }, 120000);
+
+        // Tự động kích hoạt đồng bộ ngầm 2.5 giây sau khi mở webapp
+        setTimeout(function() {
+            if (AuthManager.isAuthenticated()) {
+                syncNotionLive(false);
+            }
+        }, 2500);
+    }
+
     window.addEventListener('hashchange', () => {
+        if (!AuthManager.isAuthenticated()) return;
         const hashTab = window.location.hash.replace(/^#/, '').trim();
         if (hashTab && document.getElementById(hashTab)) {
             switchAppTab(hashTab, null, false);
         }
     });
 
-    // Tự động đồng bộ ngầm sau mỗi 2 phút (120,000ms)
-    setInterval(function() {
-        syncNotionLive(false);
-    }, 120000);
-
-    // Tự động kích hoạt đồng bộ ngầm 2.5 giây sau khi mở webapp
-    setTimeout(function() {
-        syncNotionLive(false);
-    }, 2500);
+    // 🚀 KHỞI CHẠY KIỂM TRA ĐĂNG NHẬP ĐẦU TIÊN
+    const hasValidSession = AuthManager.init();
+    if (hasValidSession) {
+        startAppWorkflow();
+    }
 </script>
 
 </body>
