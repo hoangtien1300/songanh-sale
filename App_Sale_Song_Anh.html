@@ -1050,6 +1050,38 @@
         .project-search-item:hover { background: #F8FAFC; }
         .project-search-item:last-child { border-bottom: none; }
 
+        .client-search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            margin-top: 4px;
+        }
+        .client-search-item {
+            padding: 9px 12px;
+            border-bottom: 1px solid #F1F5F9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+        .client-search-item:hover { background: #F8FAFC; }
+        .client-search-item:last-child { border-bottom: none; }
+        .client-search-item.create-new {
+            background: #FFFBEB;
+            border-top: 1px dashed #FDE68A;
+        }
+        .client-search-item.create-new:hover { background: #FEF3C7; }
+
         /* FILTER BAR (LIGHT) */
         .filter-bar {
             display: flex;
@@ -2245,9 +2277,17 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">TÊN KHÁCH HÀNG / LIÊN HỆ <span class="req">*</span></label>
-                                <input type="text" id="leadClientName" class="form-input" placeholder="Ví dụ: Anh Nam (Tổng thầu CC1)" required oninput="autoGenerateProjectName()">
+                            <div class="form-group" style="position: relative;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label class="form-label" style="margin-bottom: 0;">TÊN KHÁCH HÀNG / LIÊN HỆ <span class="req">*</span></label>
+                                    <span id="clientStatusTag" style="font-size: 0.72rem; font-weight: 600;"></span>
+                                </div>
+                                <div style="position: relative; margin-top: 6px;">
+                                    <input type="text" id="leadClientName" class="form-input" placeholder="Gõ tên hoặc SĐT để tìm khách hàng trong DB..." required autocomplete="off" oninput="handleClientSearch(this.value); autoGenerateProjectName();" onfocus="handleClientSearch(this.value)">
+                                    <input type="hidden" id="leadClientMemberId" value="">
+                                    <button type="button" id="btnClearClientSearch" onclick="clearSelectedClient()" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; color: #94A3B8; font-size: 1.1rem; line-height: 1;" title="Xóa chọn khách hàng">✕</button>
+                                </div>
+                                <div id="clientSearchResults" class="client-search-dropdown" style="display: none;"></div>
                             </div>
 
                             <div class="form-group">
@@ -5574,6 +5614,150 @@
         this.dataset.manual = 'true';
     });
 
+    let clientSearchDebounce = null;
+
+    function handleClientSearch(val) {
+        const query = (val || '').trim();
+        const resultsEl = document.getElementById('clientSearchResults');
+        const clearBtn = document.getElementById('btnClearClientSearch');
+        const memberIdInput = document.getElementById('leadClientMemberId');
+        const statusTag = document.getElementById('clientStatusTag');
+
+        // Reset ID nếu người dùng tự sửa lại text
+        if (memberIdInput && memberIdInput.value) {
+            memberIdInput.value = '';
+            if (statusTag) {
+                statusTag.innerHTML = '';
+            }
+        }
+
+        if (clearBtn) {
+            clearBtn.style.display = query ? 'block' : 'none';
+        }
+
+        if (clientSearchDebounce) clearTimeout(clientSearchDebounce);
+
+        if (!query) {
+            if (resultsEl) resultsEl.style.display = 'none';
+            return;
+        }
+
+        clientSearchDebounce = setTimeout(async () => {
+            try {
+                const resp = await fetch(API_BASE + '/api/search-members?q=' + encodeURIComponent(query));
+                const data = await resp.json();
+                renderClientSearchResults(query, (data && data.results) || []);
+            } catch (err) {
+                console.warn('Lỗi tìm kiếm thành viên:', err);
+            }
+        }, 200);
+    }
+
+    function renderClientSearchResults(query, list) {
+        const resultsEl = document.getElementById('clientSearchResults');
+        if (!resultsEl) return;
+
+        let html = '';
+        if (list && list.length > 0) {
+            html += '<div style="padding: 6px 12px; font-size: 0.72rem; font-weight: 700; color: #64748B; background: #F8FAFC; border-bottom: 1px solid #E2E8F0;">🔍 THÀNH VIÊN ĐÃ CÓ TRÊN HỆ THỐNG</div>';
+            list.forEach(item => {
+                const phoneStr = item.phone ? ' (' + item.phone + ')' : '';
+                const relStr = item.relation ? ' • ' + item.relation : '';
+                const safeName = (item.name || '').replace(/'/g, "\\'");
+                const safePhone = (item.phone || '').replace(/'/g, "\\'");
+                html += '<div class="client-search-item" onclick="selectClientMember(\'' + item.id + '\', \'' + safeName + '\', \'' + safePhone + '\')">' +
+                    '<div>' +
+                        '<div style="font-weight: 700; color: #0F172A; font-size: 0.88rem;">👤 ' + item.name + phoneStr + '</div>' +
+                        '<div style="font-size: 0.72rem; color: #64748B;">' + (item.phone ? '📞 ' + item.phone : '') + relStr + '</div>' +
+                    '</div>' +
+                    '<span class="badge badge-gold" style="font-size: 0.7rem;">Chọn</span>' +
+                '</div>';
+            });
+        }
+
+        // Tùy chọn tạo khách hàng mới
+        const safeQuery = query.replace(/'/g, "\\'");
+        html += '<div class="client-search-item create-new" onclick="chooseNewClient(\'' + safeQuery + '\')">' +
+            '<div>' +
+                '<div style="font-weight: 700; color: #B45309; font-size: 0.86rem;">➕ Tạo khách hàng mới: "' + query + '"</div>' +
+                '<div style="font-size: 0.72rem; color: #92400E;">Sẽ tự động tạo data trong Bảng Thành Viên khi lên đơn</div>' +
+            '</div>' +
+            '<span class="badge" style="background: #F59E0B; color: #FFF; font-size: 0.7rem;">Mới</span>' +
+        '</div>';
+
+        resultsEl.innerHTML = html;
+        resultsEl.style.display = 'block';
+    }
+
+    function selectClientMember(id, name, phone) {
+        const nameInput = document.getElementById('leadClientName');
+        const phoneInput = document.getElementById('leadPhone');
+        const memberIdInput = document.getElementById('leadClientMemberId');
+        const statusTag = document.getElementById('clientStatusTag');
+        const resultsEl = document.getElementById('clientSearchResults');
+        const clearBtn = document.getElementById('btnClearClientSearch');
+
+        if (nameInput) nameInput.value = name;
+        if (phoneInput && phone) phoneInput.value = phone;
+        if (memberIdInput) memberIdInput.value = id;
+        if (clearBtn) clearBtn.style.display = 'block';
+        if (resultsEl) resultsEl.style.display = 'none';
+
+        if (statusTag) {
+            statusTag.innerHTML = '✅ Đã liên kết: Khách hàng có sẵn';
+            statusTag.style.color = 'var(--success)';
+        }
+
+        autoGenerateProjectName();
+    }
+
+    function chooseNewClient(name) {
+        const nameInput = document.getElementById('leadClientName');
+        const memberIdInput = document.getElementById('leadClientMemberId');
+        const statusTag = document.getElementById('clientStatusTag');
+        const resultsEl = document.getElementById('clientSearchResults');
+        const clearBtn = document.getElementById('btnClearClientSearch');
+
+        if (nameInput) nameInput.value = name;
+        if (memberIdInput) memberIdInput.value = '';
+        if (clearBtn) clearBtn.style.display = 'block';
+        if (resultsEl) resultsEl.style.display = 'none';
+
+        if (statusTag) {
+            statusTag.innerHTML = '🆕 Khách hàng mới (Sẽ tạo vào DB)';
+            statusTag.style.color = 'var(--primary-gold)';
+        }
+
+        autoGenerateProjectName();
+    }
+
+    function clearSelectedClient() {
+        const nameInput = document.getElementById('leadClientName');
+        const phoneInput = document.getElementById('leadPhone');
+        const memberIdInput = document.getElementById('leadClientMemberId');
+        const statusTag = document.getElementById('clientStatusTag');
+        const resultsEl = document.getElementById('clientSearchResults');
+        const clearBtn = document.getElementById('btnClearClientSearch');
+
+        if (nameInput) nameInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        if (memberIdInput) memberIdInput.value = '';
+        if (statusTag) statusTag.innerHTML = '';
+        if (resultsEl) resultsEl.style.display = 'none';
+        if (clearBtn) clearBtn.style.display = 'none';
+
+        autoGenerateProjectName();
+    }
+
+    // Đóng dropdown tìm kiếm khi bấm ra ngoài
+    document.addEventListener('click', function(e) {
+        const clientResults = document.getElementById('clientSearchResults');
+        const clientInput = document.getElementById('leadClientName');
+        if (clientResults && clientInput && !clientResults.contains(e.target) && e.target !== clientInput) {
+            clientResults.style.display = 'none';
+        }
+    });
+
     function initNewLeadDates() {
         const now = new Date();
         const yyyy = now.getFullYear();
@@ -5610,6 +5794,7 @@
         const name = document.getElementById('leadProjectName').value;
         const cat = document.getElementById('leadCategory').value;
         const client = document.getElementById('leadClientName').value;
+        const clientMemberId = (document.getElementById('leadClientMemberId') && document.getElementById('leadClientMemberId').value) ? document.getElementById('leadClientMemberId').value : '';
         const phone = document.getElementById('leadPhone').value;
         const src = document.getElementById('leadSource').value;
         const adv = document.getElementById('leadAdvisor').value;
@@ -5633,6 +5818,7 @@
                     projectName: name,
                     category: cat,
                     clientName: client,
+                    clientMemberId: clientMemberId,
                     phone: phone,
                     source: src,
                     advisor: adv,
@@ -5696,6 +5882,7 @@
                         '</div>';
                 }
                 document.getElementById('newLeadForm').reset();
+                clearSelectedClient();
                 initNewLeadDates();
             } else {
                 showToast('📋 Đã sao chép cú pháp lên đơn! Sếp nhắn cho Agent để tạo ngay.');

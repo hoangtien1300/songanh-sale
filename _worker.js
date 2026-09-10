@@ -371,11 +371,76 @@ export default {
       }
     }
 
+    // 2.8. Endpoint: GET /api/search-members (Tìm kiếm khách hàng trong Bảng Thành Viên)
+    if (url.pathname === '/api/search-members' && request.method === 'GET') {
+      try {
+        const query = (url.searchParams.get('q') || '').trim();
+        if (!query || query.length < 1) {
+          return new Response(JSON.stringify({ success: true, results: [] }), {
+            headers: corsHeaders,
+          });
+        }
+
+        const filterObj = {
+          or: [
+            { property: 'Tên', title: { contains: query } },
+            { property: 'Phone', phone_number: { contains: query } }
+          ]
+        };
+
+        const nRes = await fetch(`https://api.notion.com/v1/databases/${MEMBERS_DB_ID}/query`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${NOTION_TOKEN}`,
+            'Notion-Version': '2022-06-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filter: filterObj,
+            page_size: 10
+          }),
+        });
+
+        if (!nRes.ok) {
+          const errData = await nRes.json().catch(() => ({}));
+          return new Response(JSON.stringify({ success: false, error: 'Lỗi tìm kiếm Notion', details: errData }), {
+            status: 500,
+            headers: corsHeaders,
+          });
+        }
+
+        const data = await nRes.json();
+        const results = (data.results || []).map(r => {
+          const props = r.properties || {};
+          const titleList = (props['Tên'] && props['Tên'].title) || [];
+          const name = titleList.map(t => t.plain_text || '').join('').trim();
+          const phone = (props['Phone'] && props['Phone'].phone_number) || '';
+          const mqhList = (props['Mối quan hệ'] && props['Mối quan hệ'].multi_select) || [];
+          const relation = mqhList.map(m => m.name).join(', ') || 'Khách hàng';
+          return {
+            id: r.id,
+            name: name,
+            phone: phone,
+            relation: relation
+          };
+        }).filter(m => m.name);
+
+        return new Response(JSON.stringify({ success: true, results: results }), {
+          headers: corsHeaders,
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, error: err.message }), {
+          status: 500,
+          headers: corsHeaders,
+        });
+      }
+    }
+
     // 3. Endpoint: POST /api/create-lead
     if (url.pathname === '/api/create-lead' && request.method === 'POST') {
       try {
         const body = await request.json();
-        const { projectName, category, clientName, phone, source, advisor, note, province, contactDate, reminderDate } = body;
+        const { projectName, category, clientName, phone, source, advisor, note, province, contactDate, reminderDate, clientMemberId: inputMemberId } = body;
 
         if (!projectName || !projectName.trim()) {
           return new Response(JSON.stringify({ success: false, error: 'Vui lòng nhập tên dự án!' }), {
@@ -416,18 +481,18 @@ export default {
 
         // Tự động tìm hoặc tạo khách hàng trong BẢNG THÀNH VIÊN
         const MEMBERS_DB_ID = '19b4b5e7-3d90-803a-bda4-dff1da951ef6';
-        let clientMemberId = null;
+        let clientMemberId = (inputMemberId && String(inputMemberId).trim()) ? String(inputMemberId).trim() : null;
 
-        if (clientName && clientName.trim()) {
+        if (!clientMemberId && clientName && clientName.trim()) {
           const cleanClientName = clientName.trim();
           const cleanPhone = (phone || '').trim();
 
           try {
-            // Tìm kiếm theo tên khách hàng trong Bảng Thành Viên
+            // Kiểm tra EXACT match tên khách hàng trong Bảng Thành Viên (TUYỆT ĐỐI KHÔNG DÙNG contains để tránh "Mr. A" nhầm "Mr Anakin Fung")
             const searchBody = {
               filter: {
                 property: 'Tên',
-                title: { contains: cleanClientName }
+                title: { equals: cleanClientName }
               },
               page_size: 1
             };
@@ -452,7 +517,7 @@ export default {
             console.warn('Lỗi tìm kiếm khách hàng trong Bảng Thành Viên:', findErr);
           }
 
-          // Nếu chưa có -> Tạo mới bản ghi khách hàng trong Bảng Thành Viên
+          // Nếu chưa có khớp chính xác -> Tạo mới bản ghi khách hàng trong Bảng Thành Viên
           if (!clientMemberId) {
             try {
               const memberProps = {
