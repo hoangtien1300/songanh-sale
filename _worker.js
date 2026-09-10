@@ -372,7 +372,7 @@ export default {
     if (url.pathname === '/api/create-lead' && request.method === 'POST') {
       try {
         const body = await request.json();
-        const { projectName, category, clientName, phone, source, advisor, note, province } = body;
+        const { projectName, category, clientName, phone, source, advisor, note, province, contactDate, reminderDate } = body;
 
         if (!projectName || !projectName.trim()) {
           return new Response(JSON.stringify({ success: false, error: 'Vui lòng nhập tên dự án!' }), {
@@ -388,6 +388,28 @@ export default {
 
         const vnDate = new Date(Date.now() + 7 * 3600 * 1000);
         const todayStr = vnDate.toISOString().split('T')[0];
+
+        // Ngày liên hệ: Nhận từ form, nếu không có thì mặc định lấy ngày hôm nay
+        const finalContactDate = (contactDate && String(contactDate).trim()) ? String(contactDate).trim().substring(0, 10) : todayStr;
+
+        // Nhắc hẹn: Tự động đặt thông báo cột nhắc hẹn trên Notion (mặc định là 09:00 ngày cập nhật)
+        let finalReminderDate = `${todayStr}T09:00:00+07:00`;
+        if (reminderDate && String(reminderDate).trim()) {
+          const rTrim = String(reminderDate).trim();
+          if (rTrim.includes('T')) {
+            if (rTrim.endsWith('+07:00')) {
+              finalReminderDate = rTrim;
+            } else if (rTrim.length === 16) {
+              finalReminderDate = `${rTrim}:00+07:00`;
+            } else if (rTrim.length === 19) {
+              finalReminderDate = `${rTrim}+07:00`;
+            } else {
+              finalReminderDate = rTrim;
+            }
+          } else if (rTrim.length === 10) {
+            finalReminderDate = `${rTrim}T09:00:00+07:00`;
+          }
+        }
 
         const properties = {
           'Tên dự án': {
@@ -406,10 +428,10 @@ export default {
             people: [{ id: advisorUserId }]
           },
           'Ngày liên hệ': {
-            date: { start: todayStr }
+            date: { start: finalContactDate }
           },
           'Nhắc hẹn': {
-            date: { start: `${todayStr}T09:00:00+07:00` }
+            date: { start: finalReminderDate }
           }
         };
 
@@ -467,15 +489,20 @@ export default {
 
         // Gửi Telegram ping
         try {
-          const tgMsg = `🆕 *DỰ ÁN MỚI LÊN ĐƠN (WEB APP)*\\n` +
-            `• *Tên dự án:* *${projectName.trim()}*\\n` +
-            `• *Khách hàng:* ${clientName || 'Chưa rõ'} ${phone ? `(${phone})` : ''}\\n` +
-            `• *Lĩnh vực:* Mô Hình | *Danh mục:* ${category || 'Mô hình'}\\n` +
-            `• *Nguồn khách:* ${source || 'Zalo'}\\n` +
-            `• *Phụ trách:* ${advisorName}\\n` +
-            (note ? `• *Ghi chú:* ${note}\\n` : '') +
-            `• *Nhắc hẹn:* 09:00 hôm nay\\n` +
-            `• *Trạng thái:* 🆕 Mới (💬 Tư vấn)\\n\\n` +
+          const contactDateParts = finalContactDate.split('-');
+          const contactDateVN = contactDateParts.length === 3 ? `${contactDateParts[2]}/${contactDateParts[1]}/${contactDateParts[0]}` : finalContactDate;
+          const todayVN = todayStr.split('-').reverse().join('/');
+
+          const tgMsg = `🆕 *DỰ ÁN MỚI LÊN ĐƠN (WEB APP)*\n` +
+            `• *Tên dự án:* *${projectName.trim()}*\n` +
+            `• *Khách hàng:* ${clientName || 'Chưa rõ'} ${phone ? `(${phone})` : ''}\n` +
+            `• *Ngày liên hệ:* ${contactDateVN}\n` +
+            `• *Lĩnh vực:* Mô Hình | *Danh mục:* ${category || 'Mô hình'}\n` +
+            `• *Nguồn khách:* ${source || 'Zalo'}\n` +
+            `• *Phụ trách:* ${advisorName}\n` +
+            (note ? `• *Ghi chú:* ${note}\n` : '') +
+            `• *Nhắc hẹn:* 09:00 ngày cập nhật (${todayVN})\n` +
+            `• *Trạng thái:* 🆕 Mới (💬 Tư vấn)\n\n` +
             `🔗 [Mở trên Notion](${resJson.url})`;
 
           await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {

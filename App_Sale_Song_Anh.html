@@ -2256,6 +2256,16 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="form-label">NGÀY LIÊN HỆ <span class="req">*</span></label>
+                                <input type="date" id="leadContactDate" class="form-input" required title="Ngày tiếp nhận liên hệ từ khách hàng">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">NHẮC HẸN NOTION <span style="font-size: 0.72rem; color: var(--primary-gold); font-weight: normal;">(Mặc định 09:00 ngày cập nhật)</span></label>
+                                <input type="datetime-local" id="leadReminderDate" class="form-input" title="Tự động đặt nhắc hẹn lúc 09:00 ngày cập nhật trên Notion">
+                            </div>
+
+                            <div class="form-group">
                                 <label class="form-label">NGƯỜI TƯ VẤN (SALE) <span class="req">*</span></label>
                                 <select id="leadAdvisor" class="form-select" required>
                                     <option value="SANG">Võ Minh Sang</option>
@@ -5559,6 +5569,38 @@
         this.dataset.manual = 'true';
     });
 
+    function initNewLeadDates() {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+        
+        const contactEl = document.getElementById('leadContactDate');
+        if (contactEl) {
+            contactEl.value = todayStr;
+        }
+        const reminderEl = document.getElementById('leadReminderDate');
+        if (reminderEl) {
+            reminderEl.value = `${todayStr}T09:00`;
+        }
+    }
+
+    // Tự động đồng bộ giờ nhắc hẹn 09:00 khi đổi ngày liên hệ
+    setTimeout(() => {
+        const contactEl = document.getElementById('leadContactDate');
+        if (contactEl) {
+            contactEl.addEventListener('change', function() {
+                const val = this.value;
+                const remEl = document.getElementById('leadReminderDate');
+                if (val && remEl) {
+                    remEl.value = `${val}T09:00`;
+                }
+            });
+        }
+        initNewLeadDates();
+    }, 100);
+
     async function submitNewLead() {
         const name = document.getElementById('leadProjectName').value;
         const cat = document.getElementById('leadCategory').value;
@@ -5567,6 +5609,10 @@
         const src = document.getElementById('leadSource').value;
         const adv = document.getElementById('leadAdvisor').value;
         const note = document.getElementById('leadNote').value;
+        const contactDateInput = document.getElementById('leadContactDate');
+        const contactDate = (contactDateInput && contactDateInput.value) ? contactDateInput.value : new Date().toISOString().split('T')[0];
+        const reminderInput = document.getElementById('leadReminderDate');
+        const reminderDate = (reminderInput && reminderInput.value) ? reminderInput.value : (new Date().toISOString().split('T')[0] + 'T09:00');
 
         const submitBtn = document.getElementById('btnSubmitNewLead');
         const origBtnText = submitBtn ? submitBtn.innerHTML : '';
@@ -5585,7 +5631,9 @@
                     phone: phone,
                     source: src,
                     advisor: adv,
-                    note: note
+                    note: note,
+                    contactDate: contactDate,
+                    reminderDate: reminderDate
                 })
             });
             const res = await resp.json();
@@ -5596,10 +5644,10 @@
                 const createdItem = {
                     id: createdId,
                     name: name,
-                    date: new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
-                    rawDate: new Date().toISOString().split('T')[0],
-                    nhacHen: new Date().toISOString().split('T')[0],
-                    ngayLienHe: new Date().toISOString().split('T')[0],
+                    date: formatDateVN(contactDate),
+                    rawDate: contactDate,
+                    nhacHen: reminderDate.includes('T') ? reminderDate : `${reminderDate}T09:00:00+07:00`,
+                    ngayLienHe: contactDate,
                     stage: 'tuvan',
                     stageLabel: '💬 Tư vấn',
                     assignee: adv === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang',
@@ -5636,12 +5684,14 @@
                     previewCard.style.borderColor = 'var(--success)';
                     previewCard.innerHTML = '<div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>' +
                         '<div style="font-size: 0.82rem; color: #0F172A;">• Tên dự án: <strong>' + name + '</strong></div>' +
+                        '<div style="font-size: 0.82rem; color: #0F172A;">• Ngày liên hệ: <strong>' + formatDateVN(contactDate) + '</strong> | Nhắc hẹn: <strong>09:00 ngày cập nhật</strong></div>' +
                         '<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">' +
                             (res.url ? '<a href="' + res.url + '" target="_blank" class="btn btn-sm btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a>' : '') +
                             '<button class="btn btn-sm" style="background: #0284C7; color: #FFFFFF; border: none; font-weight: 700; padding: 4px 10px; font-size: 0.72rem; cursor: pointer;" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + createdItem.id + '\');">💬 Cập Nhật Tiến Độ Ngay Cho Đơn Này</button>' +
                         '</div>';
                 }
                 document.getElementById('newLeadForm').reset();
+                initNewLeadDates();
             } else {
                 showToast('📋 Đã sao chép cú pháp lên đơn! Sếp nhắn cho Agent để tạo ngay.');
             }
@@ -5660,10 +5710,15 @@
         const src = document.getElementById('leadSource').value;
         const adv = document.getElementById('leadAdvisor').value === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang';
         const note = document.getElementById('leadNote').value;
+        const contactDateInput = document.getElementById('leadContactDate');
+        const contactDate = (contactDateInput && contactDateInput.value) ? contactDateInput.value : new Date().toISOString().split('T')[0];
+        const contactDateDisplay = formatDateVN(contactDate);
 
         const text = `📋 [LÊN ĐƠN DỰ ÁN MỚI]
 ` +
             `• Tên dự án: ${name}
+` +
+            `• Ngày liên hệ: ${contactDateDisplay}
 ` +
             `• Lĩnh vực: Mô Hình | Danh mục: ${cat}
 ` +
@@ -5671,7 +5726,7 @@
 ` +
             `• Nguồn: ${src} | Phụ trách: ${adv}
 ` +
-            `• Nhắc hẹn: 09:00 hôm nay
+            `• Nhắc hẹn: 09:00 ngày cập nhật
 ` +
             (note ? `• Ghi chú: ${note}
 ` : ``) +
@@ -7303,6 +7358,9 @@
 
     
     
+
+
+
 
 
 
