@@ -5392,10 +5392,10 @@
             subtitleEl.innerText = 'Hiển thị động theo bộ lọc: ' + activeText;
         }
 
-        // 1. Đếm số lượng theo 5 trạng thái chuẩn Notion từ TỔNG SỐ LEADS trong kỳ
+        // 1. Đếm số lượng theo các trạng thái chuẩn Notion từ TỔNG SỐ LEADS trong kỳ
         let cTuvan = 0, cBaogia = 0, cHopdong = 0, cDanglam = 0, cThanhtoan = 0;
         currentHomeRawLeads.forEach(d => {
-            if (d.stage === 'tuvan') cTuvan++;
+            if (d.stage === 'tuvan' || d.stage === 'moi') cTuvan++;
             else if (d.stage === 'baogia') cBaogia++;
             else if (d.stage === 'hopdong') cHopdong++;
             else if (d.stage === 'danglam') cDanglam++;
@@ -5418,7 +5418,10 @@
         // 2. Lọc theo trạng thái đang chọn trên bảng tổng quan
         let stageFiltered = currentHomeRawLeads;
         if (homeTableStageFilter !== 'all') {
-            stageFiltered = currentHomeRawLeads.filter(d => d.stage === homeTableStageFilter);
+            stageFiltered = currentHomeRawLeads.filter(d => {
+                if (homeTableStageFilter === 'tuvan') return d.stage === 'tuvan' || d.stage === 'moi';
+                return d.stage === homeTableStageFilter;
+            });
         }
 
         const totalBadge = document.getElementById('homeTableTotalBadge');
@@ -5460,7 +5463,8 @@
                     // Badge trạng thái chuẩn màu sắc
                     let badgeClass = 'badge-gold';
                     let stageText = '💬 Tư vấn';
-                    if (d.stage === 'baogia') { badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
+                    if (d.stage === 'moi') { badgeClass = 'badge-gold'; stageText = '🆕 Mới'; }
+                    else if (d.stage === 'baogia') { badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
                     else if (d.stage === 'hopdong') { badgeClass = 'badge-green'; stageText = '🤝 Hợp đồng'; }
                     else if (d.stage === 'danglam') { badgeClass = 'badge-purple'; stageText = '🏗️ Đang làm'; }
                     else if (d.stage === 'thanhtoan') { badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
@@ -5508,7 +5512,8 @@
                     let colorClass = 'gold';
                     let badgeClass = 'badge-gold';
                     let stageText = '💬 Tư vấn';
-                    if (d.stage === 'baogia') { colorClass = 'blue'; badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
+                    if (d.stage === 'moi') { colorClass = 'gold'; badgeClass = 'badge-gold'; stageText = '🆕 Mới'; }
+                    else if (d.stage === 'baogia') { colorClass = 'blue'; badgeClass = 'badge-blue'; stageText = '🧾 Báo giá'; }
                     else if (d.stage === 'hopdong') { colorClass = 'green'; badgeClass = 'badge-green'; stageText = '🤝 Hợp đồng'; }
                     else if (d.stage === 'danglam') { colorClass = 'purple'; badgeClass = 'badge-purple'; stageText = '🏗️ Đang làm'; }
                     else if (d.stage === 'thanhtoan') { colorClass = 'slate'; badgeClass = 'badge-gray'; stageText = '💸 Giao / Thu'; }
@@ -5638,7 +5643,7 @@
             });
             const res = await resp.json();
             if (res && res.success) {
-                showToast('🎉 Đã tạo đơn mới thành công trên Notion & Bắn Telegram!');
+                showToast('🎉 Đã tạo đơn mới [Trạng thái: 🆕 Mới] thành công trên Notion & Bắn Telegram!');
 
                 const createdId = res.pageId || ('local-' + Date.now());
                 const createdItem = {
@@ -5648,8 +5653,8 @@
                     rawDate: contactDate,
                     nhacHen: reminderDate.includes('T') ? reminderDate : `${reminderDate}T09:00:00+07:00`,
                     ngayLienHe: contactDate,
-                    stage: 'tuvan',
-                    stageLabel: '💬 Tư vấn',
+                    stage: 'moi',
+                    stageLabel: '🆕 Mới',
                     assignee: adv === 'TIEN' ? 'Phạm Hoàng Tiến' : 'Võ Minh Sang',
                     tech: '-',
                     source: src,
@@ -5684,7 +5689,7 @@
                     previewCard.style.borderColor = 'var(--success)';
                     previewCard.innerHTML = '<div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">✅ ĐÃ TẠO ĐƠN THÀNH CÔNG TRÊN NOTION!</div>' +
                         '<div style="font-size: 0.82rem; color: #0F172A;">• Tên dự án: <strong>' + name + '</strong></div>' +
-                        '<div style="font-size: 0.82rem; color: #0F172A;">• Ngày liên hệ: <strong>' + formatDateVN(contactDate) + '</strong> | Nhắc hẹn: <strong>09:00 ngày cập nhật</strong></div>' +
+                        '<div style="font-size: 0.82rem; color: #0F172A;">• Trạng thái: <span class="badge badge-gold" style="font-weight: 700;">🆕 Mới</span> | Ngày liên hệ: <strong>' + formatDateVN(contactDate) + '</strong> | Nhắc hẹn: <strong>09:00 ngày cập nhật</strong></div>' +
                         '<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">' +
                             (res.url ? '<a href="' + res.url + '" target="_blank" class="btn btn-sm btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a>' : '') +
                             '<button class="btn btn-sm" style="background: #0284C7; color: #FFFFFF; border: none; font-weight: 700; padding: 4px 10px; font-size: 0.72rem; cursor: pointer;" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + createdItem.id + '\');">💬 Cập Nhật Tiến Độ Ngay Cho Đơn Này</button>' +
@@ -5763,7 +5768,7 @@
     }
 
     function renderPipelineViews() {
-        const tuvanCount = pipelineData.filter(d => d.stage === 'tuvan').length;
+        const tuvanCount = pipelineData.filter(d => d.stage === 'tuvan' || d.stage === 'moi').length;
         const baogiaCount = pipelineData.filter(d => d.stage === 'baogia').length;
         const hopdongCount = pipelineData.filter(d => d.stage === 'hopdong').length;
         const danglamCount = pipelineData.filter(d => d.stage === 'danglam').length;
@@ -5788,6 +5793,8 @@
         let filtered = pipelineData;
         if (currentStage === 'tiemnang') {
             filtered = pipelineData.filter(d => d.isPotential);
+        } else if (currentStage === 'tuvan') {
+            filtered = pipelineData.filter(d => d.stage === 'tuvan' || d.stage === 'moi');
         } else if (currentStage !== 'all') {
             filtered = pipelineData.filter(d => d.stage === currentStage);
         }

@@ -192,12 +192,12 @@ export default {
         const isForce = url.searchParams.get('force') === '1';
 
         const statusMap = {
-          '3a74b5e7-3d90-80c0-a794-d529ab12e191': '💸 Thanh toán',
+          '3a74b5e7-3d90-803a-8d0b-d3d545ebb893': '🆕 Mới',
           '3a74b5e7-3d90-8087-a904-c25e61ae36da': '💬 Tư vấn',
-          '3a74b5e7-3d90-803a-8d0b-d3d545ebb893': '💬 Tư vấn',
+          '3a74b5e7-3d90-80bd-b3bb-dc527928c868': '🧾 Báo giá',
           '3a74b5e7-3d90-80bf-8b88-fc64bb4aafa0': '🤝 Hợp đồng',
           '3a74b5e7-3d90-8064-858b-d7b17067010b': '🏗️ Đang làm',
-          '3a74b5e7-3d90-80bd-b3bb-dc527928c868': '🧾 Báo giá'
+          '3a74b5e7-3d90-80c0-a794-d529ab12e191': '💸 Thanh toán'
         };
 
         const activeRelationIds = Object.keys(statusMap);
@@ -264,7 +264,10 @@ export default {
 
           let stage = '';
           let stageLabel = '';
-          if (rawStatus.includes('Báo giá')) {
+          if (rawStatus.includes('Mới')) {
+            stage = 'moi';
+            stageLabel = '🆕 Mới';
+          } else if (rawStatus.includes('Báo giá')) {
             stage = 'baogia';
             stageLabel = '🧾 Báo giá';
           } else if (rawStatus.includes('Hợp đồng')) {
@@ -411,6 +414,92 @@ export default {
           }
         }
 
+        // Tự động tìm hoặc tạo khách hàng trong BẢNG THÀNH VIÊN
+        const MEMBERS_DB_ID = '19b4b5e7-3d90-803a-bda4-dff1da951ef6';
+        let clientMemberId = null;
+
+        if (clientName && clientName.trim()) {
+          const cleanClientName = clientName.trim();
+          const cleanPhone = (phone || '').trim();
+
+          try {
+            // Tìm kiếm theo tên khách hàng trong Bảng Thành Viên
+            const searchBody = {
+              filter: {
+                property: 'Tên',
+                title: { contains: cleanClientName }
+              },
+              page_size: 1
+            };
+
+            const searchRes = await fetch(`https://api.notion.com/v1/databases/${MEMBERS_DB_ID}/query`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${NOTION_TOKEN}`,
+                'Notion-Version': '2022-06-28',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(searchBody),
+            });
+
+            if (searchRes.ok) {
+              const searchData = await searchRes.json();
+              if (searchData.results && searchData.results.length > 0) {
+                clientMemberId = searchData.results[0].id;
+              }
+            }
+          } catch (findErr) {
+            console.warn('Lỗi tìm kiếm khách hàng trong Bảng Thành Viên:', findErr);
+          }
+
+          // Nếu chưa có -> Tạo mới bản ghi khách hàng trong Bảng Thành Viên
+          if (!clientMemberId) {
+            try {
+              const memberProps = {
+                'Tên': {
+                  title: [{ text: { content: cleanClientName } }]
+                },
+                'Mối quan hệ': {
+                  multi_select: [{ name: 'Khách hàng' }]
+                }
+              };
+              if (cleanPhone) {
+                memberProps['Phone'] = {
+                  phone_number: cleanPhone
+                };
+              }
+              if (source && source.trim()) {
+                memberProps['Nguồn'] = {
+                  rich_text: [{ text: { content: source.trim() } }]
+                };
+              }
+
+              const createMemberRes = await fetch('https://api.notion.com/v1/pages', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${NOTION_TOKEN}`,
+                  'Notion-Version': '2022-06-28',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  parent: { database_id: MEMBERS_DB_ID },
+                  properties: memberProps
+                }),
+              });
+
+              if (createMemberRes.ok) {
+                const memberData = await createMemberRes.json();
+                clientMemberId = memberData.id;
+              } else {
+                const errData = await createMemberRes.json().catch(() => ({}));
+                console.warn('Không thể tạo bản ghi khách hàng trong Bảng Thành Viên:', errData);
+              }
+            } catch (createErr) {
+              console.warn('Lỗi tạo khách hàng trong Bảng Thành Viên:', createErr);
+            }
+          }
+        }
+
         const properties = {
           'Tên dự án': {
             title: [{ text: { content: projectName.trim() } }]
@@ -419,7 +508,7 @@ export default {
             relation: [{ id: '19a4b5e7-3d90-8022-9844-d93fd68a0812' }] // Mô Hình
           },
           'Trạng thái dự án': {
-            relation: [{ id: '3a74b5e7-3d90-8087-a904-c25e61ae36da' }] // 💬 Tư vấn / 🆕 Mới
+            relation: [{ id: '3a74b5e7-3d90-803a-8d0b-d3d545ebb893' }] // 🆕 Mới (chuẩn 100%)
           },
           'Người theo': {
             relation: [{ id: advisorRelId }]
@@ -434,6 +523,12 @@ export default {
             date: { start: finalReminderDate }
           }
         };
+
+        if (clientMemberId) {
+          properties['Khách hàng'] = {
+            relation: [{ id: clientMemberId }]
+          };
+        }
 
         if (category) {
           properties['Danh mục'] = {
@@ -502,7 +597,7 @@ export default {
             `• *Phụ trách:* ${advisorName}\n` +
             (note ? `• *Ghi chú:* ${note}\n` : '') +
             `• *Nhắc hẹn:* 09:00 ngày cập nhật (${todayVN})\n` +
-            `• *Trạng thái:* 🆕 Mới (💬 Tư vấn)\n\n` +
+            `• *Trạng thái:* 🆕 Mới\n\n` +
             `🔗 [Mở trên Notion](${resJson.url})`;
 
           await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
