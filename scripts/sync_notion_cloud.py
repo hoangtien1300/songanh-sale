@@ -382,53 +382,7 @@ if is_saturday:
     print("✅ Weekend report sent to Sếp Tiến!", flush=True)
 
 else:
-    # --- DAILY NOTIFICATION: CHỈ BÁO CÁO CÁC CẬP NHẬT TRÊN NOTION ---
-    has_activity = bool(new_projects or status_changes or new_comments or note_updates)
-    
-    if has_activity:
-        print(f"📢 Detected changes on Notion! Sending Daily Activity Alert to Telegram...", flush=True)
-        sections = []
-        
-        if new_projects:
-            p_txt = "🆕 *DỰ ÁN MỚI LÊN ĐƠN:*\n"
-            for p in new_projects[:4]:
-                p_txt += f"• *{p['name']}*\n  └ Nguồn: `{p['source']}` | Phụ trách: `{p['advisor']}`\n"
-            sections.append(p_txt)
-            
-        if status_changes:
-            s_txt = "🔄 *CHUYỂN TRẠNG THÁI:*\n"
-            for sc in status_changes[:5]:
-                s_txt += f"• *{sc['name']}*\n  └ `{sc['old']}` ➔ `{sc['new']}`\n"
-            sections.append(s_txt)
-            
-        if new_comments:
-            c_txt = "💬 *TIẾN ĐỘ & COMMENT MỚI:*\n"
-            for c in new_comments[:4]:
-                c_txt += f"• *{c['name']}*:\n  \"{c['text']}\"\n"
-            sections.append(c_txt)
-            
-        if note_updates and not new_comments:
-            n_txt = "📝 *GHI CHÚ MỚI:*\n"
-            for nu in note_updates[:3]:
-                n_txt += f"• *{nu['name']}*: {nu['note']}...\n"
-            sections.append(n_txt)
-
-        body = "\n".join(sections)
-        msg = (
-            f"🔔 *CẬP NHẬT DIỄN BIẾN NOTION (SONG ANH)*\n"
-            f"⏰ *Thời gian:* {time_str}\n\n"
-            f"{body}\n"
-            f"🔗 [Xem chi tiết trên Web App](https://songanh-sale.phamhoangtien1300.workers.dev/)"
-        )
-        
-        requests.post(f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage", json={
-            "chat_id": TELEGRAM_CHAT_ID,
-            "text": msg,
-            "parse_mode": "Markdown",
-            "disable_web_page_preview": True
-        }, timeout=10)
-        print("✅ Daily Notion activity alert sent to Sếp Tiến!", flush=True)
-    else:
-        print("ℹ️ No new changes detected on Notion during this sync pass. Skipping Telegram notification to avoid spam.", flush=True)
+    # --- DAILY NOTIFICATION: ĐÃ TẮT THEO YÊU CẦU CỦA SẾP TIẾN ---
+    print("ℹ️ Đã tắt gửi thông báo định kỳ 'Cập nhật diễn biến notion' về Telegram.", flush=True)
 
 print("🎉 Complete! Cloud sync and notification process finished.", flush=True)
