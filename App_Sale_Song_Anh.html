@@ -1478,12 +1478,11 @@
             .module-header-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
             .module-header-icon { font-size: 1.8rem; padding: 8px; }
             .app-topbar { padding: 10px 12px; gap: 8px; }
-            .topbar-left { order: 1; width: 100%; justify-content: space-between; }
-            .topbar-search-wrap { width: 100%; max-width: 100%; min-width: 0; margin: 4px 0 2px 0; order: 2; }
-            .topbar-search-box { padding: 8px 12px; min-height: 42px; }
+            .topbar-left { order: 1; width: auto; justify-content: flex-start; gap: 8px; flex: 0 0 auto; }
+            .topbar-filter-wrap { order: 2; width: auto; justify-content: flex-end; margin-top: 0; flex: 1 1 auto; }
+            .topbar-search-wrap { width: 100%; max-width: 100%; min-width: 0; margin: 6px 0 0 0; order: 3; flex: 0 0 100%; }
+            .topbar-search-box { padding: 8px 12px; min-height: 40px; width: 100%; }
             .search-shortcut-hint { display: none; }
-            .topbar-filter-wrap { width: 100%; justify-content: flex-start; margin-top: 2px; overflow-x: auto; order: 3; }
-            .custom-date-popover { right: auto; left: 0; width: 100%; }
             .mobile-bottom-nav {
                 display: flex;
                 position: fixed;
@@ -2464,9 +2463,8 @@
         <header class="app-topbar">
             <div class="topbar-left">
                 <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Mở menu">☰</button>
-                <div class="topbar-brand-title">
-                    <span>🏢 MÔ HÌNH KIẾN TRÚC SONG ANH</span>
-                    <span class="breadcrumb-tag">Live Sync</span>
+                <div class="topbar-brand-title" style="display: flex; align-items: center;">
+                    <img src="logo-song-anh.png" alt="Mô Hình Kiến Trúc Song Anh" class="topbar-logo" style="height: 32px; max-height: 34px; max-width: 170px; object-fit: contain; vertical-align: middle;">
                 </div>
             </div>
 
@@ -2489,16 +2487,8 @@
                 </div>
             </div>
 
-            <!-- BỘ LỌC TỔNG (THAY THẾ ĐƠN MỚI, IN A4, ZALO) -->
+            <!-- BỘ LỌC TỔNG & NÚT THAO TÁC HEADER -->
             <div class="topbar-filter-wrap" id="topbarGlobalFilter">
-                <div class="filter-preset-pills">
-                    <span class="filter-icon-label">📅 Lọc:</span>
-                    <button class="filter-pill-btn active" id="btn-period-week" onclick="setGlobalPeriod('week', this)">Tuần này</button>
-                    <button class="filter-pill-btn" id="btn-period-today" onclick="setGlobalPeriod('today', this)">Hôm nay</button>
-                    <button class="filter-pill-btn" id="btn-period-month" onclick="setGlobalPeriod('month', this)">Tháng này</button>
-                    <button class="filter-pill-btn" id="btn-period-all" onclick="setGlobalPeriod('all', this)">Tất cả</button>
-                    <button class="filter-pill-btn" id="btn-period-custom" onclick="toggleCustomDatePicker(this)">Tùy chọn ▾</button>
-                </div>
                 <button class="sync-pill-btn" id="btnSyncNotionLive" onclick="syncNotionLive(true)" title="Đồng bộ dữ liệu tức thì từ Notion">
                     <span id="syncSpinIcon" style="display:inline-block;">🔄</span>
                     <span id="syncBtnLabel"><span class="sync-btn-full">Đồng bộ Notion</span><span class="sync-btn-short">Đồng bộ</span></span>
@@ -2507,20 +2497,6 @@
                     <span>🚪</span>
                     <span class="topbar-logout-text">Đăng xuất</span>
                 </button>
-                <!-- POPOVER CHỌN NGÀY TÙY CHỈNH -->
-                <div class="custom-date-popover" id="customDatePopover" style="display: none;">
-                    <div class="date-range-inputs">
-                        <div class="date-field">
-                            <span>Từ:</span>
-                            <input type="date" id="filterDateFrom" class="date-input" value="2026-08-31" onchange="applyCustomRange()">
-                        </div>
-                        <div class="date-field">
-                            <span>Đến:</span>
-                            <input type="date" id="filterDateTo" class="date-input" value="2026-09-07" onchange="applyCustomRange()">
-                        </div>
-                        <button class="btn btn-sm btn-gold" onclick="applyCustomRange()">Áp dụng</button>
-                    </div>
-                </div>
             </div>
         </header>
 
@@ -2893,14 +2869,11 @@
                     <div class="module-header-title">
                         <span class="module-header-icon">📊</span>
                         <div>
-                            <h2>Báo Cáo Sale Hàng Tuần</h2>
+                            <h2>Báo Cáo Sale Tuần</h2>
                             <div class="filter-active-indicator" id="weeklyReportSubtitle">
                                 Tổng hợp khách hàng liên hệ mới, phân loại hạng mục &amp; nguồn, tiến độ thi công xưởng
                             </div>
                         </div>
-                    </div>
-                    <div class="module-status-badge">
-                        <span class="live-dot"></span> Live Notion Data
                     </div>
                 </div>
 
@@ -2925,17 +2898,6 @@
                         <span class="weekly-range-pill" id="weeklyRangeDisplayPill">
                             📅 <span id="weeklyRangeText">07/09/2026 ➔ 13/09/2026</span>
                         </span>
-                    </div>
-                    <div class="weekly-action-buttons">
-                        <button class="btn btn-sm btn-gold" onclick="copyWeeklyZaloReport()">
-                            📋 Sao Chép Báo Cáo Zalo
-                        </button>
-                        <button class="btn btn-sm btn-no-print" onclick="window.print()">
-                            🖨️ In A4 / Xuất PDF
-                        </button>
-                        <button class="btn btn-sm btn-no-print" onclick="syncNotionLive(true)">
-                            🔄 Đồng Bộ Notion
-                        </button>
                     </div>
                 </div>
 
@@ -3001,8 +2963,6 @@
                             <span class="nav-link-badge" id="weeklyCustomerCountBadge">0 Khách</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <input type="text" id="weeklySearchInput" placeholder="Tìm tên dự án, khách, SĐT..." 
-                                   class="date-input" style="width: 210px; padding: 5px 10px;" oninput="onWeeklySearchInput(this.value)">
                             <select id="weeklyStageFilter" class="weekly-select" style="padding: 5px 8px; font-size: 0.78rem;" onchange="onWeeklyStageFilterChange(this.value)">
                                 <option value="all">Tất cả trạng thái</option>
                                 <option value="tuvan">💬 Tư vấn</option>

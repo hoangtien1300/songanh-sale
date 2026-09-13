@@ -931,7 +931,12 @@ export default {
         const ct = filePath.endsWith('.html') ? 'text/html; charset=utf-8' :
                    (filePath.endsWith('.css') ? 'text/css; charset=utf-8' :
                    (filePath.endsWith('.js') ? 'application/javascript; charset=utf-8' :
-                   (filePath.endsWith('.json') ? 'application/json; charset=utf-8' : 'text/plain')));
+                   (filePath.endsWith('.json') ? 'application/json; charset=utf-8' :
+                   (filePath.endsWith('.png') ? 'image/png' :
+                   (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg') ? 'image/jpeg' :
+                   (filePath.endsWith('.svg') ? 'image/svg+xml' :
+                   (filePath.endsWith('.webp') ? 'image/webp' :
+                   (filePath.endsWith('.ico') ? 'image/x-icon' : 'text/plain'))))))));
         
         return new Response(ghRes.body, {
           status: ghRes.status,
