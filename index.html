@@ -2051,10 +2051,11 @@
             display: flex;
             align-items: flex-end;
             gap: 12px;
-            height: 130px;
-            padding: 10px 6px 0 6px;
+            min-height: 165px;
+            padding: 10px 8px 6px 8px;
             border-bottom: 1px solid #E2E8F0;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .weekly-bar-item {
             flex: 1;
@@ -2297,6 +2298,16 @@
             .weekly-toolbar { flex-direction: column; align-items: stretch !important; }
             .weekly-action-buttons { justify-content: flex-start; }
             .workshop-grid { grid-template-columns: 1fr !important; }
+
+            /* TỐI ƯU GIAO DIỆN BIỂU ĐỒ TRÊN MOBILE */
+            .weekly-chart-card { padding: 14px 12px; }
+            .weekly-chart-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .weekly-chart-badge { font-size: 0.72rem; width: 100%; justify-content: flex-start; white-space: normal; line-height: 1.35; padding: 6px 10px; }
+            .weekly-chart-container { gap: 6px; min-height: 160px; padding: 10px 2px 6px 2px; }
+            .weekly-bar-item { min-width: 44px; }
+            .weekly-bar-track { height: 75px; max-width: 32px; }
+            .weekly-bar-label { font-size: 0.65rem; margin-top: 4px; }
+            .weekly-chart-footer { flex-direction: column; align-items: flex-start; gap: 6px; }
         }
 
         @media print {
@@ -2963,6 +2974,10 @@
                             <span class="nav-link-badge" id="weeklyCustomerCountBadge">0 Khách</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <select id="weeklyDateSort" class="weekly-select" style="padding: 5px 8px; font-size: 0.78rem;" onchange="onWeeklySortChange(this.value)">
+                                <option value="asc" selected>📅 Ngày LH: A ➔ Z (Cũ đến mới)</option>
+                                <option value="desc">📅 Ngày LH: Z ➔ A (Mới đến cũ)</option>
+                            </select>
                             <select id="weeklyStageFilter" class="weekly-select" style="padding: 5px 8px; font-size: 0.78rem;" onchange="onWeeklyStageFilterChange(this.value)">
                                 <option value="all">Tất cả trạng thái</option>
                                 <option value="tuvan">💬 Tư vấn</option>
@@ -2980,7 +2995,9 @@
                                 <tr style="background: #F8FAFC; border-bottom: 2px solid #E2E8F0; text-align: left; color: #475569; font-weight: 700;">
                                     <th style="padding: 10px 12px; width: 4%;">#</th>
                                     <th style="padding: 10px 12px; width: 28%;">TÊN DỰ ÁN &amp; KHÁCH HÀNG</th>
-                                    <th style="padding: 10px 12px; width: 11%;">NGÀY LH</th>
+                                    <th style="padding: 10px 12px; width: 13%; cursor: pointer; user-select: none;" onclick="toggleWeeklyDateSort()" title="Bấm để đảo chiều sắp xếp Ngày Liên Hệ (A-Z / Z-A)">
+                                        NGÀY LH <span id="weeklyDateSortIcon" style="font-size: 0.75rem; color: #B5891A;">▲</span>
+                                    </th>
                                     <th style="padding: 10px 12px; width: 13%;">HẠNG MỤC</th>
                                     <th style="padding: 10px 12px; width: 14%;">NGUỒN LIÊN HỆ</th>
                                     <th style="padding: 10px 12px; width: 12%;">NGƯỜI TƯ VẤN</th>
@@ -5698,6 +5715,12 @@
         const bnav = document.getElementById('bnav-' + tabId);
         if (bnav) bnav.classList.add('active');
 
+        // Ẩn thanh tìm kiếm dự án trên Topbar khi xem mục Báo Cáo
+        const topbarSearch = document.getElementById('topbarSearchWrap');
+        if (topbarSearch) {
+            topbarSearch.style.display = (tabId === 'tab-bao-cao') ? 'none' : '';
+        }
+
         // 🚀 Lưu trạng thái để khi F5 / Reload trang không bị quay về trang chủ
         try {
             localStorage.setItem('songanh_sale_active_tab', tabId);
@@ -7756,6 +7779,7 @@
     };
     let weeklySearchKeyword = '';
     let weeklySelectedStage = 'all';
+    let weeklyDateSortOrder = 'asc'; // 'asc' = A-Z (cũ đến mới), 'desc' = Z-A (mới đến cũ)
     let currentWeeklyZaloText = '';
 
     function onWeeklyFilterSelectChange(val) {
@@ -7853,6 +7877,22 @@
 
     function onWeeklyStageFilterChange(val) {
         weeklySelectedStage = val || 'all';
+        renderWeeklyCustomerList();
+    }
+
+    function onWeeklySortChange(val) {
+        weeklyDateSortOrder = val || 'asc';
+        const icon = document.getElementById('weeklyDateSortIcon');
+        if (icon) icon.innerText = (weeklyDateSortOrder === 'asc' ? '▲' : '▼');
+        renderWeeklyCustomerList();
+    }
+
+    function toggleWeeklyDateSort() {
+        weeklyDateSortOrder = (weeklyDateSortOrder === 'asc') ? 'desc' : 'asc';
+        const sel = document.getElementById('weeklyDateSort');
+        if (sel) sel.value = weeklyDateSortOrder;
+        const icon = document.getElementById('weeklyDateSortIcon');
+        if (icon) icon.innerText = (weeklyDateSortOrder === 'asc' ? '▲' : '▼');
         renderWeeklyCustomerList();
     }
 
@@ -8198,6 +8238,28 @@
                 const text = `${p.name} ${p.source} ${p.assignee} ${p.category || ''} ${p.note || ''}`.toLowerCase();
                 return text.includes(weeklySearchKeyword);
             });
+        }
+
+        // Sắp xếp danh sách khách hàng từ A-Z theo cột Ngày Liên Hệ (Cũ -> Mới) hoặc Z-A (Mới -> Cũ)
+        filtered.sort((a, b) => {
+            const rawA = a.ngayLienHe || a.rawDate || a.date || '';
+            const rawB = b.ngayLienHe || b.rawDate || b.date || '';
+            const ymdA = normalizeDateToYMD(rawA) || '9999-99-99';
+            const ymdB = normalizeDateToYMD(rawB) || '9999-99-99';
+            if (weeklyDateSortOrder === 'desc') {
+                return ymdB.localeCompare(ymdA);
+            }
+            return ymdA.localeCompare(ymdB);
+        });
+
+        // Đồng bộ trạng thái hiển thị bộ lọc sắp xếp ngày liên hệ
+        const dateSortSelect = document.getElementById('weeklyDateSort');
+        if (dateSortSelect && dateSortSelect.value !== weeklyDateSortOrder) {
+            dateSortSelect.value = weeklyDateSortOrder;
+        }
+        const dateSortIcon = document.getElementById('weeklyDateSortIcon');
+        if (dateSortIcon) {
+            dateSortIcon.innerText = (weeklyDateSortOrder === 'asc' ? '▲' : '▼');
         }
 
         const badgeCount = document.getElementById('weeklyCustomerCountBadge');
