@@ -60,7 +60,68 @@ export default {
           }), { status: 400, headers: corsHeaders });
         }
 
-        // Truy vấn Notion Bảng Thành Viên có cấp Webapp ID
+        // 1. Kiểm tra bảng tài khoản quản trị nội bộ trước (Hỗ trợ đầy đủ alias: admin, hoangtien, salesang, 0981169200, 0376415131, giamdoc)
+        const BUILTIN_ACCOUNTS = [
+          {
+            username: 'phamhoangtien',
+            aliases: ['phamhoangtien1300', 'phamhoangtien1300@gmail.com', 'hoangtien1300', 'hoangtien', 'admin', '0981169200', '0333885925'],
+            fullName: 'Phạm Hoàng Tiến',
+            roleName: 'Quản trị viên / Điều Hành',
+            avatar: 'PT',
+            phone: '0981169200',
+            passwords: ['0981169200', 'admin@2026', 'SongAnh@2026', '0929224444']
+          },
+          {
+            username: 'vominhsang',
+            aliases: ['salesang', 'sang', '0376415131', '0769766104', 'vominhsang'],
+            fullName: 'Võ Minh Sang',
+            roleName: 'Chuyên viên Kinh Doanh',
+            avatar: 'VS',
+            phone: '0376415131',
+            passwords: ['0376415131', 'SaleSang@2026', 'SongAnh@2026', '0769766104']
+          },
+          {
+            username: 'giamdoc',
+            aliases: ['xuanthien', 'giamdoc', 'director', 'thien'],
+            fullName: 'Mai Xuân Thiện',
+            roleName: 'Ban Giám Đốc',
+            avatar: 'MT',
+            phone: '0929224444',
+            passwords: ['SongAnhGD@2026', 'giamdoc@2026', 'SongAnh@2026', '0929224444']
+          }
+        ];
+
+        const matchedBuiltin = BUILTIN_ACCOUNTS.find(acc => 
+          acc.username === inputUser || 
+          acc.aliases.includes(inputUser) || 
+          (acc.username === 'phamhoangtien' && (inputUser.includes('phamhoangtien') || inputUser.includes('hoangtien'))) ||
+          (acc.username === 'vominhsang' && (inputUser.includes('vominhsang') || inputUser.includes('salesang')))
+        );
+
+        if (matchedBuiltin) {
+          if (matchedBuiltin.passwords.includes(inputPass)) {
+            const token = 'sa_auth_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+            return new Response(JSON.stringify({
+              success: true,
+              user: {
+                username: matchedBuiltin.username,
+                fullName: matchedBuiltin.fullName,
+                roleName: matchedBuiltin.roleName,
+                avatar: matchedBuiltin.avatar,
+                phone: matchedBuiltin.phone
+              },
+              token: token,
+              message: 'Đăng nhập thành công!'
+            }), { headers: corsHeaders });
+          } else {
+            return new Response(JSON.stringify({ 
+              success: false, 
+              message: 'Mật khẩu truy cập không chính xác. Vui lòng kiểm tra lại!' 
+            }), { status: 401, headers: corsHeaders });
+          }
+        }
+
+        // 2. Nếu không khớp builtin, truy vấn Notion Bảng Thành Viên theo Webapp ID
         const nRes = await fetch(`https://api.notion.com/v1/databases/${MEMBERS_DB_ID}/query`, {
           method: 'POST',
           headers: {
@@ -327,6 +388,10 @@ export default {
           const techNames = techList.map(p => p.name || '').filter(Boolean);
           const techStr = techNames.length ? techNames.join(', ') : '-';
 
+          const catList = (props['Danh mục'] && props['Danh mục'].multi_select) || [];
+          const catNames = catList.map(c => c.name || '').filter(Boolean);
+          const catStr = catNames.length ? catNames.join(', ') : 'Kiến trúc';
+
           const noteList = (props['Ghi chú'] && props['Ghi chú'].rich_text) || [];
           const noteVal = noteList.map(t => t.plain_text || '').join('').trim() || 'Đang cập nhật tiến độ chi tiết';
 
@@ -342,6 +407,7 @@ export default {
             assignee: advClean,
             tech: techStr,
             source: srcExact,
+            category: catStr,
             note: noteVal,
             isPotential: isPotential
           });
