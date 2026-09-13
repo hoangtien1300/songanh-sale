@@ -2362,9 +2362,10 @@
      AUTH LOGIN PORTAL OVERLAY (MÔ HÌNH KIẾN TRÚC SONG ANH)
      ======================================================== -->
 <div id="authLoginOverlay" class="auth-overlay">
-    <div class="auth-card-backdrop"></div>
+    <div class="auth-card-backdrop" onclick="AuthManager.closeLoginModal()"></div>
     <div class="auth-container">
-        <div class="auth-card">
+        <div class="auth-card" style="position: relative;">
+            <button type="button" class="auth-modal-close" onclick="AuthManager.closeLoginModal()" title="Đóng / Quay lại xem báo cáo" style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #FFF; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">✕</button>
             <!-- BRAND HEADER -->
             <div class="auth-brand">
                 <div class="auth-logo-badge">
@@ -2415,6 +2416,11 @@
                     <span id="authBtnText">ĐĂNG NHẬP VÀO HỆ THỐNG</span>
                     <span id="authBtnSpinner" class="auth-spinner" style="display: none;"></span>
                 </button>
+                <div style="text-align: center; margin-top: 14px;">
+                    <a href="javascript:void(0)" onclick="AuthManager.closeLoginModal()" style="color: #94A3B8; font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>←</span> <span>Tiếp tục xem Báo Cáo Tuần (không cần đăng nhập)</span>
+                    </a>
+                </div>
             </form>
 
             <!-- FOOTER INFO -->
@@ -5552,6 +5558,12 @@
     // 2. TABS & SIDEBAR LOGIC
     function switchAppTab(tabId, navElement, updateHash = true) {
         if (!tabId || !document.getElementById(tabId)) tabId = 'tab-bao-cao';
+
+        // Nếu là khách chưa đăng nhập và muốn lên đơn hoặc cấu hình: yêu cầu đăng nhập
+        if (!AuthManager.isAuthenticated() && (tabId === 'tab-don-hang-moi' || tabId === 'tab-cai-dat')) {
+            AuthManager.showLoginModal('Vui lòng đăng nhập tài khoản để lên đơn hàng mới hoặc chỉnh sửa cấu hình!');
+            return;
+        }
         document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.sidebar-nav .nav-link').forEach(l => l.classList.remove('active'));
         document.querySelectorAll('.mobile-bottom-nav .bottom-nav-item').forEach(b => b.classList.remove('active'));
@@ -8753,6 +8765,45 @@
             }
         }
 
+        function updateUIForGuestUser() {
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            const nameEl = document.getElementById('sidebarUserName');
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (avatarEl) avatarEl.textContent = 'SA';
+            if (nameEl) nameEl.textContent = 'Ban Giám Đốc';
+            if (roleEl) roleEl.innerHTML = '<span class="live-dot" style="background:#10B981;"></span> Chế độ xem báo cáo';
+
+            // Mở khóa giao diện app ngay lập tức
+            const appLayout = document.querySelector('.app-layout');
+            if (appLayout) {
+                appLayout.classList.remove('app-locked');
+                appLayout.style.display = 'flex';
+            }
+
+            // Ẩn overlay đăng nhập
+            const overlay = document.getElementById('authLoginOverlay');
+            if (overlay) {
+                overlay.classList.add('auth-hidden');
+                overlay.style.display = 'none';
+            }
+
+            // Đổi nút Thoát ở sidebar thành nút Đăng nhập
+            const logoutBtn = document.querySelector('.sidebar-logout-btn');
+            if (logoutBtn) {
+                logoutBtn.setAttribute('onclick', 'AuthManager.showLoginModal()');
+                logoutBtn.setAttribute('title', 'Đăng nhập vào hệ thống');
+                logoutBtn.innerHTML = '<span>🔑</span><span>Đăng nhập</span>';
+            }
+
+            // Đổi nút Đăng xuất ở topbar thành Đăng nhập
+            const topbarLogoutBtn = document.querySelector('.topbar-logout-btn');
+            if (topbarLogoutBtn) {
+                topbarLogoutBtn.setAttribute('onclick', 'AuthManager.showLoginModal()');
+                topbarLogoutBtn.setAttribute('title', 'Đăng nhập vào hệ thống');
+                topbarLogoutBtn.innerHTML = '<span>🔑</span><span class="topbar-logout-text">Đăng nhập</span>';
+            }
+        }
+
         function lockAppUI() {
             const appLayout = document.querySelector('.app-layout');
             if (appLayout) {
@@ -8785,8 +8836,10 @@
                     updateUIForLoggedInUser(sess);
                     return true;
                 } else {
-                    lockAppUI();
-                    return false;
+                    // 🔓 CHẾ ĐỘ XEM BÁO CÁO CÔNG KHAI (KHÔNG CẦN ĐĂNG NHẬP)
+                    // Cho phép Ban Giám Đốc mở thẳng Báo Cáo Sale Tuần (#tab-bao-cao)
+                    updateUIForGuestUser();
+                    return true;
                 }
             },
 
@@ -8867,6 +8920,36 @@
 
             isAuthenticated: function() {
                 return !!getStoredSession();
+            },
+
+            showLoginModal: function(promptMessage) {
+                const overlay = document.getElementById('authLoginOverlay');
+                if (overlay) {
+                    overlay.style.display = 'flex';
+                    overlay.classList.remove('auth-hidden');
+                    const alertBox = document.getElementById('authAlertBox');
+                    if (alertBox) {
+                        if (promptMessage) {
+                            alertBox.className = 'auth-alert auth-alert-warning';
+                            alertBox.innerText = promptMessage;
+                            alertBox.style.display = 'block';
+                        } else {
+                            alertBox.style.display = 'none';
+                        }
+                    }
+                    setTimeout(() => {
+                        const uInput = document.getElementById('authUsername');
+                        if (uInput) uInput.focus();
+                    }, 50);
+                }
+            },
+
+            closeLoginModal: function() {
+                const overlay = document.getElementById('authLoginOverlay');
+                if (overlay) {
+                    overlay.classList.add('auth-hidden');
+                    overlay.style.display = 'none';
+                }
             }
         };
     })();
