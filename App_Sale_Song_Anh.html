@@ -2047,6 +2047,34 @@
             background: #F1F5F9;
             color: #475569;
         }
+        .weekly-chart-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .weekly-chart-nav-btn {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            color: #334155;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .weekly-chart-nav-btn:hover:not(:disabled) {
+            background: var(--gold-light);
+            color: #855C08;
+            border-color: var(--primary-gold);
+        }
+        .weekly-chart-nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
         .weekly-chart-container {
             display: flex;
             align-items: flex-end;
@@ -2299,14 +2327,22 @@
             .weekly-action-buttons { justify-content: flex-start; }
             .workshop-grid { grid-template-columns: 1fr !important; }
 
-            /* TỐI ƯU GIAO DIỆN BIỂU ĐỒ TRÊN MOBILE */
+            /* TỐI ƯU GIAO DIỆN BIỂU ĐỒ TRÊN MOBILE (3 TUẦN GẦN NHẤT + NÚT QUA LẠI, ẨN DÒNG XANH) */
             .weekly-chart-card { padding: 14px 12px; }
-            .weekly-chart-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .weekly-chart-badge { font-size: 0.72rem; width: 100%; justify-content: flex-start; white-space: normal; line-height: 1.35; padding: 6px 10px; }
-            .weekly-chart-container { gap: 6px; min-height: 160px; padding: 10px 2px 6px 2px; }
-            .weekly-bar-item { min-width: 44px; }
-            .weekly-bar-track { height: 75px; max-width: 32px; }
-            .weekly-bar-label { font-size: 0.65rem; margin-top: 4px; }
+            #weeklyChartCompareBadge { display: none !important; }
+            .weekly-chart-header {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 8px !important;
+            }
+            .weekly-chart-title { font-size: 0.74rem !important; }
+            .weekly-chart-nav-btn { padding: 4px 8px !important; font-size: 0.68rem !important; }
+            .weekly-chart-container { gap: 14px; min-height: 160px; padding: 10px 4px 6px 4px; justify-content: space-around; }
+            .weekly-bar-item { min-width: 68px; flex: 1; }
+            .weekly-bar-track { height: 75px; max-width: 44px; }
+            .weekly-bar-label { font-size: 0.68rem; margin-top: 4px; }
             .weekly-chart-footer { flex-direction: column; align-items: flex-start; gap: 6px; }
         }
 
@@ -2941,6 +2977,14 @@
                             <div class="weekly-chart-title">
                                 <span>📊 BIỂU ĐỒ SO SÁNH KHÁCH LIÊN HỆ THEO TUẦN</span>
                             </div>
+                            <div class="weekly-chart-nav">
+                                <button class="weekly-chart-nav-btn" onclick="changeWeeklyChartOffset(1)" id="btnPrevWeekPage" title="Xem các tuần cũ hơn">
+                                    ◀ Cũ hơn
+                                </button>
+                                <button class="weekly-chart-nav-btn" onclick="changeWeeklyChartOffset(-1)" id="btnNextWeekPage" title="Xem các tuần mới hơn" disabled>
+                                    Mới hơn ▶
+                                </button>
+                            </div>
                             <div id="weeklyChartCompareBadge" class="weekly-chart-badge">
                                 <span>Đang tính toán so sánh...</span>
                             </div>
@@ -2966,18 +3010,13 @@
                     </div>
                 </div>
 
-                <!-- 4. DANH SÁCH KHÁCH HÀNG TIẾP NHẬN TRONG TUẦN -->
+                <!-- 4. KHÁCH HÀNG LIÊN HỆ TUẦN -->
                 <div class="card">
                     <div class="card-header">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <span>📋 DANH SÁCH KHÁCH HÀNG TIẾP NHẬN TRONG TUẦN</span>
-                            <span class="nav-link-badge" id="weeklyCustomerCountBadge">0 Khách</span>
+                            <span>📋 Khách hàng liên hệ tuần</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <select id="weeklyDateSort" class="weekly-select" style="padding: 5px 8px; font-size: 0.78rem;" onchange="onWeeklySortChange(this.value)">
-                                <option value="asc" selected>📅 Ngày LH: A ➔ Z (Cũ đến mới)</option>
-                                <option value="desc">📅 Ngày LH: Z ➔ A (Mới đến cũ)</option>
-                            </select>
                             <select id="weeklyStageFilter" class="weekly-select" style="padding: 5px 8px; font-size: 0.78rem;" onchange="onWeeklyStageFilterChange(this.value)">
                                 <option value="all">Tất cả trạng thái</option>
                                 <option value="tuvan">💬 Tư vấn</option>
@@ -2995,9 +3034,7 @@
                                 <tr style="background: #F8FAFC; border-bottom: 2px solid #E2E8F0; text-align: left; color: #475569; font-weight: 700;">
                                     <th style="padding: 10px 12px; width: 4%;">#</th>
                                     <th style="padding: 10px 12px; width: 28%;">TÊN DỰ ÁN &amp; KHÁCH HÀNG</th>
-                                    <th style="padding: 10px 12px; width: 13%; cursor: pointer; user-select: none;" onclick="toggleWeeklyDateSort()" title="Bấm để đảo chiều sắp xếp Ngày Liên Hệ (A-Z / Z-A)">
-                                        NGÀY LH <span id="weeklyDateSortIcon" style="font-size: 0.75rem; color: #B5891A;">▲</span>
-                                    </th>
+                                    <th style="padding: 10px 12px; width: 11%;">NGÀY LH</th>
                                     <th style="padding: 10px 12px; width: 13%;">HẠNG MỤC</th>
                                     <th style="padding: 10px 12px; width: 14%;">NGUỒN LIÊN HỆ</th>
                                     <th style="padding: 10px 12px; width: 12%;">NGƯỜI TƯ VẤN</th>
@@ -8098,13 +8135,38 @@
         buildWeeklyZaloReportText(weeklyProjects, prevCount, delta, growthText, workshopCount);
     }
 
+    let weeklyChartOffset = 0; // 0 = mốc gần nhất, >0 = lùi về các tuần cũ hơn
+    let cachedWeeklyTrendStats = { currentCount: 0, prevCount: 0, delta: 0 };
+
+    function changeWeeklyChartOffset(step) {
+        weeklyChartOffset = Math.max(0, weeklyChartOffset + step);
+        renderWeeklyTrendChart();
+    }
+
     // BIỂU ĐỒ SO SÁNH KHÁCH LIÊN HỆ THEO CÁC TUẦN
     function renderWeeklyTrendChart(currentCount, prevCount, delta) {
         const container = document.getElementById('weeklyBarChartContainer');
         const compareBadge = document.getElementById('weeklyChartCompareBadge');
         if (!container) return;
 
-        // Tính 6 tuần gần nhất tính từ ngày hiện tại
+        if (currentCount !== undefined) cachedWeeklyTrendStats.currentCount = currentCount;
+        if (prevCount !== undefined) cachedWeeklyTrendStats.prevCount = prevCount;
+        if (delta !== undefined) cachedWeeklyTrendStats.delta = delta;
+        currentCount = cachedWeeklyTrendStats.currentCount;
+        prevCount = cachedWeeklyTrendStats.prevCount;
+        delta = cachedWeeklyTrendStats.delta;
+
+        // Cập nhật trạng thái các nút chuyển tuần
+        const prevBtn = document.getElementById('btnPrevWeekPage');
+        const nextBtn = document.getElementById('btnNextWeekPage');
+        if (nextBtn) nextBtn.disabled = (weeklyChartOffset <= 0);
+        if (prevBtn) prevBtn.disabled = (weeklyChartOffset >= 12);
+
+        // Xác định số tuần hiển thị: Trên Mobile hiển thị 3 tuần gần nhất, trên Desktop hiển thị 6 tuần
+        const isMobile = window.innerWidth < 640;
+        const numWeeks = isMobile ? 3 : 6;
+
+        // Tính các mốc tuần dựa trên offset
         const now = new Date();
         const y = now.getFullYear();
         const m = now.getMonth();
@@ -8117,7 +8179,10 @@
         const toShortDM = dt => `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
 
         const weeks = [];
-        for (let i = 5; i >= 0; i--) {
+        const startIndex = (numWeeks - 1) + weeklyChartOffset;
+        const endIndex = weeklyChartOffset;
+
+        for (let i = startIndex; i >= endIndex; i--) {
             const mon = new Date(mondayThisWeek);
             mon.setDate(mondayThisWeek.getDate() - (i * 7));
             const sun = new Date(mon);
@@ -8240,27 +8305,14 @@
             });
         }
 
-        // Sắp xếp danh sách khách hàng từ A-Z theo cột Ngày Liên Hệ (Cũ -> Mới) hoặc Z-A (Mới -> Cũ)
+        // Mặc định sắp xếp danh sách khách hàng từ A-Z theo cột Ngày Liên Hệ (Cũ -> Mới)
         filtered.sort((a, b) => {
             const rawA = a.ngayLienHe || a.rawDate || a.date || '';
             const rawB = b.ngayLienHe || b.rawDate || b.date || '';
             const ymdA = normalizeDateToYMD(rawA) || '9999-99-99';
             const ymdB = normalizeDateToYMD(rawB) || '9999-99-99';
-            if (weeklyDateSortOrder === 'desc') {
-                return ymdB.localeCompare(ymdA);
-            }
             return ymdA.localeCompare(ymdB);
         });
-
-        // Đồng bộ trạng thái hiển thị bộ lọc sắp xếp ngày liên hệ
-        const dateSortSelect = document.getElementById('weeklyDateSort');
-        if (dateSortSelect && dateSortSelect.value !== weeklyDateSortOrder) {
-            dateSortSelect.value = weeklyDateSortOrder;
-        }
-        const dateSortIcon = document.getElementById('weeklyDateSortIcon');
-        if (dateSortIcon) {
-            dateSortIcon.innerText = (weeklyDateSortOrder === 'asc' ? '▲' : '▼');
-        }
 
         const badgeCount = document.getElementById('weeklyCustomerCountBadge');
         if (badgeCount) badgeCount.innerText = `${filtered.length} Khách`;
