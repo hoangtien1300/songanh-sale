@@ -2601,23 +2601,24 @@
                             <span style="font-size: 0.78rem; color: var(--text-muted);" id="sourceScopeLabel">Theo bộ lọc hiện tại</span>
                         </div>
                         <div class="source-distribution-grid">
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_tien')" title="Bấm để xem danh sách khách Zalo / Hotline Tiến" style="cursor: pointer;">
-                                <div class="source-kpi-title">Zalo / Hotline Tiến</div>
+                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_tien')" title="Bấm để xem danh sách khách Steven (0981169200)" style="cursor: pointer;">
+                                <div class="source-kpi-title">Steven (0981169200)</div>
                                 <div class="source-kpi-value" style="color: var(--primary-gold);" id="srcCountTien">0 Khách</div>
                             </div>
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_sep')" title="Bấm để xem danh sách khách Hotline Sếp / BGĐ" style="cursor: pointer;">
-                                <div class="source-kpi-title">Hotline Sếp / BGĐ</div>
+                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_sep')" title="Bấm để xem danh sách khách Hotline Sếp (0929224444)" style="cursor: pointer;">
+                                <div class="source-kpi-title">Hotline Sếp (0929224444)</div>
                                 <div class="source-kpi-value" style="color: #0284C7;" id="srcCountSep">0 Khách</div>
                             </div>
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_sang')" title="Bấm để xem danh sách khách Zalo Sang" style="cursor: pointer;">
-                                <div class="source-kpi-title">Zalo Sang</div>
+                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_sang')" title="Bấm để xem danh sách khách Hotline 3D (0376415131)" style="cursor: pointer;">
+                                <div class="source-kpi-title">Hotline 3D (0376415131)</div>
                                 <div class="source-kpi-value" style="color: #059669;" id="srcCountSang">0 Khách</div>
                             </div>
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_cu')" title="Bấm để xem danh sách khách Cũ &amp; Giới thiệu" style="cursor: pointer;">
-                                <div class="source-kpi-title">Khách Cũ &amp; Giới Thiệu</div>
+                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_cu')" title="Bấm để xem danh sách khách Song Anh Shop &amp; Khác" style="cursor: pointer;">
+                                <div class="source-kpi-title">Song Anh Shop &amp; Khác</div>
                                 <div class="source-kpi-value" style="color: #7C3AED;" id="srcCountCu">0 Khách</div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -2767,16 +2768,18 @@
 
                             <div class="form-group">
                                 <label class="form-label">NGUỒN KHÁCH HÀNG <span class="req">*</span></label>
-                                <input type="text" id="leadSource" class="form-input" value="Sếp" required>
+                                <input type="text" id="leadSource" class="form-input" value="Hotline Sếp (0929224444)" required>
                                 <div class="pill-selector">
-                                    <span class="pill-opt active" onclick="setLeadSource('Sếp', this)">Sếp</span>
-                                    <span class="pill-opt" onclick="setLeadSource('Số Tiến', this)">Số Tiến</span>
-                                    <span class="pill-opt" onclick="setLeadSource('Số Sang', this)">Số Sang</span>
+                                    <span class="pill-opt active" onclick="setLeadSource('Hotline Sếp (0929224444)', this)">Hotline Sếp (0929224444)</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Steven (0981169200)', this)">Steven (0981169200)</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Hotline 3D (0376415131)', this)">Hotline 3D (0376415131)</span>
+                                    <span class="pill-opt" onclick="setLeadSource('Song Anh Shop', this)">Song Anh Shop</span>
                                     <span class="pill-opt" onclick="setLeadSource('Fanpage', this)">Fanpage</span>
                                     <span class="pill-opt" onclick="setLeadSource('Website', this)">Website</span>
                                     <span class="pill-opt" onclick="setLeadSource('Khách cũ', this)">Khách cũ</span>
                                 </div>
                             </div>
+
 
                             <div class="form-group full-width">
                                 <label class="form-label">NỘI DUNG TƯ VẤN BAN ĐẦU / GHI CHÚ TIẾN ĐỘ</label>
@@ -3387,7 +3390,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "30/06 Đã gửi báo giá ⇒ Chờ khách phản hồi",
         "isPotential": false,
         "category": "Sửa chữa - Vệ sinh"
@@ -3403,7 +3406,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "23/7 Bên phía CĐT đang làm kế hoạch kinh phí",
         "isPotential": false,
         "category": "Khác"
@@ -3419,7 +3422,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "16/7 Đã gửi báo giá sửa chữa đợi khách phản hồi • 20/7 Khách phản hồi “Chưa giải trình em lúc nào bên anh sếp duyệt anh báo nhé”",
         "isPotential": false,
         "category": "Sửa chữa - Vệ sinh"
@@ -3435,7 +3438,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: • - 12/08 Đã gửi báo giá • Kỹ thuật: • -  • Thanh toán: • -",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -3467,7 +3470,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Số Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang tư vấn khách",
         "isPotential": false,
         "category": "Mô hình kiến trúc"
@@ -3483,7 +3486,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang làm hồ sơ báo giá",
         "isPotential": false,
         "category": "Mô hình kiến trúc"
@@ -3499,7 +3502,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đã gửi báo giá",
         "isPotential": false,
         "category": "Mô hình kiến trúc"
@@ -3531,7 +3534,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Khác"
@@ -3547,7 +3550,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Nguồn từ Sếp, giao Sang theo và tư vấn",
         "isPotential": false,
         "category": "Sửa chữa - Vệ sinh"
@@ -3563,7 +3566,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Hotline Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • Đã gửi báo giá qua mail 07/09 • Kỹ thuật: •   • Khách có file 3D và 2D nhưng còn chỉnh sửa thêm • Thanh toán:",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3595,7 +3598,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đã gửi báo giá chờ phản hồi • Qua tuần cập nhật thông tin dự án với khách • 28/07 Có nhắn hỏi thăm tiến độ ⇒ Khách chưa có thông tin gì mới",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3611,7 +3614,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: •   • Bục gỗ đã đặt 10/7 ⇒ Cuối tháng giao •   • Kính đã đặt ngày 13/7. Cuối tháng giao • Kỹ thuật: •   • Nhóm Thế Anh đang triển khai • Thanh toán: •   •",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3627,7 +3630,7 @@
         "stageLabel": "💸 Thanh toán",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ:  •   • 21/04 Đã nhận hợp đồng và tạm ứng •   • 18/05 Đã nhận phụ lục mô hình treo tường và tạm ứng •   • Đã gửi HSTT đợt 2  •   • Đã gửi HSTT đợt 3 •   • 11/06 Đã hoàn tất lắp đặt •   • 25/07 Đã gửi bổ sung hồ sơ (giấy bàn giao, giấy cam kết bảo hành) •   • 03/08 Đã gửi bảo hành cho khách",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3659,7 +3662,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp Thiện",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: • - 29/08 Đã gửi báo giá •   • Đề xuất 10% hoa hồng cho anh Quỳnh • Kỹ thuật: • -  • Thanh toán:",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3675,7 +3678,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp Thiện",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • 31/08 Đã gửi báo giá •   • Đề xuất gửi 5% hoa hồng cho anh Tâm • Kỹ thuật: • -  • Thanh toán:",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3691,7 +3694,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • 29/08 Đã gửi báo giá •   • Đề xuất 10% hoa hồng cho anh Quỳnh ⇒ Giảm thẳng vào báo giá • Kỹ thuật: • -  • Thanh toán: • -",
         "isPotential": true,
         "category": "Cao tầng"
@@ -3707,7 +3710,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Hotline Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • Hợp đồng số 01 đã ký và gửi đi •   • Hợp đồng số 02 đang trình ký sếp • Kỹ thuật: •   • Nhóm anh Huynh đang triển khai HĐ số 01 •   • Nhóm anh Hiển dự kiến giao cho HĐ số 02 • Thanh toán: •   • HĐ số 01: đã tạm ứng lần 01 nhưng thiếu 800.000 đ •   • HĐ số 02: Đã tạm ứng lần 01",
         "isPotential": false,
         "category": "Nội thất"
@@ -3723,7 +3726,7 @@
         "stageLabel": "💸 Thanh toán",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Hotline Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • Đã ký hợp đồng điện tử • Kỹ thuật: •   • Đang triển khai chốt 01/09 xong • Thanh toán: •   • Đã thanh toán đợt 1 50%",
         "isPotential": false,
         "category": "Khác"
@@ -3739,7 +3742,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Hotline Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • Đã gửi báo giá đề xuất 10% hoa hồng cho chị Thư • Kỹ thuật: •   • Có file 3D • Thanh toán:",
         "isPotential": true,
         "category": "Cao tầng"
@@ -3787,7 +3790,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: • - 29/08 Qua lễ 02/09 khách phản hồi • Kỹ thuật: • - • Thanh toán: • -",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3835,7 +3838,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang hỏi xin thêm file CAD layout mặt bằng",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -3851,7 +3854,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: • - 14/08 Đang triển khai hợp đồng • Kỹ thuật: •   • Có file 3D •   • Đang triển khai sơ bộ được 03 khối cao tầng • Thanh toán: • - đã tạm ứng lần 01",
         "isPotential": false,
         "category": "Sửa chữa - Vệ sinh"
@@ -3867,7 +3870,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "Hồ sơ: • - 11/08 Đang hỏi thêm thông tin file 3D • Kỹ thuật: •   •  • Thanh toán: • -",
         "isPotential": false,
         "category": "Khác"
@@ -3883,7 +3886,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đã trao đổi thông tin đợi khách gửi bản vẽ",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -3899,7 +3902,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: •   • 08/08 Đã gửi báo giá đợi khách phản hồi • Kỹ thuật: •   •  • Thanh toán: •   •",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -3931,7 +3934,7 @@
         "stageLabel": "💸 Thanh toán",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "Hồ sơ: •   • 11/08 Đã gửi báo giá •   • 24/08 Hợp đồng khách chưa chốt ký • Kỹ thuật: •   • 28/08 đã hoàn tất bàn giao • Thanh toán: •   • 11/08 khách thanh toán tạm ứng lần 1 qua tk cá nhân •   • 28/08 bàn giao vận chuyển thanh toán tk cá nhân lần 02",
         "isPotential": false,
         "category": "Khác"
@@ -3947,7 +3950,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "Đã gửi báo giá cho khách ⇒ Khách chưa phản hồi",
         "isPotential": false,
         "category": "Nội thất"
@@ -3963,7 +3966,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "08/08 Đợi khách gửi file để tổng hợp báo giá",
         "isPotential": false,
         "category": "Cao tầng"
@@ -3979,7 +3982,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "31/07 Đã gửi báo giá đợi khách trình sếp • 03/08 Đã gọi điện (đề xuất với khách 10% hoa hồng) • 08/08 Có nhắn hỏi tiến độ dự án ⇒ đợi khách phản hồi",
         "isPotential": false,
         "category": "Khác"
@@ -4011,7 +4014,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "Hồ sơ: •   • Đã làm hợp đồng ký điện tử • Kỹ thuật: •   • Đã có sẵn file 3D •   • Đang triển khai • Thanh toán: •   • Tạm ứng lần 01",
         "isPotential": true,
         "category": "Kiến trúc"
@@ -4027,7 +4030,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: •   • Đã gửi báo giá •   • Khách đang lên hồ sơ triển khai • Kỹ thuật: •   •  • Thanh toán: •   •",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4059,7 +4062,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "Sang theo • 08/08 chưa có thông tin mới",
         "isPotential": false,
         "category": "Khác"
@@ -4075,7 +4078,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "09/08 Chờ khách gửi file",
         "isPotential": false,
         "category": "Khác"
@@ -4091,7 +4094,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "03/07 Đã gửi báo giá ⇒ Chờ khách phản hồi",
         "isPotential": false,
         "category": "Quân sư"
@@ -4107,7 +4110,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "12/7 Khách phản hồi “đang gửi cho bên quản lý thiết kế review giá, có gì e báo lại mình sớm”",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4123,7 +4126,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "01/07 Đã gửi báo giá ⇒ Chờ khách phản hồi",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -4139,7 +4142,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "25/06 Đã gửi báo giá ⇒ Chờ khách phản hồi",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4155,7 +4158,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "08/08 Có nhắc khách review phương án triển khai báo giá nhưng khách chưa phản hồi",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4171,7 +4174,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "03/06 Đã gửi báo giá và đề xuất 5% hoa hồng cho anh Mạnh Vũ ⇒ Chờ khách phản hồi • 09/06 Khách báo đã trình báo giá ⇒ Chờ bên Trung Quốc về VN sẽ họp triển khai • 23/07 Đã nhắn tin hỏi tiến độ dự án, khách chưa phản hồi • 03/08 Khách không phản hồi",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4187,7 +4190,7 @@
         "stageLabel": "🤝 Hợp đồng",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "02/06 Đã gửi hợp đồng ⇒ Chờ khách trình ký và tạm ứng • 25/06 Đã nhắc lại ⇒ Khách phản hồi chờ sếp đi công tác về ký • 25/07 Khách chưa phản hồi về hợp đồng, Qua tuần nhắc khách • 08/08 Đã nhắc khách nhưng chưa có phản hồi",
         "isPotential": false,
         "category": "KCN"
@@ -4203,7 +4206,7 @@
         "stageLabel": "💸 Thanh toán",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "• Anh Nhã đang làm hồ sơ thanh toán gộp đợt 2 - 3  •   • Chờ gửi hstt đợt 2-3 và hstt vệ sinh thay đèn •   • 25/07 gửi hồ sơ bổ sung để tiến hành thanh toán đợt 2 - 3 •   • Đã thanh toán và gửi lại hồ sơ, Đợi bên mình bổ sung thêm cam kết bảo hành •   • Đã gửi bổ sung giấy cam kết bảo hành 08/03",
         "isPotential": false,
         "category": "Cao tầng"
@@ -4251,7 +4254,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "05/08 Đã cập nhật lại thông tin báo giá với chị đợi phản hồi",
         "isPotential": false,
         "category": "Khác"
@@ -4267,7 +4270,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: • - 07/08 Nhận được hợp đồng khách ký • Kỹ thuật: • - 25/08 Hoàn thành 70% đơn hàng • Thanh toán: • - khách đã thanh toán tạm ứng lần 1",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4283,7 +4286,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "29/7 Khách báo hôm nay họp với CĐT để trình các phương án, nếu cần tư vấn thêm thì CĐT sẽ liên hệ trực tiếp với bên mình",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4315,7 +4318,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Số Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "Đang đợi làm báo giá",
         "isPotential": false,
         "category": "Mô hình quy hoạch"
@@ -4331,7 +4334,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "24/7 Khách chưa có thông tin đầy đủ ⇒ Đang tư vấn xin thêm thông tin",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4347,7 +4350,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "6/8 đã phản hồi khách tự làm việc phần thiết kế với team và cho thông tin thực hiện sa bàn.  Vì khoảng cách xa nên khảo sát sẽ tốn nhiều chi phí và thời gian thực hiện ⇒ Đợi phản hồi",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4363,7 +4366,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "20/08 khách đã chốt và duyệt thiết kế và cần bào giá thic ông bằng vật liệu tôn Hoa Sen cung cấp",
         "isPotential": false,
         "category": "Thiết kế"
@@ -4379,7 +4382,7 @@
         "stageLabel": "💸 Thanh toán",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "Hồ sơ: •   • Đã gửi báo giá phát sinh ⇒ Đợi khách phản hồi •   • Dự án có ký bảo mật nên không được phát tán • Kỹ thuật: •   • Khách đã ký nghiệm thu và có yêu cầu báo giá thêm phần phát sinh cho giai đoạn 2 ⇒ Đợi khách •   • Kính và gỗ đã đặt ⇒ đã giao. •   • Đợi khách gửi file logo báo giá làm thêm • Thanh toán •   • Khách đã thanh toán đợt 1/2. •   • Đợi kỹ thuật hoàn thành nghiệm thu tại xưởng gửi DNTT đợt 2 ⇒ Đã làm sẵn DNTT đợt 2",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4427,7 +4430,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Chị Thuỷ",
+        "source": "Song Anh Shop",
         "note": "Đợi làm báo giá",
         "isPotential": false,
         "category": "Mô hình nội thất"
@@ -4443,7 +4446,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Mô hình kiến trúc"
@@ -4454,7 +4457,7 @@
         "date": "10/09/2026",
         "rawDate": "2026-09-10T09:00:00.000+07:00",
         "nhacHen": "2026-09-10T09:00:00.000+07:00",
-        "ngayLienHe": "",
+        "ngayLienHe": "2026-01-29",
         "stage": "danglam",
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Phạm Hoàng Tiến",
@@ -4475,7 +4478,7 @@
         "stageLabel": "🏗️ Đang làm",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ •   • 07/09 HD và PLHD01 bản cứng đã nhận • Kỹ thuật •   • Kính và bục gỗ đã giao •   • 7/9 Khách thông báo dời lại ngày giao do kế hoạch bên khách thay đổi. Sẽ thông báo lại sau • Thanh toán •   • Hợp đồng: Đã tạm ứng (cá nhân) đợt 1 •   • PLHD: 19/8 Khách đã tạm ứng đợt (Cty)",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4491,7 +4494,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Số Sang",
+        "source": "Hotline 3D (0376415131)",
         "note": "Đã gửi báo giá",
         "isPotential": false,
         "category": "Khác"
@@ -4507,7 +4510,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "8/9 Hỏi thăm tình trạng dự án",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4523,7 +4526,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ •   • Đợi Sang điều chỉnh file gửi anh Trung xem",
         "isPotential": false,
         "category": "Cao tầng"
@@ -4539,7 +4542,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Hồ sơ: •   • Khách yêu cầu thiết kế lại 3D toàn dự án ⇒ Ko được ⇒ Đang theo dõi",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4555,7 +4558,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Chị Thủy",
+        "source": "Song Anh Shop",
         "note": "30/06 Đã gửi báo giá ⇒ Chờ khách phản hồi • 03/07 Khách gọi trao đổi phương án thực hiện • 13/07 Đã hỏi thăm ⇒ Đang chờ duyệt tài chính",
         "isPotential": false,
         "category": "Khác"
@@ -4571,7 +4574,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang làm hồ sơ báo giá",
         "isPotential": false,
         "category": "Mô hình kiến trúc"
@@ -4587,7 +4590,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "11/8 chị Vũ Vui phản hồi dự án bị tạm pending. Khi nào chạy lại sẽ liên hệ",
         "isPotential": false,
         "category": "Nội thất"
@@ -4603,7 +4606,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Anh An phản hồi đã bàn giao cho Sếp trên theo trực tiếp. Chưa thấy gọi. Chắc đang hoãn hoặc đợi xây xong Sale Galery",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4619,7 +4622,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đã gửi khách kích thước file Scale 1/500 đợi phản hồi • 31/7 Hỏi thăm khách ⇒ Khách báo phía CĐT chưa phản hồi",
         "isPotential": false,
         "category": "KCN"
@@ -4651,7 +4654,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Hotline Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Thu mua"
@@ -4683,7 +4686,7 @@
         "stageLabel": "🧾 Báo giá",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Anh Tiến",
+        "source": "Steven (0981169200)",
         "note": "Mấy sếp vẫn đang cân nhắc xem xét ⇒ Có thông tin sẽ liên hệ",
         "isPotential": false,
         "category": "Quy hoạch"
@@ -4699,7 +4702,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Hotline Tiến",
+        "source": "Steven (0981169200)",
         "note": "• Đang check fiel và tư vấn qua Wechat",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -4731,7 +4734,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Sếp Thiện",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Cao tầng"
@@ -4763,7 +4766,7 @@
         "stageLabel": "🆕 Mới",
         "assignee": "Võ Minh Sang",
         "tech": "-",
-        "source": "Zalo Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Khác"
@@ -5147,7 +5150,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "- Đã gửi báo giá, đã gửi HSNL cho KH.",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5307,7 +5310,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -5435,7 +5438,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5467,7 +5470,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5483,7 +5486,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5499,7 +5502,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5531,7 +5534,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5547,7 +5550,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5563,7 +5566,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5579,7 +5582,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -5595,7 +5598,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5643,7 +5646,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5659,7 +5662,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Khác"
@@ -5691,7 +5694,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5707,7 +5710,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "a Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5723,7 +5726,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Trường học"
@@ -5739,7 +5742,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Tiến",
+        "source": "Steven (0981169200)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5755,7 +5758,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Sửa chữa - Vệ sinh"
@@ -5771,7 +5774,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -5787,7 +5790,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Nhà máy - Thiết bị"
@@ -5803,7 +5806,7 @@
         "stageLabel": "💬 Tư vấn",
         "assignee": "Phạm Hoàng Tiến",
         "tech": "-",
-        "source": "Sếp",
+        "source": "Hotline Sếp (0929224444)",
         "note": "Đang cập nhật tiến độ chi tiết",
         "isPotential": false,
         "category": "Kiến trúc"
@@ -6066,11 +6069,12 @@
         filteredLeads.forEach(p => {
             const src = (p.source || '').toLowerCase();
             const adv = (p.assignee || '').toLowerCase();
-            if (src.includes('tiến') || adv.includes('tiến')) countTien++;
-            else if (src.includes('sếp') || src.includes('bgđ') || src.includes('thiện')) countSep++;
-            else if (src.includes('sang') || adv.includes('sang')) countSang++;
+            if (src.includes('tiến') || src.includes('steven') || src.includes('0981169200') || adv.includes('tiến')) countTien++;
+            else if (src.includes('sếp') || src.includes('bgđ') || src.includes('thiện') || src.includes('0929224444')) countSep++;
+            else if (src.includes('sang') || src.includes('0376415131') || adv.includes('sang')) countSang++;
             else countCu++;
         });
+
 
         const srcTienEl = document.getElementById('srcCountTien');
         const srcSepEl = document.getElementById('srcCountSep');
@@ -6867,40 +6871,44 @@
             list = pipelineData.filter(p => p.isPotential === true && p.stage !== 'huy' && p.stage !== 'hoanthanh' && p.stage !== 'thanhtoan');
         } else if (type === 'src_tien') {
             icon = '📱';
-            title = 'Khách Hàng Nguồn Zalo / Hotline Tiến';
+            title = 'Khách Hàng Nguồn Steven (0981169200)';
             subtitle = 'Phân bổ theo bộ lọc thời gian hiện tại';
             list = filteredLeads.filter(p => {
                 const s = (p.source || '').toLowerCase();
                 const a = (p.assignee || '').toLowerCase();
-                return s.includes('tiến') || a.includes('tiến');
+                return s.includes('tiến') || s.includes('steven') || s.includes('0981169200') || a.includes('tiến');
             });
         } else if (type === 'src_sep') {
-            icon = '🏢';
-            title = 'Khách Hàng Nguồn Hotline Sếp / BGĐ';
+            icon = '📞';
+            title = 'Khách Hàng Nguồn Hotline Sếp (0929224444)';
             subtitle = 'Phân bổ theo bộ lọc thời gian hiện tại';
             list = filteredLeads.filter(p => {
                 const s = (p.source || '').toLowerCase();
-                return s.includes('sếp') || s.includes('bgđ') || s.includes('thiện');
+                return s.includes('sếp') || s.includes('bgđ') || s.includes('thiện') || s.includes('0929224444');
             });
         } else if (type === 'src_sang') {
             icon = '📱';
-            title = 'Khách Hàng Nguồn Zalo Sang';
+            title = 'Khách Hàng Nguồn Hotline 3D (0376415131)';
             subtitle = 'Phân bổ theo bộ lọc thời gian hiện tại';
             list = filteredLeads.filter(p => {
                 const s = (p.source || '').toLowerCase();
                 const a = (p.assignee || '').toLowerCase();
-                return s.includes('sang') || a.includes('sang');
+                return s.includes('sang') || s.includes('0376415131') || a.includes('sang');
             });
         } else if (type === 'src_cu') {
-            icon = '🔄';
-            title = 'Khách Hàng Cũ & Giới Thiệu';
+            icon = '🛍️';
+            title = 'Khách Hàng Nguồn Song Anh Shop & Khác';
             subtitle = 'Phân bổ theo bộ lọc thời gian hiện tại';
             list = filteredLeads.filter(p => {
                 const s = (p.source || '').toLowerCase();
                 const a = (p.assignee || '').toLowerCase();
-                return !s.includes('tiến') && !a.includes('tiến') && !s.includes('sếp') && !s.includes('bgđ') && !s.includes('thiện') && !s.includes('sang') && !a.includes('sang');
+                const isTien = s.includes('tiến') || s.includes('steven') || s.includes('0981169200') || a.includes('tiến');
+                const isSep = s.includes('sếp') || s.includes('bgđ') || s.includes('thiện') || s.includes('0929224444');
+                const isSang = s.includes('sang') || s.includes('0376415131') || a.includes('sang');
+                return !isTien && !isSep && !isSang;
             });
         } else {
+
             list = [...pipelineData];
         }
 
