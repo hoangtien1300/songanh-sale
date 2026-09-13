@@ -1943,19 +1943,34 @@
             flex-wrap: wrap;
         }
 
-        /* WEEKLY KPI GRID */
-        .weekly-kpi-grid {
+        /* WEEKLY OVERVIEW GRID (2-COLUMN: STATS STACK + WEEKLY COMPARISON BAR CHART) */
+        .weekly-overview-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
+            grid-template-columns: 270px 1fr;
+            gap: 16px;
             margin-bottom: 20px;
+            align-items: stretch;
+        }
+
+        .weekly-stat-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .weekly-stat-stack .weekly-kpi-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 16px 18px;
         }
 
         .weekly-kpi-card {
             background: #FFFFFF;
             border: 1px solid var(--card-border);
             border-radius: 10px;
-            padding: 14px 16px;
+            padding: 16px 18px;
             position: relative;
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             transition: transform 0.2s, box-shadow 0.2s;
@@ -1974,7 +1989,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .weekly-kpi-label {
             font-size: 0.72rem;
@@ -1984,19 +1999,135 @@
             letter-spacing: 0.5px;
         }
         .weekly-kpi-icon {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
         }
         .weekly-kpi-val {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 800;
             color: #0F172A;
             line-height: 1.1;
         }
-        .weekly-kpi-sub {
+
+        /* WEEKLY COMPARISON BAR CHART */
+        .weekly-chart-card {
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .weekly-chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .weekly-chart-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1E293B;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .weekly-chart-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #F1F5F9;
+            color: #475569;
+        }
+        .weekly-chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 130px;
+            padding: 10px 6px 0 6px;
+            border-bottom: 1px solid #E2E8F0;
+            overflow-x: auto;
+        }
+        .weekly-bar-item {
+            flex: 1;
+            min-width: 52px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .weekly-bar-item:hover .weekly-bar-fill {
+            filter: brightness(1.15);
+            transform: scaleY(1.02);
+        }
+        .weekly-bar-count {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #334155;
+            margin-bottom: 5px;
+            transition: color 0.2s;
+        }
+        .weekly-bar-track {
+            width: 100%;
+            max-width: 36px;
+            height: 80px;
+            background: #F1F5F9;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            position: relative;
+        }
+        .weekly-bar-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 6px 6px 0 0;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 4px;
+        }
+        .weekly-bar-item.active .weekly-bar-fill {
+            background: linear-gradient(180deg, #EAB308 0%, #B5891A 100%);
+            box-shadow: 0 0 10px rgba(181, 137, 26, 0.4);
+        }
+        .weekly-bar-item.active .weekly-bar-count {
+            color: #B5891A;
+            font-size: 0.95rem;
+        }
+        .weekly-bar-label {
+            font-size: 0.7rem;
+            color: #64748B;
+            margin-top: 6px;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .weekly-bar-item.active .weekly-bar-label {
+            color: #B5891A;
+            font-weight: 800;
+        }
+        .weekly-chart-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
             font-size: 0.72rem;
             color: #64748B;
-            margin-top: 4px;
-            font-weight: 500;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         /* 2-COLUMN ANALYTICS GRID */
@@ -2154,10 +2285,15 @@
         .report-desktop-table { display: block; }
         .report-mobile-cards { display: none; }
 
+        @media (max-width: 768px) {
+            .weekly-overview-grid { grid-template-columns: 1fr !important; gap: 12px; }
+            .weekly-stat-stack { flex-direction: row; }
+        }
+
         @media (max-width: 639px) {
             .report-desktop-table { display: none !important; }
             .report-mobile-cards { display: flex !important; flex-direction: column; gap: 10px; }
-            .weekly-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+            .weekly-stat-stack { flex-direction: column; }
             .weekly-analytics-grid { grid-template-columns: 1fr !important; gap: 14px; }
             .weekly-toolbar { flex-direction: column; align-items: stretch !important; }
             .weekly-action-buttons { justify-content: flex-start; }
@@ -2803,39 +2939,57 @@
                     </div>
                 </div>
 
-                <!-- 3. KPI TỔNG QUAN & SO SÁNH VỚI DATA CŨ -->
-                <div class="weekly-kpi-grid">
-                    <div class="weekly-kpi-card kpi-gold">
-                        <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Tổng Khách Hàng Liên Hệ</span>
-                            <span class="weekly-kpi-icon">👥</span>
+                <!-- 3. TỔNG QUAN & BIỂU ĐỒ SO SÁNH DATA THEO TUẦN -->
+                <div class="weekly-overview-grid">
+                    <!-- CỘT 1: 2 THẺ THỐNG KÊ CHÍNH (GOM VÀO 1 CỘT, BỎ DÒNG TEXT PHỤ) -->
+                    <div class="weekly-stat-stack">
+                        <!-- THẺ 1: TỔNG KHÁCH HÀNG LIÊN HỆ -->
+                        <div class="weekly-kpi-card kpi-gold">
+                            <div class="weekly-kpi-header">
+                                <span class="weekly-kpi-label">Tổng Khách Hàng Liên Hệ</span>
+                                <span class="weekly-kpi-icon">👥</span>
+                            </div>
+                            <div class="weekly-kpi-val" id="kpiWeeklyTotal">00</div>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyTotal">00</div>
-                        <div class="weekly-kpi-sub" id="kpiWeeklyTotalSub">Phạm vi: 07/09/2026 - 13/09/2026</div>
+
+                        <!-- THẺ 2: TỔNG DỰ ÁN ĐANG LÀM -->
+                        <div class="weekly-kpi-card kpi-blue">
+                            <div class="weekly-kpi-header">
+                                <span class="weekly-kpi-label">Tổng Dự Án Đang Làm</span>
+                                <span class="weekly-kpi-icon">🏗️</span>
+                            </div>
+                            <div class="weekly-kpi-val" id="kpiWeeklyWorkshopTotal">00</div>
+                        </div>
                     </div>
-                    <div class="weekly-kpi-card kpi-blue">
-                        <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Tổng Dự Án Đang Làm</span>
-                            <span class="weekly-kpi-icon">🏗️</span>
+
+                    <!-- CỘT 2: BIỂU ĐỒ SO SÁNH KHÁCH LIÊN HỆ THEO TUẦN (RỘNG) -->
+                    <div class="weekly-chart-card">
+                        <div class="weekly-chart-header">
+                            <div class="weekly-chart-title">
+                                <span>📊 BIỂU ĐỒ SO SÁNH KHÁCH LIÊN HỆ THEO TUẦN</span>
+                            </div>
+                            <div id="weeklyChartCompareBadge" class="weekly-chart-badge">
+                                <span>Đang tính toán so sánh...</span>
+                            </div>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyWorkshopTotal">00</div>
-                        <div class="weekly-kpi-sub" id="kpiWeeklyWorkshopSub">Xưởng Song Anh đang thi công</div>
-                    </div>
-                    <div class="weekly-kpi-card kpi-purple" id="cardWeeklyPrevData" style="cursor: pointer;" title="Bấm để xem dữ liệu kỳ đối chiếu này" onclick="jumpToPreviousPeriod()">
-                        <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Data Cũ (Kỳ Trước)</span>
-                            <span class="weekly-kpi-icon">📅</span>
+                        <div class="weekly-chart-container" id="weeklyBarChartContainer">
+                            <!-- Rendered dynamically by renderWeeklyTrendChart() -->
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyPrevTotal">00</div>
-                        <div class="weekly-kpi-sub" id="kpiWeeklyPrevSub">Tuần trước: 31/08 - 06/09/2026</div>
-                    </div>
-                    <div class="weekly-kpi-card kpi-green">
-                        <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">So Sánh Với Data Cũ</span>
-                            <span class="weekly-kpi-icon" id="kpiWeeklyGrowthIcon">📈</span>
+                        <div class="weekly-chart-footer">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <span style="display: inline-flex; align-items: center; gap: 5px;">
+                                    <span style="display: inline-block; width: 10px; height: 10px; background: #B5891A; border-radius: 2px;"></span>
+                                    <strong style="color: #1E293B;">Tuần đang xem</strong>
+                                </span>
+                                <span style="display: inline-flex; align-items: center; gap: 5px;">
+                                    <span style="display: inline-block; width: 10px; height: 10px; background: #3B82F6; border-radius: 2px;"></span>
+                                    <span>Các tuần trước</span>
+                                </span>
+                            </div>
+                            <div id="weeklyChartHintText" style="font-size: 0.72rem; color: #94A3B8;">
+                                💡 Bấm vào cột bất kỳ để lọc dữ liệu theo tuần đó
+                            </div>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyGrowth">0%</div>
-                        <div class="weekly-kpi-sub" id="kpiWeeklyGrowthSub">Chênh lệch so với kỳ đối chiếu</div>
                     </div>
                 </div>
 
@@ -7918,48 +8072,157 @@
             }
         }
 
-        // Cập nhật DOM các thẻ KPI
+        // Cập nhật DOM 2 thẻ KPI chính (Gom vào 1 cột, bỏ các text phụ)
         const elTotal = document.getElementById('kpiWeeklyTotal');
-        const elTotalSub = document.getElementById('kpiWeeklyTotalSub');
         const elWorkshop = document.getElementById('kpiWeeklyWorkshopTotal');
-        const elWorkshopSub = document.getElementById('kpiWeeklyWorkshopSub');
-        const elPrev = document.getElementById('kpiWeeklyPrevTotal');
-        const elPrevSub = document.getElementById('kpiWeeklyPrevSub');
-        const elGrowth = document.getElementById('kpiWeeklyGrowth');
-        const elGrowthSub = document.getElementById('kpiWeeklyGrowthSub');
-        const elGrowthIcon = document.getElementById('kpiWeeklyGrowthIcon');
 
         if (elTotal) elTotal.innerText = totalCount < 10 && totalCount >= 0 ? '0' + totalCount : totalCount;
-        if (elTotalSub) {
-            elTotalSub.innerText = totalCount === 0 
-                ? `Chưa có khách trong kỳ (${formatVNStandardDate(currentWeeklyFilter.startDate)} - ${formatVNStandardDate(currentWeeklyFilter.endDate)})`
-                : `Phạm vi: ${formatVNStandardDate(currentWeeklyFilter.startDate)} - ${formatVNStandardDate(currentWeeklyFilter.endDate)}`;
-        }
-
         if (elWorkshop) elWorkshop.innerText = workshopCount < 10 && workshopCount >= 0 ? '0' + workshopCount : workshopCount;
-        if (elWorkshopSub) elWorkshopSub.innerText = `${workshopCount} dự án xưởng Song Anh đang thi công`;
 
-        if (elPrev) elPrev.innerText = prevCount < 10 && prevCount >= 0 ? '0' + prevCount : prevCount;
-        if (elPrevSub) elPrevSub.innerText = currentWeeklyFilter.prevLabel || 'Không có mốc đối chiếu';
+        // 2. RENDER BIỂU ĐỒ SO SÁNH DATA THEO TUẦN (CỘT RỘNG BÊN PHẢI)
+        renderWeeklyTrendChart(totalCount, prevCount, delta);
 
-        if (elGrowth) elGrowth.innerHTML = growthHtml;
-        if (elGrowthSub) elGrowthSub.innerText = growthSub;
-        if (elGrowthIcon) elGrowthIcon.innerText = growthIcon;
-
-        // 2. RENDER CUSTOMER LIST (TABLE & MOBILE CARDS)
+        // 3. RENDER CUSTOMER LIST (TABLE & MOBILE CARDS)
         renderWeeklyCustomerList();
 
-        // 3. RENDER CATEGORY BREAKDOWN
+        // 4. RENDER CATEGORY BREAKDOWN
         renderWeeklyCategoryBreakdown(weeklyProjects);
 
-        // 4. RENDER SOURCE BREAKDOWN
+        // 5. RENDER SOURCE BREAKDOWN
         renderWeeklySourceBreakdown(weeklyProjects);
 
-        // 5. RENDER WORKSHOP PROJECTS (DỰ ÁN ĐANG LÀM)
+        // 6. RENDER WORKSHOP PROJECTS (DỰ ÁN ĐANG LÀM)
         renderWeeklyWorkshopProjects();
 
-        // 6. BUILD ZALO/TELEGRAM REPORT TEXT
+        // 7. BUILD ZALO/TELEGRAM REPORT TEXT
         buildWeeklyZaloReportText(weeklyProjects, prevCount, delta, growthText, workshopCount);
+    }
+
+    // BIỂU ĐỒ SO SÁNH KHÁCH LIÊN HỆ THEO CÁC TUẦN
+    function renderWeeklyTrendChart(currentCount, prevCount, delta) {
+        const container = document.getElementById('weeklyBarChartContainer');
+        const compareBadge = document.getElementById('weeklyChartCompareBadge');
+        if (!container) return;
+
+        // Tính 6 tuần gần nhất tính từ ngày hiện tại
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = now.getMonth();
+        const d = now.getDate();
+        const day = now.getDay();
+        const mondayDiff = day === 0 ? -6 : 1 - day;
+        const mondayThisWeek = new Date(y, m, d + mondayDiff);
+
+        const toYMD = dt => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+        const toShortDM = dt => `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
+
+        const weeks = [];
+        for (let i = 5; i >= 0; i--) {
+            const mon = new Date(mondayThisWeek);
+            mon.setDate(mondayThisWeek.getDate() - (i * 7));
+            const sun = new Date(mon);
+            sun.setDate(mon.getDate() + 6);
+
+            const startYmd = toYMD(mon);
+            const endYmd = toYMD(sun);
+
+            const count = pipelineData.filter(p => {
+                const raw = p.ngayLienHe || p.rawDate || p.date || '';
+                const ymd = normalizeDateToYMD(raw);
+                return ymd && ymd >= startYmd && ymd <= endYmd;
+            }).length;
+
+            const isCurrentWeek = (i === 0);
+            const isSelected = (currentWeeklyFilter.startDate === startYmd && currentWeeklyFilter.endDate === endYmd);
+
+            weeks.push({
+                startYmd,
+                endYmd,
+                label: `${toShortDM(mon)} - ${toShortDM(sun)}`,
+                fullLabel: `Tuần ${formatVNStandardDate(startYmd)} - ${formatVNStandardDate(endYmd)}`,
+                count,
+                isCurrentWeek,
+                isSelected
+            });
+        }
+
+        const maxCount = Math.max(1, ...weeks.map(w => w.count));
+
+        let barsHtml = '';
+        weeks.forEach(w => {
+            const heightPercent = Math.max(6, Math.round((w.count / maxCount) * 100));
+            const activeClass = w.isSelected ? 'active' : '';
+            const tag = w.isCurrentWeek ? '<span style="font-size: 0.65rem; color: #B5891A; font-weight: 800; display: block;">(Tuần này)</span>' : '';
+            const countStr = w.count < 10 && w.count > 0 ? '0' + w.count : w.count;
+
+            barsHtml += `
+                <div class="weekly-bar-item ${activeClass}" 
+                     title="${w.fullLabel}: ${w.count} khách liên hệ. Bấm để lọc dữ liệu tuần này."
+                     onclick="selectWeekFromChart('${w.startYmd}', '${w.endYmd}')">
+                    <span class="weekly-bar-count">${countStr}</span>
+                    <div class="weekly-bar-track">
+                        <div class="weekly-bar-fill" style="height: ${heightPercent}%;"></div>
+                    </div>
+                    <span class="weekly-bar-label">${w.label}${tag}</span>
+                </div>
+            `;
+        });
+        container.innerHTML = barsHtml;
+
+        // Cập nhật Badge so sánh trên Header biểu đồ
+        if (compareBadge) {
+            if (currentWeeklyFilter.type === 'all') {
+                compareBadge.innerHTML = `<span>Toàn bộ dữ liệu (${currentCount} khách)</span>`;
+                compareBadge.style.background = '#F1F5F9';
+                compareBadge.style.color = '#475569';
+            } else if (prevCount === 0) {
+                if (currentCount > 0) {
+                    compareBadge.innerHTML = `<span style="color: #16A34A; font-weight: 800;">📈 +${currentCount} khách mới (Kỳ trước: 0 khách)</span>`;
+                    compareBadge.style.background = '#DCFCE7';
+                } else {
+                    compareBadge.innerHTML = `<span style="color: #64748B; font-weight: 700;">➖ 0 khách (Bằng kỳ trước: 0 khách)</span>`;
+                    compareBadge.style.background = '#F1F5F9';
+                }
+            } else {
+                const pct = ((delta / prevCount) * 100).toFixed(1);
+                if (delta > 0) {
+                    compareBadge.innerHTML = `<span style="color: #16A34A; font-weight: 800;">▲ +${delta} khách (+${pct}%) so với ${currentWeeklyFilter.prevLabel || 'kỳ trước'} (${prevCount} khách)</span>`;
+                    compareBadge.style.background = '#DCFCE7';
+                } else if (delta < 0) {
+                    compareBadge.innerHTML = `<span style="color: #DC2626; font-weight: 800;">▼ ${delta} khách (${pct}%) so với ${currentWeeklyFilter.prevLabel || 'kỳ trước'} (${prevCount} khách)</span>`;
+                    compareBadge.style.background = '#FEE2E2';
+                } else {
+                    compareBadge.innerHTML = `<span style="color: #64748B; font-weight: 700;">━ 0 khách (0%) bằng ${currentWeeklyFilter.prevLabel || 'kỳ trước'} (${prevCount} khách)</span>`;
+                    compareBadge.style.background = '#F1F5F9';
+                }
+            }
+        }
+    }
+
+    function selectWeekFromChart(startYmd, endYmd) {
+        const presets = computeWeeklyDatePresets();
+        let matchedKey = 'custom';
+        for (const k in presets) {
+            if (presets[k].start === startYmd && presets[k].end === endYmd) {
+                matchedKey = k;
+                break;
+            }
+        }
+
+        const sel = document.getElementById('weeklySelectFilter');
+        if (sel) sel.value = matchedKey;
+
+        if (matchedKey === 'custom') {
+            const customBox = document.getElementById('weeklyCustomRangeBox');
+            if (customBox) customBox.style.display = 'inline-flex';
+            const sInput = document.getElementById('weeklyCustomStart');
+            const eInput = document.getElementById('weeklyCustomEnd');
+            if (sInput) sInput.value = startYmd;
+            if (eInput) eInput.value = endYmd;
+            onWeeklyCustomDateChange();
+        } else {
+            onWeeklyFilterSelectChange(matchedKey);
+        }
     }
 
     // Sub-render: Customer list table
