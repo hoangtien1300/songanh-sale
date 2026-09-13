@@ -8709,11 +8709,14 @@
 
         function saveSession(user, remember) {
             const duration = remember ? (30 * 24 * 60 * 60 * 1000) : (12 * 60 * 60 * 1000); // 30 ngày hoặc 12 tiếng
+            const rawPerm = (user.permission || '').toLowerCase();
+            const perm = rawPerm === 'admin' || user.roleCode === 'admin' || (user.username && user.username.includes('tien')) ? 'admin' : 'member';
             const sess = {
                 username: user.username,
                 fullName: user.fullName,
                 roleName: user.roleName,
-                roleCode: user.roleCode || 'member',
+                roleCode: user.roleCode || perm,
+                permission: perm,
                 avatar: user.avatar || 'SA',
                 expiresAt: Date.now() + duration,
                 token: user.token || ('sa_' + Math.random().toString(36).substring(2) + Date.now().toString(36))
@@ -8920,6 +8923,16 @@
 
             isAuthenticated: function() {
                 return !!getStoredSession();
+            },
+
+            isAdmin: function() {
+                const sess = getStoredSession();
+                return !!(sess && (sess.permission === 'admin' || sess.roleCode === 'admin'));
+            },
+
+            getPermission: function() {
+                const sess = getStoredSession();
+                return sess ? (sess.permission || 'member') : 'guest';
             },
 
             showLoginModal: function(promptMessage) {

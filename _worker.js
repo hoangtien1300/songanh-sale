@@ -67,6 +67,7 @@ export default {
             aliases: ['phamhoangtien1300', 'phamhoangtien1300@gmail.com', 'hoangtien1300', 'hoangtien', 'admin', '0981169200', '0333885925'],
             fullName: 'Phạm Hoàng Tiến',
             roleName: 'Quản trị viên / Điều Hành',
+            permission: 'admin',
             avatar: 'PT',
             phone: '0981169200',
             passwords: ['0981169200', 'admin@2026', 'SongAnh@2026', '0929224444']
@@ -76,6 +77,7 @@ export default {
             aliases: ['salesang', 'sang', '0376415131', '0769766104', 'vominhsang'],
             fullName: 'Võ Minh Sang',
             roleName: 'Chuyên viên Kinh Doanh',
+            permission: 'member',
             avatar: 'VS',
             phone: '0376415131',
             passwords: ['0376415131', 'SaleSang@2026', 'SongAnh@2026', '0769766104']
@@ -85,6 +87,7 @@ export default {
             aliases: ['xuanthien', 'giamdoc', 'director', 'thien'],
             fullName: 'Mai Xuân Thiện',
             roleName: 'Ban Giám Đốc',
+            permission: 'admin',
             avatar: 'MT',
             phone: '0929224444',
             passwords: ['SongAnhGD@2026', 'giamdoc@2026', 'SongAnh@2026', '0929224444']
@@ -107,6 +110,7 @@ export default {
                 username: matchedBuiltin.username,
                 fullName: matchedBuiltin.fullName,
                 roleName: matchedBuiltin.roleName,
+                permission: matchedBuiltin.permission || 'member',
                 avatar: matchedBuiltin.avatar,
                 phone: matchedBuiltin.phone
               },
@@ -205,11 +209,24 @@ export default {
                 avatar = words.length >= 2 ? (words[0][0] + words[words.length - 1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
               }
 
+              // Lấy quyền Webapp permission ('Admin' hoặc 'Member')
+              const permObj = props['Webapp permission'] && props['Webapp permission'].select;
+              const permRaw = ((permObj && permObj.name) || '').trim().toLowerCase();
+              let permission = 'member';
+              if (permRaw === 'admin' || rawWid === 'admin' || rawWid.includes('tien') || nameUpper.includes('TIẾN')) {
+                permission = 'admin';
+              } else if (permRaw === 'member') {
+                permission = 'member';
+              } else {
+                permission = (nameUpper.includes('TIẾN') || nameUpper.includes('THIỆN')) ? 'admin' : 'member';
+              }
+
               matchedMember = {
                 id: m.id,
                 username: rawWid || inputUser,
                 fullName: name,
                 roleName: role,
+                permission: permission,
                 avatar: avatar,
                 phone: phone
               };
