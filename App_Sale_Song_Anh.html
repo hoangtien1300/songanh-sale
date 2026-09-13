@@ -2433,7 +2433,7 @@
     <!-- ==================== LEFT SIDEBAR ==================== -->
     <aside class="app-sidebar" id="appSidebar">
         <div class="sidebar-brand">
-            <a class="brand-link" onclick="switchAppTab('tab-trang-chu'); closeSidebar();">
+            <a class="brand-link" onclick="switchAppTab('tab-bao-cao'); closeSidebar();">
                 <div class="brand-logo">SA</div>
                 <div class="brand-info">
                     <h1>SONG ANH SALE</h1>
@@ -2445,42 +2445,22 @@
 
         <nav class="sidebar-nav">
             <div class="nav-section-title">HỆ THỐNG ĐIỀU HÀNH</div>
-            
-            <!-- 1. TRANG CHỦ -->
-            <a class="nav-link active" id="nav-tab-trang-chu" onclick="switchAppTab('tab-trang-chu', this)">
-                <span class="nav-link-icon">🏠</span>
-                <span class="nav-link-text">Trang chủ</span>
+
+            <!-- 1. BÁO CÁO -->
+            <a class="nav-link active" id="nav-tab-bao-cao" onclick="switchAppTab('tab-bao-cao', this)">
+                <span class="nav-link-icon">📊</span>
+                <span class="nav-link-text">Báo cáo</span>
             </a>
 
             <!-- 2. ĐƠN HÀNG MỚI -->
             <a class="nav-link" id="nav-tab-don-hang-moi" onclick="switchAppTab('tab-don-hang-moi', this)">
                 <span class="nav-link-icon">📝</span>
                 <span class="nav-link-text">Đơn hàng mới</span>
-                <span class="nav-link-badge">PO</span>
-            </a>
-
-            <!-- 3. THEO DÕI ĐƠN HÀNG -->
-            <a class="nav-link" id="nav-tab-theo-doi" onclick="switchAppTab('tab-theo-doi', this)">
-                <span class="nav-link-icon">🔍</span>
-                <span class="nav-link-text">Theo dõi đơn hàng</span>
-                <span class="nav-link-badge" id="navCountActive">143</span>
-            </a>
-
-            <!-- 4. KHÁCH HÀNG -->
-            <a class="nav-link" id="nav-tab-khach-hang" onclick="switchAppTab('tab-khach-hang', this)">
-                <span class="nav-link-icon">👥</span>
-                <span class="nav-link-text">Khách hàng</span>
-            </a>
-
-            <!-- 5. BÁO CÁO -->
-            <a class="nav-link" id="nav-tab-bao-cao" onclick="switchAppTab('tab-bao-cao', this)">
-                <span class="nav-link-icon">📊</span>
-                <span class="nav-link-text">Báo cáo</span>
             </a>
 
             <div class="nav-section-title" style="margin-top: 10px;">HỆ THỐNG</div>
 
-            <!-- 6. CÀI ĐẶT -->
+            <!-- 3. CÀI ĐẶT -->
             <a class="nav-link" id="nav-tab-cai-dat" onclick="switchAppTab('tab-cai-dat', this)">
                 <span class="nav-link-icon">⚙️</span>
                 <span class="nav-link-text">Cài đặt</span>
@@ -2549,140 +2529,6 @@
 
         <!-- CONTAINER FOR 6 MODULE VIEWS -->
         <div class="main-container">
-
-            <!-- ==================== 1. MENU: TRANG CHỦ ==================== -->
-            <div id="tab-trang-chu" class="module-panel active">
-                <div class="module-header-banner">
-                    <div class="module-header-title">
-                        <span class="module-header-icon">🏠</span>
-                        <div>
-                            <h2>Tổng quan</h2>
-                            <div class="filter-active-indicator" id="filterActiveIndicator">
-                                📅 Đang xem: <strong id="filterActiveText">Tuần này (01/09 - 07/09/2026)</strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="module-status-badge">
-                        <span class="live-dot"></span> <span id="pipelineFilterBadge">00 Khách mới</span>
-                    </div>
-                </div>
-
-                <!-- KHỐI DASHBOARD TỔNG QUAN 2 CỘT GỌN GÀNG -->
-                <div class="dashboard-overview-grid">
-                    <!-- CỘT TRÁI (LEFT COLUMN): 3 THẺ KPI CON SỐ XẾP DỌC (MODAL CHI TIẾT) -->
-                                        <div class="kpi-column">
-                        <div class="kpi-box gold" onclick="openHomeKpiModal('new_leads')" title="Bấm để mở danh sách chi tiết khách hàng mới" style="cursor: pointer;">
-                            <div class="kpi-label" style="display: flex; align-items: center; justify-content: space-between;">
-                                <span>Khách hàng mới</span>
-                                <span style="font-size: 0.72rem; opacity: 0.8; font-weight: 600;">🔍 Xem bảng</span>
-                            </div>
-                            <div class="kpi-num" id="homeNewLeadsCount" style="color: var(--primary-gold);">00</div>
-                        </div>
-                        <div class="kpi-box green" onclick="openHomeKpiModal('danglam')" title="Bấm để mở danh sách 12 dự án xưởng đang làm" style="cursor: pointer;">
-                            <div class="kpi-label" style="display: flex; align-items: center; justify-content: space-between;">
-                                <span>Dự án đang làm</span>
-                                <span style="font-size: 0.72rem; opacity: 0.8; font-weight: 600;">🔍 Xem bảng</span>
-                            </div>
-                            <div class="kpi-num" id="homeInProductionCount" style="color: #059669;">12</div>
-                        </div>
-                        <div class="kpi-box blue" onclick="openHomeKpiModal('tiemnang')" title="Bấm để mở danh sách 8 dự án tiềm năng" style="cursor: pointer;">
-                            <div class="kpi-label" style="display: flex; align-items: center; justify-content: space-between;">
-                                <span>Dự án tiềm năng</span>
-                                <span style="font-size: 0.72rem; opacity: 0.8; font-weight: 600;">🔍 Xem bảng</span>
-                            </div>
-                            <div class="kpi-num" id="homePotentialCount" style="color: #0284C7;">08</div>
-                        </div>
-                    </div>
-
-                    <!-- CỘT PHẢI (RIGHT COLUMN): KHỐI PHÂN BỔ NGUỒN KHÁCH HÀNG THỰC TẾ -->
-                    <div class="card source-card">
-                        <div class="card-header">
-                            <span>🎯 PHÂN BỔ NGUỒN KHÁCH HÀNG THỰC TẾ</span>
-                            <span style="font-size: 0.78rem; color: var(--text-muted);" id="sourceScopeLabel">Theo bộ lọc hiện tại</span>
-                        </div>
-                        <div class="source-distribution-grid">
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_tien')" title="Bấm để xem danh sách khách Steven (0981169200)" style="cursor: pointer;">
-                                <div class="source-kpi-title">Steven (0981169200)</div>
-                                <div class="source-kpi-value" style="color: var(--primary-gold);" id="srcCountTien">0 Khách</div>
-                            </div>
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_sep')" title="Bấm để xem danh sách khách Hotline Sếp (0929224444)" style="cursor: pointer;">
-                                <div class="source-kpi-title">Hotline Sếp (0929224444)</div>
-                                <div class="source-kpi-value" style="color: #0284C7;" id="srcCountSep">0 Khách</div>
-                            </div>
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_sang')" title="Bấm để xem danh sách khách Hotline 3D (0376415131)" style="cursor: pointer;">
-                                <div class="source-kpi-title">Hotline 3D (0376415131)</div>
-                                <div class="source-kpi-value" style="color: #059669;" id="srcCountSang">0 Khách</div>
-                            </div>
-                            <div class="source-kpi-item" onclick="openHomeKpiModal('src_cu')" title="Bấm để xem danh sách khách Song Anh Shop &amp; Khác" style="cursor: pointer;">
-                                <div class="source-kpi-title">Song Anh Shop &amp; Khác</div>
-                                <div class="source-kpi-value" style="color: #7C3AED;" id="srcCountCu">0 Khách</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- ==================== BẢNG THEO DÕI TỔNG QUAN TÌNH TRẠNG DỰ ÁN ==================== -->
-                <div class="card" style="margin-top: 20px;">
-                    <div class="card-header">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-size: 1rem;">📋 BẢNG THEO DÕI TỔNG QUAN TÌNH TRẠNG DỰ ÁN</span>
-                            <span class="badge badge-gold" id="homeTableTotalBadge">0 Dự án</span>
-                        </div>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);" id="homeTableScopeSubtitle">Hiển thị động theo bộ lọc: Tuần này (01/09 - 07/09/2026)</span>
-                    </div>
-
-                    <!-- HÀNG NÚT LỌC TRẠNG THÁI DỰ ÁN TRÊN BẢNG TỔNG QUAN -->
-                    <div class="home-stage-filter-wrap">
-                        <button type="button" class="home-stage-btn all active" id="btn-home-stage-all" onclick="setHomeTableStageFilter('all', this)">
-                            <span>🌐 Tất cả:</span> <strong id="homeStageAllCount">0</strong>
-                        </button>
-                        <button type="button" class="home-stage-btn gold" id="btn-home-stage-tuvan" onclick="setHomeTableStageFilter('tuvan', this)">
-                            <span>💬 Tư vấn:</span> <strong id="homeStageTuvanCount">0</strong>
-                        </button>
-                        <button type="button" class="home-stage-btn blue" id="btn-home-stage-baogia" onclick="setHomeTableStageFilter('baogia', this)">
-                            <span>🧾 Báo giá:</span> <strong id="homeStageBaogiaCount">0</strong>
-                        </button>
-                        <button type="button" class="home-stage-btn green" id="btn-home-stage-hopdong" onclick="setHomeTableStageFilter('hopdong', this)">
-                            <span>🤝 Hợp đồng:</span> <strong id="homeStageHopdongCount">0</strong>
-                        </button>
-                        <button type="button" class="home-stage-btn purple" id="btn-home-stage-danglam" onclick="setHomeTableStageFilter('danglam', this)">
-                            <span>🏗️ Đang làm:</span> <strong id="homeStageDanglamCount">0</strong>
-                        </button>
-                        <button type="button" class="home-stage-btn gray" id="btn-home-stage-thanhtoan" onclick="setHomeTableStageFilter('thanhtoan', this)">
-                            <span>💸 Giao/Thu:</span> <strong id="homeStageThanhtoanCount">0</strong>
-                        </button>
-                    </div>
-
-                    <!-- BẢNG DỮ LIỆU DESKTOP (>= 768px) -->
-                    <div class="desktop-table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th width="40" style="text-align: center;">#</th>
-                                    <th style="min-width: 200px;">TÊN DỰ ÁN</th>
-                                    <th width="110">NGÀY NHẮC HẸN</th>
-                                    <th style="min-width: 140px;">KHÁCH HÀNG</th>
-                                    <th width="130">GIAI ĐOẠN / TRẠNG THÁI</th>
-                                    <th width="130">TƯ VẤN</th>
-                                    <th style="min-width: 240px;">GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="homeProjectTableBody">
-                                <!-- Dynamic rows rendered by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- CARD LIST MOBILE (< 768px) -->
-                    <div class="mobile-card-list" id="homeProjectMobileCards" style="margin-top: 10px;">
-                        <!-- Dynamic mobile cards rendered by JS -->
-                    </div>
-
-                    <!-- THANH PHÂN TRANG BẢNG TỔNG QUAN -->
-                    <div class="pagination-bar" id="homeTablePaginationBar"></div>
-                </div>
-            </div>
 
             <!-- ==================== 2. MENU: ĐƠN HÀNG MỚI ==================== -->
             <div id="tab-don-hang-moi" class="module-panel">
@@ -2802,118 +2648,8 @@
                 </div>
             </div>
 
-            <!-- ==================== 3. MENU: THEO DÕI ĐƠN HÀNG ==================== -->
-            <div id="tab-theo-doi" class="module-panel">
-                <div class="module-header-banner">
-                    <div class="module-header-title">
-                        <span class="module-header-icon">🔍</span>
-                        <div>
-                            <h2>Theo dõi đơn hàng</h2>
-                        </div>
-                    </div>
-                    <div class="module-status-badge">
-                        <span class="live-dot"></span> Pipeline Active
-                    </div>
-                </div>
-
-                <!-- THANH TÁC VỤ & NÚT MỞ FORM CẬP NHẬT DỰ ÁN -->
-                <div class="tracking-action-bar" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; background: #FFFFFF; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--card-border); box-shadow: 0 1px 4px rgba(0,0,0,0.03);">
-                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                        <button type="button" class="btn btn-gold" id="btnOpenUpdateProjectModal" onclick="openUpdateProjectModal()" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 10px 18px; border-radius: 8px; font-size: 0.88rem; box-shadow: 0 2px 6px rgba(181, 137, 26, 0.25);">
-                            <span style="font-size: 1.15rem;">✍️</span> <span>Cập nhật dự án</span>
-                        </button>
-                        <span id="selectedProjectBadge" style="font-size: 0.82rem; color: #64748B; font-weight: 600;">Chọn dự án bên dưới hoặc bấm nút</span>
-                    </div>
-                    <div style="font-size: 0.8rem; color: #475569; display: flex; align-items: center; gap: 6px;">
-                        <span>💡</span> <span>Bấm <strong>"Cập nhật dự án"</strong> hoặc <strong>click trực tiếp vào dòng dự án</strong> trong bảng bên dưới</span>
-                    </div>
-                </div>
-
-                <!-- BỘ LỌC GIAI ĐOẠN PIPELINE -->
-                <div class="filter-bar">
-                    <button class="filter-btn active" id="btn-filter-all" onclick="filterPipeline('all', this)">Tất Cả (152)</button>
-                    <button class="filter-btn" id="btn-filter-tiemnang" onclick="filterPipeline('tiemnang', this)" style="border-color: var(--primary-gold); color: #855C08; font-weight: 700;">⭐ Tiềm Năng (8)</button>
-                    <button class="filter-btn" id="btn-filter-tuvan" onclick="filterPipeline('tuvan', this)">💬 1. Tư Vấn</button>
-                    <button class="filter-btn" id="btn-filter-baogia" onclick="filterPipeline('baogia', this)">🧾 2. Báo Giá</button>
-                    <button class="filter-btn" id="btn-filter-hopdong" onclick="filterPipeline('hopdong', this)">🤝 3. Hợp Đồng</button>
-                    <button class="filter-btn" id="btn-filter-danglam" onclick="filterPipeline('danglam', this)">🏗️ 4. Đang Làm</button>
-                    <button class="filter-btn" id="btn-filter-thanhtoan" onclick="filterPipeline('thanhtoan', this)">💸 5. Giao / Thu</button>
-                </div>
-
-                <!-- BẢNG DỮ LIỆU DESKTOP -->
-                <div class="desktop-table-wrap">
-                    <table id="pipelineTable">
-                        <thead id="pipelineThead">
-                            <tr>
-                                <th width="35">#</th>
-                                <th>TÊN DỰ ÁN</th>
-                                <th>NGÀY</th>
-                                <th>TƯ VẤN</th>
-                                <th>KỸ THUẬT</th>
-                                <th>GHI CHÚ TIẾN ĐỘ THỰC TẾ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pipelineTbody"></tbody>
-                    </table>
-                </div>
-
-                <!-- MOBILE CARDS -->
-                <div class="mobile-card-list" id="pipelineMobileCards"></div>
-
-                <!-- THANH ĐIỀU HƯỚNG PHÂN TRANG PIPELINE -->
-                <div class="pagination-bar" id="pipelinePaginationBar"></div>
-            </div>
-
-            <!-- ==================== 4. MENU: KHÁCH HÀNG ==================== -->
-            <div id="tab-khach-hang" class="module-panel">
-                <div class="module-header-banner">
-                    <div class="module-header-title">
-                        <span class="module-header-icon">👥</span>
-                        <div>
-                            <h2>Khách hàng</h2>
-                        </div>
-                    </div>
-                    <div class="module-status-badge">
-                        <span class="live-dot"></span> Danh Bạ &amp; CRM B2B
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <span>BỘ LỌC TÌM KIẾM KHÁCH HÀNG</span>
-                    </div>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
-                        <input type="text" id="customerSearchInput" class="form-input" placeholder="Tìm theo tên khách, công ty, SĐT, nguồn..." style="flex: 1; min-width: 240px;" oninput="filterCustomerList(this.value)">
-                        <div class="filter-bar" style="margin-bottom: 0; padding: 4px;">
-                            <button class="filter-btn active" onclick="filterCustomerByAdvisor('all', this)">Tất Cả</button>
-                            <button class="filter-btn" onclick="filterCustomerByAdvisor('Tiến', this)">Phạm Hoàng Tiến</button>
-                            <button class="filter-btn" onclick="filterCustomerByAdvisor('Sang', this)">Võ Minh Sang</button>
-                        </div>
-                    </div>
-
-                    <div class="desktop-table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th width="35">#</th>
-                                    <th>KHÁCH HÀNG</th>
-                                    <th>SỐ ĐIỆN THOẠI</th>
-                                    <th>DỰ ÁN LIÊN QUAN</th>
-                                    <th>NGUỒN</th>
-                                    <th>PHỤ TRÁCH</th>
-                                    <th>TRẠNG THÁI</th>
-                                </tr>
-                            </thead>
-                            <tbody id="customerTableBody"></tbody>
-                        </table>
-                    </div>
-
-                    <div class="mobile-card-list" id="customerMobileCards"></div>
-                </div>
-            </div>
-
-                        <!-- ==================== 5. MENU: BÁO CÁO ==================== -->
-            <div id="tab-bao-cao" class="module-panel">
+            <!-- ==================== 5. MENU: BÁO CÁO ==================== -->
+            <div id="tab-bao-cao" class="module-panel active">
                 <!-- 1. MODULE HEADER BANNER (INVARIANT RULE 1) -->
                 <div class="module-header-banner">
                     <div class="module-header-title">
@@ -3337,25 +3073,17 @@
 
 <!-- MOBILE BOTTOM NAVIGATION (SAFE AREA DƯỚI ĐÁY ĐIỆN THOẠI) -->
 <nav class="mobile-bottom-nav" id="mobileBottomNav">
-    <button class="bottom-nav-item active" id="bnav-tab-trang-chu" onclick="switchAppTab('tab-trang-chu')">
-        <span class="bnav-icon">🏠</span>
-        <span class="bnav-label">Tổng quan</span>
+    <button class="bottom-nav-item active" id="bnav-tab-bao-cao" onclick="switchAppTab('tab-bao-cao')">
+        <span class="bnav-icon">📊</span>
+        <span class="bnav-label">Báo cáo</span>
     </button>
     <button class="bottom-nav-item" id="bnav-tab-don-hang-moi" onclick="switchAppTab('tab-don-hang-moi')">
         <span class="bnav-icon">📝</span>
         <span class="bnav-label">Đơn mới</span>
     </button>
-    <button class="bottom-nav-item" id="bnav-tab-theo-doi" onclick="switchAppTab('tab-theo-doi')">
-        <span class="bnav-icon">🔍</span>
-        <span class="bnav-label">Theo dõi</span>
-    </button>
-    <button class="bottom-nav-item" id="bnav-tab-khach-hang" onclick="switchAppTab('tab-khach-hang')">
-        <span class="bnav-icon">👥</span>
-        <span class="bnav-label">Khách</span>
-    </button>
-    <button class="bottom-nav-item" id="bnav-tab-bao-cao" onclick="switchAppTab('tab-bao-cao')">
-        <span class="bnav-icon">📊</span>
-        <span class="bnav-label">Báo cáo</span>
+    <button class="bottom-nav-item" id="bnav-tab-cai-dat" onclick="switchAppTab('tab-cai-dat')">
+        <span class="bnav-icon">⚙️</span>
+        <span class="bnav-label">Cài đặt</span>
     </button>
 </nav>
 
@@ -5823,7 +5551,7 @@
 
     // 2. TABS & SIDEBAR LOGIC
     function switchAppTab(tabId, navElement, updateHash = true) {
-        if (!tabId) tabId = 'tab-trang-chu';
+        if (!tabId || !document.getElementById(tabId)) tabId = 'tab-bao-cao';
         document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.sidebar-nav .nav-link').forEach(l => l.classList.remove('active'));
         document.querySelectorAll('.mobile-bottom-nav .bottom-nav-item').forEach(b => b.classList.remove('active'));
@@ -6598,7 +6326,7 @@
                         '<div style="font-size: 0.82rem; color: #0F172A;">• Trạng thái: <span class="badge badge-gold" style="font-weight: 700;">🆕 Mới</span> | Ngày liên hệ: <strong>' + formatDateVN(contactDate) + '</strong> | Nhắc hẹn: <strong>09:00 ngày cập nhật</strong></div>' +
                         '<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">' +
                             (res.url ? '<a href="' + res.url + '" target="_blank" class="btn btn-sm btn-gold" style="padding: 4px 10px; font-size: 0.72rem;">🔗 Mở Trang Notion Dự Án</a>' : '') +
-                            '<button class="btn btn-sm" style="background: #0284C7; color: #FFFFFF; border: none; font-weight: 700; padding: 4px 10px; font-size: 0.72rem; cursor: pointer;" onclick="switchAppTab(\'tab-theo-doi\'); selectProject(\'' + createdItem.id + '\');">💬 Cập Nhật Tiến Độ Ngay Cho Đơn Này</button>' +
+                            '<button class="btn btn-sm" style="background: #0284C7; color: #FFFFFF; border: none; font-weight: 700; padding: 4px 10px; font-size: 0.72rem; cursor: pointer;" onclick="openUpdateProjectModal(\'' + createdItem.id + '\');">💬 Cập Nhật Tiến Độ Ngay Cho Đơn Này</button>' +
                         '</div>';
                 }
                 document.getElementById('newLeadForm').reset();
@@ -6675,6 +6403,7 @@
     }
 
     function renderPipelineViews() {
+        if (!document.getElementById("tab-theo-doi")) return;
         const tuvanCount = pipelineData.filter(d => d.stage === 'tuvan' || d.stage === 'moi').length;
         const baogiaCount = pipelineData.filter(d => d.stage === 'baogia').length;
         const hopdongCount = pipelineData.filter(d => d.stage === 'hopdong').length;
@@ -7704,6 +7433,7 @@
     }
 
     function renderCustomerViews() {
+        if (!document.getElementById("tab-khach-hang")) return;
         let customers = pipelineData.map(p => {
             let client = '-';
             let phone = '';
@@ -9016,7 +8746,7 @@
 
             // Dọn sạch query param ? nếu có trên thanh địa chỉ
             if (window.location.search && window.location.search.includes('?')) {
-                const targetHash = window.location.hash || '#tab-trang-chu';
+                const targetHash = window.location.hash || '#tab-bao-cao';
                 try {
                     window.history.replaceState({}, document.title, window.location.pathname + targetHash);
                 } catch(e) {}
@@ -9044,7 +8774,7 @@
             init: function() {
                 // Dọn sạch query param ? nếu có trên URL
                 if (window.location.search && window.location.search.includes('?')) {
-                    const targetHash = window.location.hash || '#tab-trang-chu';
+                    const targetHash = window.location.hash || '#tab-bao-cao';
                     try {
                         window.history.replaceState({}, document.title, window.location.pathname + targetHash);
                     } catch(e) {}
@@ -9225,7 +8955,7 @@
         // Router khôi phục tab F5
         (function initActiveTab() {
             try {
-                let targetTab = 'tab-trang-chu';
+                let targetTab = 'tab-bao-cao';
                 const hashTab = window.location.hash.replace(/^#/, '').trim();
                 const savedTab = localStorage.getItem('songanh_sale_active_tab');
                 if (hashTab && document.getElementById(hashTab)) {
@@ -9233,9 +8963,7 @@
                 } else if (savedTab && document.getElementById(savedTab)) {
                     targetTab = savedTab;
                 }
-                if (targetTab !== 'tab-trang-chu') {
-                    switchAppTab(targetTab, null, false);
-                }
+                switchAppTab(targetTab, null, false);
             } catch(e) {
                 console.warn('Tab init router error:', e);
             }
