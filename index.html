@@ -2771,14 +2771,15 @@
                 <!-- 2. WEEKLY TOOLBAR (CHỌN TUẦN & TÁC VỤ) -->
                 <div class="weekly-toolbar">
                     <div class="weekly-selector-group">
-                        <span style="font-size: 0.82rem; font-weight: 700; color: #475569;">📅 Chọn Tuần:</span>
+                        <span style="font-size: 0.82rem; font-weight: 700; color: #475569;">📅 Chọn Mốc Báo Cáo:</span>
                         <select id="weeklySelectFilter" class="weekly-select" onchange="onWeeklyFilterSelectChange(this.value)">
-                            <option value="2026-W37">Tuần Này (07/09/2026 - 13/09/2026)</option>
-                            <option value="2026-W36" selected>Tuần Trước (31/08/2026 - 06/09/2026)</option>
-                            <option value="2026-W35">Tuần 24/08/2026 - 30/08/2026</option>
-                            <option value="2026-W34">Tuần 17/08/2026 - 23/08/2026</option>
+                            <option value="this-week" selected>Tuần Này (07/09/2026 - 13/09/2026)</option>
+                            <option value="last-week">Tuần Trước (31/08/2026 - 06/09/2026)</option>
+                            <option value="2-weeks-ago">2 Tuần Trước (24/08/2026 - 30/08/2026)</option>
+                            <option value="this-month">Tháng Này (Tháng 09/2026)</option>
+                            <option value="last-month">Tháng Trước (Tháng 08/2026)</option>
                             <option value="custom">Tùy Chọn Khoảng Ngày...</option>
-                            <option value="all">Tất Cả Các Tuần</option>
+                            <option value="all">Tất Cả Dữ Liệu</option>
                         </select>
                         <div id="weeklyCustomRangeBox" style="display: none; align-items: center; gap: 6px;">
                             <input type="date" id="weeklyCustomStart" class="date-input" style="padding: 5px 8px;" onchange="onWeeklyCustomDateChange()">
@@ -2786,7 +2787,7 @@
                             <input type="date" id="weeklyCustomEnd" class="date-input" style="padding: 5px 8px;" onchange="onWeeklyCustomDateChange()">
                         </div>
                         <span class="weekly-range-pill" id="weeklyRangeDisplayPill">
-                            📅 <span id="weeklyRangeText">31/08/2026 ➔ 06/09/2026</span>
+                            📅 <span id="weeklyRangeText">07/09/2026 ➔ 13/09/2026</span>
                         </span>
                     </div>
                     <div class="weekly-action-buttons">
@@ -2802,39 +2803,39 @@
                     </div>
                 </div>
 
-                <!-- 3. KPI TỔNG QUAN KHÁCH HÀNG TIẾP NHẬN TRONG TUẦN -->
+                <!-- 3. KPI TỔNG QUAN & SO SÁNH VỚI DATA CŨ -->
                 <div class="weekly-kpi-grid">
                     <div class="weekly-kpi-card kpi-gold">
                         <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Tổng Khách LH Tuần</span>
+                            <span class="weekly-kpi-label">Tổng Khách Hàng Liên Hệ</span>
                             <span class="weekly-kpi-icon">👥</span>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyTotal">0</div>
-                        <div class="weekly-kpi-sub" id="kpiWeeklyTotalSub">Dựa vào cột Ngày Liên Hệ</div>
+                        <div class="weekly-kpi-val" id="kpiWeeklyTotal">00</div>
+                        <div class="weekly-kpi-sub" id="kpiWeeklyTotalSub">Phạm vi: 07/09/2026 - 13/09/2026</div>
                     </div>
                     <div class="weekly-kpi-card kpi-blue">
                         <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Khách Mới &amp; Tư Vấn</span>
-                            <span class="weekly-kpi-icon">💬</span>
+                            <span class="weekly-kpi-label">Tổng Dự Án Đang Làm</span>
+                            <span class="weekly-kpi-icon">🏗️</span>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyTuvan">0</div>
-                        <div class="weekly-kpi-sub">Đang trao đổi nhu cầu</div>
+                        <div class="weekly-kpi-val" id="kpiWeeklyWorkshopTotal">00</div>
+                        <div class="weekly-kpi-sub" id="kpiWeeklyWorkshopSub">Xưởng Song Anh đang thi công</div>
                     </div>
-                    <div class="weekly-kpi-card kpi-purple">
+                    <div class="weekly-kpi-card kpi-purple" id="cardWeeklyPrevData" style="cursor: pointer;" title="Bấm để xem dữ liệu kỳ đối chiếu này" onclick="jumpToPreviousPeriod()">
                         <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Đang Báo Giá</span>
-                            <span class="weekly-kpi-icon">🧾</span>
+                            <span class="weekly-kpi-label">Data Cũ (Kỳ Trước)</span>
+                            <span class="weekly-kpi-icon">📅</span>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyBaogia">0</div>
-                        <div class="weekly-kpi-sub">Đã gửi phương án &amp; dự toán</div>
+                        <div class="weekly-kpi-val" id="kpiWeeklyPrevTotal">00</div>
+                        <div class="weekly-kpi-sub" id="kpiWeeklyPrevSub">Tuần trước: 31/08 - 06/09/2026</div>
                     </div>
                     <div class="weekly-kpi-card kpi-green">
                         <div class="weekly-kpi-header">
-                            <span class="weekly-kpi-label">Hợp Đồng &amp; Cọc</span>
-                            <span class="weekly-kpi-icon">🤝</span>
+                            <span class="weekly-kpi-label">So Sánh Với Data Cũ</span>
+                            <span class="weekly-kpi-icon" id="kpiWeeklyGrowthIcon">📈</span>
                         </div>
-                        <div class="weekly-kpi-val" id="kpiWeeklyHopdong">0</div>
-                        <div class="weekly-kpi-sub">Đã ký HĐ hoặc chốt cọc</div>
+                        <div class="weekly-kpi-val" id="kpiWeeklyGrowth">0%</div>
+                        <div class="weekly-kpi-sub" id="kpiWeeklyGrowthSub">Chênh lệch so với kỳ đối chiếu</div>
                     </div>
                 </div>
 
@@ -7529,56 +7530,174 @@
     // =========================================================================
     // 📊 WEEKLY REPORT ENGINE - SONG ANH SALE
     // =========================================================================
+    function computeWeeklyDatePresets() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = now.getMonth();
+        const d = now.getDate();
+        const day = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+        const mondayDiff = day === 0 ? -6 : 1 - day;
+
+        const mondayThisWeek = new Date(y, m, d + mondayDiff);
+        const sundayThisWeek = new Date(y, m, d + mondayDiff + 6);
+
+        const mondayLastWeek = new Date(y, m, d + mondayDiff - 7);
+        const sundayLastWeek = new Date(y, m, d + mondayDiff - 1);
+
+        const monday2WeeksAgo = new Date(y, m, d + mondayDiff - 14);
+        const sunday2WeeksAgo = new Date(y, m, d + mondayDiff - 8);
+
+        const firstDayThisMonth = new Date(y, m, 1);
+        const lastDayThisMonth = new Date(y, m + 1, 0);
+
+        const firstDayLastMonth = new Date(y, m - 1, 1);
+        const lastDayLastMonth = new Date(y, m, 0);
+
+        const toYMD = (dt) => {
+            const yr = dt.getFullYear();
+            const mo = String(dt.getMonth() + 1).padStart(2, '0');
+            const da = String(dt.getDate()).padStart(2, '0');
+            return `${yr}-${mo}-${da}`;
+        };
+
+        const strMonThis = toYMD(mondayThisWeek);
+        const strSunThis = toYMD(sundayThisWeek);
+        const strMonLast = toYMD(mondayLastWeek);
+        const strSunLast = toYMD(sundayLastWeek);
+        const strMon2W = toYMD(monday2WeeksAgo);
+        const strSun2W = toYMD(sunday2WeeksAgo);
+        const strFirstThisM = toYMD(firstDayThisMonth);
+        const strLastThisM = toYMD(lastDayThisMonth);
+        const strFirstLastM = toYMD(firstDayLastMonth);
+        const strLastLastM = toYMD(lastDayLastMonth);
+
+        return {
+            'this-week': {
+                start: strMonThis,
+                end: strSunThis,
+                label: `Tuần Này (${formatVNStandardDate(strMonThis)} - ${formatVNStandardDate(strSunThis)})`,
+                prevKey: 'last-week',
+                prevStart: strMonLast,
+                prevEnd: strSunLast,
+                prevLabel: `Tuần trước (${formatVNStandardDate(strMonLast)} - ${formatVNStandardDate(strSunLast)})`
+            },
+            'last-week': {
+                start: strMonLast,
+                end: strSunLast,
+                label: `Tuần Trước (${formatVNStandardDate(strMonLast)} - ${formatVNStandardDate(strSunLast)})`,
+                prevKey: '2-weeks-ago',
+                prevStart: strMon2W,
+                prevEnd: strSun2W,
+                prevLabel: `2 Tuần trước (${formatVNStandardDate(strMon2W)} - ${formatVNStandardDate(strSun2W)})`
+            },
+            '2-weeks-ago': {
+                start: strMon2W,
+                end: strSun2W,
+                label: `2 Tuần Trước (${formatVNStandardDate(strMon2W)} - ${formatVNStandardDate(strSun2W)})`,
+                prevKey: null,
+                prevStart: toYMD(new Date(y, m, d + mondayDiff - 21)),
+                prevEnd: toYMD(new Date(y, m, d + mondayDiff - 15)),
+                prevLabel: `Tuần trước đó`
+            },
+            'this-month': {
+                start: strFirstThisM,
+                end: strLastThisM,
+                label: `Tháng Này (Tháng ${String(m + 1).padStart(2, '0')}/${y})`,
+                prevKey: 'last-month',
+                prevStart: strFirstLastM,
+                prevEnd: strLastLastM,
+                prevLabel: `Tháng trước (Tháng ${String(firstDayLastMonth.getMonth() + 1).padStart(2, '0')}/${firstDayLastMonth.getFullYear()})`
+            },
+            'last-month': {
+                start: strFirstLastM,
+                end: strLastLastM,
+                label: `Tháng Trước (Tháng ${String(firstDayLastMonth.getMonth() + 1).padStart(2, '0')}/${firstDayLastMonth.getFullYear()})`,
+                prevKey: null,
+                prevStart: toYMD(new Date(y, m - 2, 1)),
+                prevEnd: toYMD(new Date(y, m - 1, 0)),
+                prevLabel: `Tháng ${String(new Date(y, m - 2, 1).getMonth() + 1).padStart(2, '0')}/${new Date(y, m - 2, 1).getFullYear()}`
+            },
+            'all': {
+                start: '2020-01-01',
+                end: '2030-12-31',
+                label: 'Tất Cả Dữ Liệu',
+                prevKey: null,
+                prevStart: '',
+                prevEnd: '',
+                prevLabel: 'Toàn bộ dữ liệu'
+            }
+        };
+    }
+
+    const _initWeeklyPresets = computeWeeklyDatePresets();
     let currentWeeklyFilter = {
-        type: '2026-W36',
-        startDate: '2026-08-31',
-        endDate: '2026-09-06',
-        label: 'Tuần Trước (31/08/2026 - 06/09/2026)'
+        type: 'this-week',
+        startDate: _initWeeklyPresets['this-week'].start,
+        endDate: _initWeeklyPresets['this-week'].end,
+        label: _initWeeklyPresets['this-week'].label,
+        prevKey: _initWeeklyPresets['this-week'].prevKey,
+        prevStart: _initWeeklyPresets['this-week'].prevStart,
+        prevEnd: _initWeeklyPresets['this-week'].prevEnd,
+        prevLabel: _initWeeklyPresets['this-week'].prevLabel
     };
     let weeklySearchKeyword = '';
     let weeklySelectedStage = 'all';
     let currentWeeklyZaloText = '';
 
-    const PRESET_WEEKS = {
-        '2026-W37': { start: '2026-09-07', end: '2026-09-13', label: 'Tuần Này (07/09/2026 - 13/09/2026)' },
-        '2026-W36': { start: '2026-08-31', end: '2026-09-06', label: 'Tuần Trước (31/08/2026 - 06/09/2026)' },
-        '2026-W35': { start: '2026-08-24', end: '2026-08-30', label: 'Tuần 24/08/2026 - 30/08/2026' },
-        '2026-W34': { start: '2026-08-17', end: '2026-08-23', label: 'Tuần 17/08/2026 - 23/08/2026' },
-        'all': { start: '2020-01-01', end: '2030-12-31', label: 'Tất Cả Các Tuần' }
-    };
-
     function onWeeklyFilterSelectChange(val) {
+        const presets = computeWeeklyDatePresets();
         const customBox = document.getElementById('weeklyCustomRangeBox');
         if (val === 'custom') {
             if (customBox) customBox.style.display = 'inline-flex';
             const sInput = document.getElementById('weeklyCustomStart');
             const eInput = document.getElementById('weeklyCustomEnd');
-            if (sInput && !sInput.value) sInput.value = '2026-08-31';
-            if (eInput && !eInput.value) eInput.value = '2026-09-06';
+            if (sInput && !sInput.value) sInput.value = presets['this-week'].start;
+            if (eInput && !eInput.value) eInput.value = presets['this-week'].end;
             onWeeklyCustomDateChange();
             return;
         }
 
         if (customBox) customBox.style.display = 'none';
-        const preset = PRESET_WEEKS[val] || PRESET_WEEKS['2026-W36'];
+        const preset = presets[val] || presets['this-week'];
         currentWeeklyFilter = {
             type: val,
             startDate: preset.start,
             endDate: preset.end,
-            label: preset.label
+            label: preset.label,
+            prevKey: preset.prevKey,
+            prevStart: preset.prevStart,
+            prevEnd: preset.prevEnd,
+            prevLabel: preset.prevLabel
         };
         updateWeeklyRangeDisplay();
         renderWeeklyReport();
     }
 
     function onWeeklyCustomDateChange() {
-        const sVal = document.getElementById('weeklyCustomStart')?.value || '2026-08-31';
-        const eVal = document.getElementById('weeklyCustomEnd')?.value || '2026-09-06';
+        const presets = computeWeeklyDatePresets();
+        const sVal = document.getElementById('weeklyCustomStart')?.value || presets['this-week'].start;
+        const eVal = document.getElementById('weeklyCustomEnd')?.value || presets['this-week'].end;
+        
+        // Calculate previous comparison period of equal duration
+        const sDt = new Date(sVal);
+        const eDt = new Date(eVal);
+        const diffMs = Math.max(86400000, eDt.getTime() - sDt.getTime());
+        const prevEndDt = new Date(sDt.getTime() - 86400000);
+        const prevStartDt = new Date(prevEndDt.getTime() - diffMs);
+        
+        const toYMD = dt => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+        const pStart = toYMD(prevStartDt);
+        const pEnd = toYMD(prevEndDt);
+
         currentWeeklyFilter = {
             type: 'custom',
             startDate: sVal,
             endDate: eVal,
-            label: `Tùy Chọn (${formatVNStandardDate(sVal)} - ${formatVNStandardDate(eVal)})`
+            label: `Tùy Chọn (${formatVNStandardDate(sVal)} - ${formatVNStandardDate(eVal)})`,
+            prevKey: null,
+            prevStart: pStart,
+            prevEnd: pEnd,
+            prevLabel: `Kỳ trước (${formatVNStandardDate(pStart)} - ${formatVNStandardDate(pEnd)})`
         };
         updateWeeklyRangeDisplay();
         renderWeeklyReport();
@@ -7592,6 +7711,24 @@
             } else {
                 rangeText.innerText = `${formatVNStandardDate(currentWeeklyFilter.startDate)} ➔ ${formatVNStandardDate(currentWeeklyFilter.endDate)}`;
             }
+        }
+    }
+
+    function jumpToPreviousPeriod() {
+        if (currentWeeklyFilter.prevKey) {
+            const sel = document.getElementById('weeklySelectFilter');
+            if (sel) {
+                sel.value = currentWeeklyFilter.prevKey;
+                onWeeklyFilterSelectChange(currentWeeklyFilter.prevKey);
+            }
+        } else if (currentWeeklyFilter.prevStart && currentWeeklyFilter.prevEnd) {
+            const sel = document.getElementById('weeklySelectFilter');
+            if (sel) sel.value = 'custom';
+            const sInput = document.getElementById('weeklyCustomStart');
+            const eInput = document.getElementById('weeklyCustomEnd');
+            if (sInput) sInput.value = currentWeeklyFilter.prevStart;
+            if (eInput) eInput.value = currentWeeklyFilter.prevEnd;
+            onWeeklyCustomDateChange();
         }
     }
 
@@ -7717,28 +7854,97 @@
     function renderWeeklyReport() {
         const weeklyProjects = getWeeklyFilteredProjects();
 
-        // 1. UPDATE KPIS
+        // 1. UPDATE 4 KPIS
+        // Thẻ 1: Tổng khách hàng liên hệ trong kỳ lọc
         const totalCount = weeklyProjects.length;
-        const tuvanCount = weeklyProjects.filter(p => p.stage === 'tuvan').length;
-        const baogiaCount = weeklyProjects.filter(p => p.stage === 'baogia').length;
-        const hopdongCount = weeklyProjects.filter(p => p.stage === 'hopdong' || p.stage === 'danglam' || p.stage === 'thanhtoan').length;
 
+        // Thẻ 2: Tổng dự án đang làm (các dự án trạng thái 'danglam')
+        const danglamProjects = pipelineData.filter(p => p.stage === 'danglam');
+        const workshopCount = danglamProjects.length;
+
+        // Thẻ 3 & 4: Data cũ đối chiếu & So sánh
+        let prevProjects = [];
+        if (currentWeeklyFilter.prevStart && currentWeeklyFilter.prevEnd) {
+            prevProjects = pipelineData.filter(p => {
+                const rawContactDate = p.ngayLienHe || p.rawDate || p.date || '';
+                const ymd = normalizeDateToYMD(rawContactDate);
+                if (!ymd) return false;
+                return ymd >= currentWeeklyFilter.prevStart && ymd <= currentWeeklyFilter.prevEnd;
+            });
+        }
+        const prevCount = prevProjects.length;
+
+        // Tính toán so sánh tăng trưởng
+        const delta = totalCount - prevCount;
+        let growthHtml = '0%';
+        let growthText = '0%';
+        let growthSub = `So với ${currentWeeklyFilter.prevLabel || 'kỳ đối chiếu'}`;
+        let growthIcon = '➖';
+
+        if (currentWeeklyFilter.type === 'all') {
+            growthHtml = `<span style="color: #64748B;">Toàn Bộ</span>`;
+            growthText = 'Toàn bộ dữ liệu';
+            growthSub = 'Tổng cộng toàn bộ dữ liệu hệ thống';
+            growthIcon = '📊';
+        } else if (prevCount === 0) {
+            if (totalCount > 0) {
+                growthHtml = `<span style="color: #16A34A; font-weight: 800;">+${totalCount} (Mới)</span>`;
+                growthText = `+${totalCount} khách (Mới hoàn toàn)`;
+                growthSub = `Tăng mới hoàn toàn so với ${currentWeeklyFilter.prevLabel || 'kỳ trước'}`;
+                growthIcon = '📈';
+            } else {
+                growthHtml = `<span style="color: #64748B; font-weight: 800;">0 (0%)</span>`;
+                growthText = '0 (0%)';
+                growthSub = `Không có phát sinh khách so với ${currentWeeklyFilter.prevLabel || 'kỳ trước'}`;
+                growthIcon = '➖';
+            }
+        } else {
+            const pct = ((delta / prevCount) * 100).toFixed(1);
+            if (delta > 0) {
+                growthHtml = `<span style="color: #16A34A; font-weight: 800;">+${delta} (+${pct}%)</span>`;
+                growthText = `+${delta} khách (+${pct}%)`;
+                growthSub = `Tăng ${delta} khách so với ${currentWeeklyFilter.prevLabel || 'kỳ trước'} (${prevCount} khách)`;
+                growthIcon = '📈';
+            } else if (delta < 0) {
+                growthHtml = `<span style="color: #DC2626; font-weight: 800;">${delta} (${pct}%)</span>`;
+                growthText = `${delta} khách (${pct}%)`;
+                growthSub = `Giảm ${Math.abs(delta)} khách so với ${currentWeeklyFilter.prevLabel || 'kỳ trước'} (${prevCount} khách)`;
+                growthIcon = '📉';
+            } else {
+                growthHtml = `<span style="color: #64748B; font-weight: 800;">0 (0%)</span>`;
+                growthText = '0 (Bằng kỳ trước)';
+                growthSub = `Bằng với ${currentWeeklyFilter.prevLabel || 'kỳ trước'} (${prevCount} khách)`;
+                growthIcon = '➖';
+            }
+        }
+
+        // Cập nhật DOM các thẻ KPI
         const elTotal = document.getElementById('kpiWeeklyTotal');
-        const elTuvan = document.getElementById('kpiWeeklyTuvan');
-        const elBaogia = document.getElementById('kpiWeeklyBaogia');
-        const elHopdong = document.getElementById('kpiWeeklyHopdong');
         const elTotalSub = document.getElementById('kpiWeeklyTotalSub');
+        const elWorkshop = document.getElementById('kpiWeeklyWorkshopTotal');
+        const elWorkshopSub = document.getElementById('kpiWeeklyWorkshopSub');
+        const elPrev = document.getElementById('kpiWeeklyPrevTotal');
+        const elPrevSub = document.getElementById('kpiWeeklyPrevSub');
+        const elGrowth = document.getElementById('kpiWeeklyGrowth');
+        const elGrowthSub = document.getElementById('kpiWeeklyGrowthSub');
+        const elGrowthIcon = document.getElementById('kpiWeeklyGrowthIcon');
 
-        if (elTotal) elTotal.innerText = totalCount < 10 && totalCount > 0 ? '0' + totalCount : totalCount;
-        if (elTuvan) elTuvan.innerText = tuvanCount < 10 && tuvanCount > 0 ? '0' + tuvanCount : tuvanCount;
-        if (elBaogia) elBaogia.innerText = baogiaCount < 10 && baogiaCount > 0 ? '0' + baogiaCount : baogiaCount;
-        if (elHopdong) elHopdong.innerText = hopdongCount < 10 && hopdongCount > 0 ? '0' + hopdongCount : hopdongCount;
-
+        if (elTotal) elTotal.innerText = totalCount < 10 && totalCount >= 0 ? '0' + totalCount : totalCount;
         if (elTotalSub) {
             elTotalSub.innerText = totalCount === 0 
-                ? 'Không có khách liên hệ trong tuần này'
+                ? `Chưa có khách trong kỳ (${formatVNStandardDate(currentWeeklyFilter.startDate)} - ${formatVNStandardDate(currentWeeklyFilter.endDate)})`
                 : `Phạm vi: ${formatVNStandardDate(currentWeeklyFilter.startDate)} - ${formatVNStandardDate(currentWeeklyFilter.endDate)}`;
         }
+
+        if (elWorkshop) elWorkshop.innerText = workshopCount < 10 && workshopCount >= 0 ? '0' + workshopCount : workshopCount;
+        if (elWorkshopSub) elWorkshopSub.innerText = `${workshopCount} dự án xưởng Song Anh đang thi công`;
+
+        if (elPrev) elPrev.innerText = prevCount < 10 && prevCount >= 0 ? '0' + prevCount : prevCount;
+        if (elPrevSub) elPrevSub.innerText = currentWeeklyFilter.prevLabel || 'Không có mốc đối chiếu';
+
+        if (elGrowth) elGrowth.innerHTML = growthHtml;
+        if (elGrowthSub) elGrowthSub.innerText = growthSub;
+        if (elGrowthIcon) elGrowthIcon.innerText = growthIcon;
 
         // 2. RENDER CUSTOMER LIST (TABLE & MOBILE CARDS)
         renderWeeklyCustomerList();
@@ -7753,7 +7959,7 @@
         renderWeeklyWorkshopProjects();
 
         // 6. BUILD ZALO/TELEGRAM REPORT TEXT
-        buildWeeklyZaloReportText(weeklyProjects);
+        buildWeeklyZaloReportText(weeklyProjects, prevCount, delta, growthText, workshopCount);
     }
 
     // Sub-render: Customer list table
@@ -7778,17 +7984,27 @@
         const mobileBox = document.getElementById('weeklyCustomerMobileCards');
 
         if (filtered.length === 0) {
-            const emptyHtml = `<tr><td colspan="8" style="text-align: center; padding: 24px; color: #94A3B8;">
-                <div style="font-size: 1.5rem; margin-bottom: 6px;">📭</div>
-                <div>Không tìm thấy khách hàng liên hệ nào trong khoảng thời gian này.</div>
-                <div style="font-size: 0.76rem; color: #B5891A; margin-top: 4px; cursor: pointer; font-weight: 700;" onclick="document.getElementById('weeklySelectFilter').value='2026-W36'; onWeeklyFilterSelectChange('2026-W36');">
-                    👉 Bấm vào đây để xem dữ liệu Tuần Trước (31/08 - 06/09/2026)
+            const prevHint = currentWeeklyFilter.prevLabel 
+                ? `👉 Bấm vào đây để xem dữ liệu ${currentWeeklyFilter.prevLabel}`
+                : '👉 Bấm vào đây để xem dữ liệu Tuần Trước (31/08 - 06/09/2026)';
+
+            const emptyHtml = `<tr><td colspan="8" style="text-align: center; padding: 28px 16px; color: #64748B;">
+                <div style="font-size: 1.8rem; margin-bottom: 8px;">📭</div>
+                <div style="font-weight: 700; color: #1E293B; font-size: 0.95rem;">Không tìm thấy khách hàng liên hệ nào trong khoảng thời gian này</div>
+                <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 4px;">Dữ liệu đối chiếu tự động theo cột Ngày Liên Hệ từ Notion DB</div>
+                <div style="margin-top: 12px;">
+                    <button class="btn btn-sm btn-gold" onclick="jumpToPreviousPeriod()">
+                        ${prevHint}
+                    </button>
                 </div>
             </td></tr>`;
             if (tbody) tbody.innerHTML = emptyHtml;
             if (mobileBox) mobileBox.innerHTML = `<div style="text-align: center; padding: 24px; color: #94A3B8; background: #FFF; border-radius: 8px; border: 1px solid #E2E8F0;">
                 <div style="font-size: 1.5rem; margin-bottom: 6px;">📭</div>
-                <div>Không có khách hàng nào trong tuần được chọn.</div>
+                <div style="font-weight: 700; color: #1E293B;">Không có khách hàng nào trong kỳ được chọn.</div>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-sm btn-gold" onclick="jumpToPreviousPeriod()">${prevHint}</button>
+                </div>
             </div>`;
             return;
         }
@@ -8048,11 +8264,16 @@
     }
 
     // Build Zalo/Telegram formatted text for executive summary
-    function buildWeeklyZaloReportText(weeklyProjects) {
+    function buildWeeklyZaloReportText(weeklyProjects, prevCount = null, delta = null, growthText = null, workshopCount = null) {
         const rangeStr = `${formatVNStandardDate(currentWeeklyFilter.startDate)} - ${formatVNStandardDate(currentWeeklyFilter.endDate)}`;
         const danglamProjects = pipelineData.filter(p => p.stage === 'danglam');
         const baogiaProjects = pipelineData.filter(p => p.stage === 'baogia');
         const potentialProjects = pipelineData.filter(p => p.isPotential);
+
+        const currentCount = weeklyProjects.length;
+        const currentPrevCount = prevCount !== null ? prevCount : document.getElementById('kpiWeeklyPrevTotal')?.innerText || 0;
+        const currentGrowthText = growthText || document.getElementById('kpiWeeklyGrowth')?.innerText || '0%';
+        const currentWorkshopCount = workshopCount !== null ? workshopCount : danglamProjects.length;
 
         // Group categories
         const catMap = {};
@@ -8075,10 +8296,14 @@
         let report = `📊 BÁO CÁO TỔNG HỢP SALE TUẦN [${rangeStr}]\n` +
             `🏢 MÔ HÌNH KIẾN TRÚC SONG ANH\n` +
             `👤 Người thực hiện: Phạm Hoàng Tiến & Võ Minh Sang\n\n` +
-            `1️⃣ TỔNG QUAN KHÁCH HÀNG MỚI LIÊN HỆ TRONG TUẦN (${weeklyProjects.length} KHÁCH):\n` +
+            `1️⃣ TỔNG QUAN & SO SÁNH DATA:\n` +
+            `• Tổng khách liên hệ: ${currentCount} khách\n` +
+            `• Data cũ đối chiếu (${currentWeeklyFilter.prevLabel || 'Kỳ trước'}): ${currentPrevCount} khách\n` +
+            `• So sánh tăng trưởng: ${currentGrowthText}\n` +
+            `• Tổng dự án xưởng đang thi công: ${currentWorkshopCount} dự án\n` +
             `• Phân loại theo Hạng mục: ${catSummary}\n` +
             `• Phân loại theo Nguồn liên hệ: ${srcSummary}\n\n` +
-            `2️⃣ DANH SÁCH CHI TIẾT KHÁCH HÀNG MỚI TIẾP NHẬN:\n`;
+            `2️⃣ DANH SÁCH CHI TIẾT KHÁCH HÀNG TIẾP NHẬN:\n`;
 
         if (weeklyProjects.length === 0) {
             report += `• Trong tuần chưa ghi nhận khách hàng liên hệ mới.\n`;
